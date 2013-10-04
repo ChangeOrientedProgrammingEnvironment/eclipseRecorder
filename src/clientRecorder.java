@@ -5,5 +5,5 @@
  * Time: 2:31 PM
  * To change this template use File | Settings | File Templates.
  */
-public class clientRecorder {
+public class ClientRecorder {
 }
