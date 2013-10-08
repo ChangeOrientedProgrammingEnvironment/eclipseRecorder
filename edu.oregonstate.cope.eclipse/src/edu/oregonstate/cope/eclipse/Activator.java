@@ -1,11 +1,24 @@
 package edu.oregonstate.cope.eclipse;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextOperationTarget;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
+
+import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -37,9 +50,25 @@ public class Activator extends AbstractUIPlugin {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				monitor.beginTask("Registering listeners", 1);
-				//TODO register the listeners here
+				registerDocumentListenersForOpenEditors();
 				monitor.done();
 				return Status.OK_STATUS;
+			}
+
+			private void registerDocumentListenersForOpenEditors() {
+				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				IEditorReference[] editorReferences = activeWindow.getActivePage().getEditorReferences();
+				for (IEditorReference editorReference : editorReferences) {
+					IDocument document = getDocumentForEditor(editorReference);
+					document.addDocumentListener(new DocumentListener());
+				}
+			}
+			
+			private IDocument getDocumentForEditor(IEditorReference editorReference) {
+				IEditorPart editorPart = editorReference.getEditor(true);
+				ISourceViewer sourceViewer = (ISourceViewer) editorPart.getAdapter(ITextOperationTarget.class);
+				IDocument document = sourceViewer.getDocument();
+				return document;
 			}
 		};
 		
