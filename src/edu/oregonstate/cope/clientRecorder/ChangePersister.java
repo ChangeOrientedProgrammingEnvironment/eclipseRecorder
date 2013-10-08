@@ -1,5 +1,7 @@
 package edu.oregonstate.cope.clientRecorder;
 
+import org.json.simple.JSONObject;
+
 /**
  * Created with IntelliJ IDEA.
  * User: michaelhilton
@@ -8,7 +10,7 @@ package edu.oregonstate.cope.clientRecorder;
  * To change this template use File | Settings | File Templates.
  */
 public class ChangePersister {
-    public void persist(String change){
+    public void persist(JSONObject change){
 
     }
 }

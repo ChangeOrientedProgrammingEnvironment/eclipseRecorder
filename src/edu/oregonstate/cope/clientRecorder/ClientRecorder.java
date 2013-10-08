@@ -8,11 +8,27 @@ import org.json.simple.JSONObject;
  *
  * To change this template use File | Settings | File Templates.
  */
+
+
 public class ClientRecorder {
-     public void recordTextChange(String replacedText, String newText,int offset,int length,String sourceFile, String changeOrigen){
-                //create text change record in JSON
-                //call changePersister.persist(json)
+
+    /**
+     * Parameter values are not checked for consistancy.
+     * @param text
+     * @param offset
+     * @param length
+     * @param sourceFile
+     * @param changeOrigin
+     * @return
+     */
+     public void recordTextChange(String text,int offset,int length,String sourceFile, String changeOrigin){
+        //TODO change cp to a singleton
+        ChangePersister cp = new ChangePersister();
+        cp.persist(buildJSONTextChange(text,offset,length,sourceFile,changeOrigin));
+
      }
+
+
     protected JSONObject buildJSONTextChange(String text,int offset,int length,String sourceFile, String changeOrigin){
        if(text == null || sourceFile == null || changeOrigin == null){
            throw new RuntimeException("Change parameters cannot be null");
