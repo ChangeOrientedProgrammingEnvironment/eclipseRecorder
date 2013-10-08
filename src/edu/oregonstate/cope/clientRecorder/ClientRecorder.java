@@ -13,8 +13,8 @@ public class ClientRecorder {
                 //create text change record in JSON
                 //call changePersister.persist(json)
      }
-    protected JSONObject buildJSONTextChange(String replacedText, String newText,int offset,int length,String sourceFile, String changeOrigin){
-       if(replacedText == null || newText == null || sourceFile == null || changeOrigin == null){
+    protected JSONObject buildJSONTextChange(String text,int offset,int length,String sourceFile, String changeOrigin){
+       if(text == null || sourceFile == null || changeOrigin == null){
            throw new RuntimeException("Change parameters cannot be null");
        }
         if(sourceFile.isEmpty()){
@@ -25,8 +25,7 @@ public class ClientRecorder {
         }
         JSONObject obj=new JSONObject();
         obj.put("type","Text");
-        obj.put("replacedText",replacedText);
-        obj.put("newText",newText);
+        obj.put("text",text);
         obj.put("offset",offset);
         obj.put("len",length);
         obj.put("sourceFile",sourceFile);
