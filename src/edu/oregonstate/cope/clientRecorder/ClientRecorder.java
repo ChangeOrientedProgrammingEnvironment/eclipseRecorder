@@ -17,6 +17,12 @@ public class ClientRecorder {
        if(replacedText == null || newText == null || sourceFile == null || changeOrigin == null){
            throw new RuntimeException("Change parameters cannot be null");
        }
+        if(sourceFile.isEmpty()){
+            throw new RuntimeException("Source File cannot be empty");
+        }
+        if(changeOrigin.isEmpty()){
+            throw new RuntimeException("Change Origin cannot be empty");
+        }
         JSONObject obj=new JSONObject();
         obj.put("type","Text");
         obj.put("replacedText",replacedText);
