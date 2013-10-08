@@ -1,6 +1,10 @@
 package org.oregonstate.edu.eclipse;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -27,6 +31,19 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		UIJob uiJob = new UIJob("Registering listeners") {
+			
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				monitor.beginTask("Registering listeners", 1);
+				//TODO register the listeners here
+				monitor.done();
+				return Status.OK_STATUS;
+			}
+		};
+		
+		uiJob.schedule();
 	}
 
 	/*
