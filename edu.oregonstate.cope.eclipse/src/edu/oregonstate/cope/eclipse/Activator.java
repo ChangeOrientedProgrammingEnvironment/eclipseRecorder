@@ -1,8 +1,10 @@
 package edu.oregonstate.cope.eclipse;
 
+import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
@@ -19,6 +21,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
+import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -51,6 +54,7 @@ public class Activator extends AbstractUIPlugin {
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				monitor.beginTask("Registering listeners", 1);
 				registerDocumentListenersForOpenEditors();
+				FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
 				monitor.done();
 				return Status.OK_STATUS;
 			}
