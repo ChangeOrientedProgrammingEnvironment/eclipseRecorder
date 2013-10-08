@@ -1,20 +1,15 @@
 package edu.oregonstate.cope.eclipse;
 
 import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
@@ -26,18 +21,18 @@ import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class COPEPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.oregonstate.edu.eclipse"; //$NON-NLS-1$
 
 	// The shared instance
-	private static Activator plugin;
+	private static COPEPlugin plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public Activator() {
+	public COPEPlugin() {
 	}
 
 	/*
@@ -93,7 +88,7 @@ public class Activator extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static COPEPlugin getDefault() {
 		return plugin;
 	}
 
