@@ -1,4 +1,4 @@
-package edu.oregonstate.edu.eclipse;
+package edu.oregonstate.cope.eclipse;
 
 import org.eclipse.ui.IStartup;
 

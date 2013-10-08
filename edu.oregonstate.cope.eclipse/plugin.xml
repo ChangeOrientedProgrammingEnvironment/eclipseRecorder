@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="edu.oregonstate.edu.eclipse.EarlyStartup"></startup>
+            class="edu.oregonstate.cope.eclipse.EarlyStartup"></startup>
    </extension>
 
 </plugin>

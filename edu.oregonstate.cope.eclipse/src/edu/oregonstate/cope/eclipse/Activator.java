@@ -1,4 +1,4 @@
-package org.oregonstate.edu.eclipse;
+package edu.oregonstate.cope.eclipse;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
