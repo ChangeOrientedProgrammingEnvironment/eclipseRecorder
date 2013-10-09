@@ -3,6 +3,9 @@ package edu.oregonstate.cope.clientRecorder;
 import org.json.simple.JSONObject;
 
 /**
+ * Persists JSON objects to disc.
+ * This class is a Singleton.
+ * 
  * Created with IntelliJ IDEA.
  * User: michaelhilton
  * Date: 10/4/13
