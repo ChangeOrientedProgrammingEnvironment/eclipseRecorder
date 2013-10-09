@@ -10,6 +10,18 @@ import org.json.simple.JSONObject;
  * To change this template use File | Settings | File Templates.
  */
 public class ChangePersister {
+	
+	private static class Instance{
+		public static final ChangePersister instance = new ChangePersister();
+	}
+	
+	private ChangePersister(){
+	}
+	
+	public static ChangePersister instance(){
+		return Instance.instance;
+	}
+	
     public void persist(JSONObject change){
 
     }
