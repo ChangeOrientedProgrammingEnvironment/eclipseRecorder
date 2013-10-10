@@ -9,6 +9,7 @@ public class FileBufferListener implements IFileBufferListener {
 
 	@Override
 	public void bufferCreated(IFileBuffer buffer) {
+		System.out.println("File opened: " + buffer.getLocation().toPortableString());
 		if (!(buffer instanceof ITextFileBuffer))
 			return;
 		
@@ -18,7 +19,7 @@ public class FileBufferListener implements IFileBufferListener {
 
 	@Override
 	public void bufferDisposed(IFileBuffer buffer) {
-		// TODO Auto-generated method stub
+		System.out.println("File closed: " + buffer.getLocation().toPortableString());
 
 	}
 
