@@ -13,12 +13,11 @@ public class ClientRecorder {
 	/**
 	 * Parameter values are not checked for consistancy.
 	 * 
-	 * @param text
-	 * @param offset
-	 * @param length
-	 * @param sourceFile
-	 * @param changeOrigin
-	 * @return
+	 * @param text     This is the text that was added to the document
+	 * @param offset   This is the location that the text was added in the doc
+	 * @param length   length of the text that was removed
+	 * @param sourceFile  fully qualified name of the file
+	 * @param changeOrigin  who originated the change, ie user, refactoring engine, source control
 	 */
 	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
 		// TODO change cp to a singleton
