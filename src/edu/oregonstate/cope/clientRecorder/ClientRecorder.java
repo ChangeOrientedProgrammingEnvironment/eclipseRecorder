@@ -19,14 +19,14 @@ public class ClientRecorder {
 	 * @param sourceFile  fully qualified name of the file
 	 * @param changeOrigin  who originated the change, ie user, refactoring engine, source control
 	 */
-	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
+	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin,String IDE) {
 		// TODO change cp to a singleton
 		ChangePersister cp = new ChangePersister();
-		cp.persist(buildJSONTextChange(text, offset, length, sourceFile, changeOrigin));
+		cp.persist(buildJSONTextChange(text, offset, length, sourceFile, changeOrigin, IDE));
 
 	}
 
-	protected JSONObject buildJSONTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
+	protected JSONObject buildJSONTextChange(String text, int offset, int length, String sourceFile, String changeOrigin,String IDE) {
 		if (text == null || sourceFile == null || changeOrigin == null) {
 			throw new RuntimeException("Change parameters cannot be null");
 		}
@@ -40,9 +40,15 @@ public class ClientRecorder {
 		obj.put("len", length);
 		obj.put("sourceFile", sourceFile);
 		obj.put("changeOrigin", changeOrigin);
+        obj.put("ide", IDE);
 		return obj;
 	}
 
+    public void recordIDEEvent(String event, String eventClass,String eventMethod,String eventType){
+
+    }
+
+    /*
     public void testRun(String testMethod, String testResult, String testClass) {
         ChangePersister cp = new ChangePersister();
         cp.persist( buildJSONTestRun(testMethod,testResult,testClass));
@@ -55,4 +61,5 @@ public class ClientRecorder {
         }
         return null;
     }
+    */
 }
