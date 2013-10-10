@@ -46,4 +46,11 @@ public class ClientRecorder {
 		obj.put("changeOrigin", changeOrigin);
 		return obj;
 	}
+
+    public void testRun(String testMethod, String testResult, String testClass) {
+
+        if(testMethod == null || testResult == null || testClass == null){
+            throw new RuntimeException("Test Run parameters cannot be null");
+        }
+    }
 }

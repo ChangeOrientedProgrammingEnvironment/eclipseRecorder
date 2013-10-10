@@ -10,22 +10,23 @@ import static org.junit.Assert.assertEquals;
  * To change this template use File | Settings | File Templates.
  */
 public class ClientRecorderTest {
-	@Test(expected = RuntimeException.class)
+	/*Text Change Tests*/
+    @Test(expected = RuntimeException.class)
 	public void testRecordTextChangeNull() throws Exception {
 		ClientRecorder cr = new ClientRecorder();
-		JSONObject result1 = cr.buildJSONTextChange(null, 0, 0, null, null);
+		cr.buildJSONTextChange(null, 0, 0, null, null);
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testRecordTextChangeNoSourceFile() throws Exception {
 		ClientRecorder cr = new ClientRecorder();
-		JSONObject result1 = cr.buildJSONTextChange("", 0, 0, "", "");
+		cr.buildJSONTextChange("", 0, 0, "", "");
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testRecordTextChangeNoOrigin() throws Exception {
 		ClientRecorder cr = new ClientRecorder();
-		JSONObject result1 = cr.buildJSONTextChange("", 0, 0, "/sampleFile", "");
+		cr.buildJSONTextChange("", 0, 0, "/sampleFile", "");
 	}
 
 	@Test
@@ -70,5 +71,14 @@ public class ClientRecorderTest {
 		j.put("changeOrigin", changeOrigin);
 		return j;
 	}
+
+    /*Test Run Tests*/
+    @Test(expected = RuntimeException.class)
+    public void testRunNull() throws Exception {
+        ClientRecorder cr = new ClientRecorder();
+        cr.testRun(null, null, null);
+    }
+
+
 
 }
