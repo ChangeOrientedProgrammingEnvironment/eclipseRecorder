@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
 public class ClientRecorder {
 
 	/**
-	 * Parameter values are not checked for consistancy.
+	 * Parameter values are not checked for consistency.
 	 * 
 	 * @param text     This is the text that was added to the document
 	 * @param offset   This is the location that the text was added in the doc
@@ -30,14 +30,11 @@ public class ClientRecorder {
 		if (text == null || sourceFile == null || changeOrigin == null) {
 			throw new RuntimeException("Change parameters cannot be null");
 		}
-		if (sourceFile.isEmpty()) {
-			throw new RuntimeException("Source File cannot be empty");
-		}
-		if (changeOrigin.isEmpty()) {
-			throw new RuntimeException("Change Origin cannot be empty");
-		}
-		JSONObject obj = new JSONObject();
-		obj.put("type", "Text");
+		if (sourceFile.isEmpty()) throw new RuntimeException("Source File cannot be empty");
+		if (changeOrigin.isEmpty()) throw new RuntimeException("Change Origin cannot be empty");
+		JSONObject obj;
+        obj = new JSONObject();
+        obj.put("type", "Text");
 		obj.put("text", text);
 		obj.put("offset", offset);
 		obj.put("len", length);
@@ -47,9 +44,15 @@ public class ClientRecorder {
 	}
 
     public void testRun(String testMethod, String testResult, String testClass) {
+        ChangePersister cp = new ChangePersister();
+        cp.persist( buildJSONTestRun(testMethod,testResult,testClass));
+    }
+
+    protected JSONObject buildJSONTestRun(String testMethod, String testResult, String testClass){
 
         if(testMethod == null || testResult == null || testClass == null){
             throw new RuntimeException("Test Run parameters cannot be null");
         }
+        return null;
     }
 }

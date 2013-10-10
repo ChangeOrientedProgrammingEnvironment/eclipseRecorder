@@ -76,7 +76,7 @@ public class ClientRecorderTest {
     @Test(expected = RuntimeException.class)
     public void testRunNull() throws Exception {
         ClientRecorder cr = new ClientRecorder();
-        cr.testRun(null, null, null);
+        cr.buildJSONTestRun(null, null, null);
     }
 
 
