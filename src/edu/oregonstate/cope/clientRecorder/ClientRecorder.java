@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 public class ClientRecorder {
 
     private String IDE;
+    protected enum EventType{debugLaunch};
 
     /**
 	 * Parameter values are not checked for consistency.  Fully qualified names include the workspace of the file.
@@ -67,15 +68,15 @@ public class ClientRecorder {
 	}
 
     public void recordDebugLaunch(String fullyQualifiedMainFunction){
-        ChangePersister.instance().persist(buildJSONDebugLaunch(fullyQualifiedMainFunction));
+        ChangePersister.instance().persist(buildJSONDebugLaunch(EventType.debugLaunch,fullyQualifiedMainFunction));
     }
 
-    protected JSONObject buildJSONDebugLaunch(String fullyQualifiedMainFunction) {
+    protected JSONObject buildJSONDebugLaunch(Enum EventType, String fullyQualifiedMainFunction) {
         if(fullyQualifiedMainFunction == null) {
             throw new RuntimeException("Fully Qualified Main Function cannot be null");
         }
         JSONObject obj;
-        obj = buildCommonJSONObj();
+        obj = buildCommonJSONObj(EventType);
         obj.put("fullyQualifiedMain", fullyQualifiedMainFunction);
         return obj;
     }
@@ -88,10 +89,11 @@ public class ClientRecorder {
         this.IDE = IDE;
     }
 
-    protected JSONObject buildCommonJSONObj(){
+    protected JSONObject buildCommonJSONObj(Enum eventType){
         JSONObject obj;
         obj = new JSONObject();
         obj.put("IDE", this.getIDE());
+        obj.put("eventType", eventType);
         return obj;
     }
 }

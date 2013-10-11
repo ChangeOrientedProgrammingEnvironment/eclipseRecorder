@@ -74,19 +74,21 @@ public class ClientRecorderTest {
 	}
 
 	/* Test DebugLaunch */
-
 	@Test(expected = RuntimeException.class)
 	public void testDebugLaunchNull() throws Exception {
-        clientRecorder.buildJSONDebugLaunch(null);
+        clientRecorder.buildJSONDebugLaunch(null,null);
 	}
 
     @Test
     public void testDebugLaunch() throws Exception {
-        JSONObject retObj = clientRecorder.buildJSONDebugLaunch("/workspace/package/filename.java");
+        JSONObject retObj = clientRecorder.buildJSONDebugLaunch(ClientRecorder.EventType.debugLaunch,"/workspace/package/filename.java");
         JSONObject expected = new JSONObject();
         expected.put("IDE","IDEA");
+        expected.put("eventType",ClientRecorder.EventType.debugLaunch);
         expected.put("fullyQualifiedMain","/workspace/package/filename.java") ;
         assertEquals(expected, retObj);
     }
+
+
 
 }
