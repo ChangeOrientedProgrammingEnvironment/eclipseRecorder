@@ -1,6 +1,9 @@
 package edu.oregonstate.cope.eclipse;
 
 import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -18,6 +21,7 @@ import org.osgi.framework.BundleContext;
 
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
+import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
 
 /**
@@ -53,6 +57,11 @@ public class COPEPlugin extends AbstractUIPlugin {
 				registerDocumentListenersForOpenEditors();
 				FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
 				monitor.done();
+				IWorkspace workspace = ResourcesPlugin.getWorkspace();
+				workspace.addResourceChangeListener(
+						new ResourceListener(),
+						IResourceChangeEvent.PRE_REFRESH
+								| IResourceChangeEvent.POST_CHANGE);
 				ICommandService commandService = (ICommandService) PlatformUI
 						.getWorkbench().getActiveWorkbenchWindow()
 						.getService(ICommandService.class);
