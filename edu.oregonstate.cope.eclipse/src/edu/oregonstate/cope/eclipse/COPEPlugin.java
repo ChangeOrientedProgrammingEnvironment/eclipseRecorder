@@ -11,12 +11,14 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
+import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -51,6 +53,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 				registerDocumentListenersForOpenEditors();
 				FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
 				monitor.done();
+				ICommandService commandService = (ICommandService) PlatformUI
+						.getWorkbench().getActiveWorkbenchWindow()
+						.getService(ICommandService.class);
+				commandService.addExecutionListener(new SaveCommandExecutionListener());
 				return Status.OK_STATUS;
 			}
 
