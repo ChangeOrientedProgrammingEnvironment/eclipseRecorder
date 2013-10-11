@@ -68,6 +68,7 @@ public class ClientRecorder {
 		obj = new JSONObject();
 		obj.put("IDE", this.getIDE());
 		obj.put("eventType", eventType);
+		
 		return obj;
 	}
 
@@ -86,6 +87,7 @@ public class ClientRecorder {
 		obj.put("len", length);
 		obj.put("sourceFile", sourceFile);
 		obj.put("changeOrigin", changeOrigin);
+		
 		return obj;
 	}
 
@@ -93,9 +95,11 @@ public class ClientRecorder {
 		if (fullyQualifiedMainFunction == null) {
 			throw new RuntimeException("Fully Qualified Main Function cannot be null");
 		}
+		
 		JSONObject obj;
 		obj = buildCommonJSONObj(EventType);
 		obj.put("fullyQualifiedMain", fullyQualifiedMainFunction);
+		
 		return obj;
 	}
 
