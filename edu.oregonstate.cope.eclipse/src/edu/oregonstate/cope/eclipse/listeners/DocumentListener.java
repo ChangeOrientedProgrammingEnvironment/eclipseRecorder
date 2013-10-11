@@ -24,7 +24,7 @@ public class DocumentListener implements IDocumentListener {
 		System.out.println("Recorded a change in "
 				+ fileLocation.toPortableString() + " at offset "
 				+ event.getOffset() + " of length " + event.getLength()
-				+ " with the text" + event.fText);
+				+ " with the text: " + event.fText);
 	}
 
 }
