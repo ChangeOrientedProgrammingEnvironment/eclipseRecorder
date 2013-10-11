@@ -7,7 +7,7 @@ public class ResourceListener implements IResourceChangeListener {
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		if (isSavedAction())
+		if (isSavedAction() || isRefactoringInProgress())
 			System.out.println("This is a save action, so I will ignore it");
 		else
 			System.out.println("This is a genuine refresh");
@@ -16,5 +16,9 @@ public class ResourceListener implements IResourceChangeListener {
 	private boolean isSavedAction() {
 		long currentTime = System.currentTimeMillis();
 		return currentTime - SaveCommandExecutionListener.getLastSaveAction() < 500;
+	}
+	
+	private boolean isRefactoringInProgress() {
+		return RefactoringExecutionListener.isRefactoringInProgress();
 	}
 }
