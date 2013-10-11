@@ -6,5 +6,11 @@
       <startup
             class="edu.oregonstate.cope.eclipse.EarlyStartup"></startup>
    </extension>
+   <extension
+         point="org.eclipse.jdt.junit.testRunListeners">
+      <testRunListener
+            class="edu.oregonstate.cope.eclipse.listeners.JUnitListener">
+      </testRunListener>
+   </extension>
 
 </plugin>
