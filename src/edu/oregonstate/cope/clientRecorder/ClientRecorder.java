@@ -9,8 +9,10 @@ import org.json.simple.JSONObject;
 
 public class ClientRecorder {
 
-	/**
-	 * Parameter values are not checked for consistency.
+    private String IDE;
+
+    /**
+	 * Parameter values are not checked for consistency.  Fully qualified names include the workspace of the file.
 	 * 
 	 * @param text
 	 *            This is the text that was added to the document
@@ -64,4 +66,32 @@ public class ClientRecorder {
 		return null;
 	}
 
+    public void recordDebugLaunch(String fullyQualifiedMainFunction){
+        ChangePersister.instance().persist(buildJSONDebugLaunch(fullyQualifiedMainFunction));
+    }
+
+    protected JSONObject buildJSONDebugLaunch(String fullyQualifiedMainFunction) {
+        if(fullyQualifiedMainFunction == null) {
+            throw new RuntimeException("Fully Qualified Main Function cannot be null");
+        }
+        JSONObject obj;
+        obj = buildCommonJSONObj();
+        obj.put("fullyQualifiedMain", fullyQualifiedMainFunction);
+        return obj;
+    }
+
+    public String getIDE() {
+        return IDE;
+    }
+
+    public void setIDE(String IDE) {
+        this.IDE = IDE;
+    }
+
+    protected JSONObject buildCommonJSONObj(){
+        JSONObject obj;
+        obj = new JSONObject();
+        obj.put("IDE", this.getIDE());
+        return obj;
+    }
 }

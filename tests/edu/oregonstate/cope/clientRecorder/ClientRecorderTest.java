@@ -1,58 +1,62 @@
 package edu.oregonstate.cope.clientRecorder;
 
 import org.json.simple.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class ClientRecorderTest {
+
+
+    private ClientRecorder clientRecorder;
+
+    @Before
+    public void setup(){
+        clientRecorder = new ClientRecorder();
+        clientRecorder.setIDE("IDEA");
+    }
+
 	/* Text Change Tests */
 	@Test(expected = RuntimeException.class)
 	public void testRecordTextChangeNull() throws Exception {
-		ClientRecorder cr = new ClientRecorder();
-		cr.buildJSONTextChange(null, 0, 0, null, null, null);
+        clientRecorder.buildJSONTextChange(null, 0, 0, null, null, null);
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testRecordTextChangeNoSourceFile() throws Exception {
-		ClientRecorder cr = new ClientRecorder();
-		cr.buildJSONTextChange("", 0, 0, "", "", "");
+        clientRecorder.buildJSONTextChange("", 0, 0, "", "", "");
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testRecordTextChangeNoOrigin() throws Exception {
-		ClientRecorder cr = new ClientRecorder();
-		cr.buildJSONTextChange("", 0, 0, "/sampleFile", "", "");
+        clientRecorder.buildJSONTextChange("", 0, 0, "/sampleFile", "", "");
 	}
 
 	@Test
 	public void testRecordTextChangeNoOp() throws Exception {
-		ClientRecorder cr = new ClientRecorder();
-		JSONObject result1 = cr.buildJSONTextChange("", 0, 0, "/sampleFile", "changeOrigin", "IDEA");
+		JSONObject result1 = clientRecorder.buildJSONTextChange("", 0, 0, "/sampleFile", "changeOrigin", "IDEA");
 		JSONObject obj = createChangeJSON("", 0, 0, "/sampleFile", "changeOrigin", "IDEA");
 		assertEquals(result1, obj);
 	}
 
 	@Test
 	public void testRecordTextChangeAdd() throws Exception {
-		ClientRecorder cr = new ClientRecorder();
-		JSONObject result1 = cr.buildJSONTextChange("addedText", 0, 0, "/sampleFile", "changeOrigin", "IDEA");
+		JSONObject result1 = clientRecorder.buildJSONTextChange("addedText", 0, 0, "/sampleFile", "changeOrigin", "IDEA");
 		JSONObject obj = createChangeJSON("addedText", 0, 0, "/sampleFile", "changeOrigin", "IDEA");
 		assertEquals(result1, obj);
 	}
 
 	@Test
 	public void testRecordTextChangeDelete() throws Exception {
-		ClientRecorder cr = new ClientRecorder();
-		JSONObject result1 = cr.buildJSONTextChange("", 0, 0, "/sampleFile", "changeOrigin", "IDEA");
+		JSONObject result1 = clientRecorder.buildJSONTextChange("", 0, 0, "/sampleFile", "changeOrigin", "IDEA");
 		JSONObject obj = createChangeJSON("", 0, 0, "/sampleFile", "changeOrigin", "IDEA");
 		assertEquals(result1, obj);
 	}
 
 	@Test
 	public void testRecordTextChangeReplace() throws Exception {
-		ClientRecorder cr = new ClientRecorder();
-		JSONObject result1 = cr.buildJSONTextChange("addedText", 3, 0, "/sampleFile", "changeOrigin", "IDEA");
+		JSONObject result1 = clientRecorder.buildJSONTextChange("addedText", 3, 0, "/sampleFile", "changeOrigin", "IDEA");
 		JSONObject obj = createChangeJSON("addedText", 3, 0, "/sampleFile", "changeOrigin", "IDEA");
 		assertEquals(result1, obj);
 	}
@@ -69,11 +73,20 @@ public class ClientRecorderTest {
 		return j;
 	}
 
-	/* Test Run Tests */
+	/* Test DebugLaunch */
 
-	  @Test(expected = RuntimeException.class) public void testRunNull() throws
-	  Exception { ClientRecorder cr = new ClientRecorder();
-	  cr.buildJSONIDEEvent(null, null, null); }
+	@Test(expected = RuntimeException.class)
+	public void testDebugLaunchNull() throws Exception {
+        clientRecorder.buildJSONDebugLaunch(null);
+	}
 
+    @Test
+    public void testDebugLaunch() throws Exception {
+        JSONObject retObj = clientRecorder.buildJSONDebugLaunch("/workspace/package/filename.java");
+        JSONObject expected = new JSONObject();
+        expected.put("IDE","IDEA");
+        expected.put("fullyQualifiedMain","/workspace/package/filename.java") ;
+        assertEquals(expected, retObj);
+    }
 
 }
