@@ -7,6 +7,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -22,6 +23,7 @@ import org.osgi.framework.BundleContext;
 
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
+import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
@@ -75,6 +77,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 				
 				RefactoringHistoryService refactoringHistoryService = RefactoringHistoryService.getInstance();
 				refactoringHistoryService.addExecutionListener(new RefactoringExecutionListener());
+				
+				DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());;
 				
 				return Status.OK_STATUS;
 			}
