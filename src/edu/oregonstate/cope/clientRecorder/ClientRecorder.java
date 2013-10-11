@@ -12,7 +12,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange
 	};
 
 	/**
@@ -31,11 +31,11 @@ public class ClientRecorder {
 	 *            who originated the change, ie user, refactoring engine, source
 	 *            control
 	 */
-	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin, String IDE) {
-		ChangePersister.instance().persist(buildJSONTextChange(text, offset, length, sourceFile, changeOrigin, IDE));
+	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
+		ChangePersister.instance().persist(buildJSONTextChange(text, offset, length, sourceFile, changeOrigin));
 	}
 
-	protected JSONObject buildJSONTextChange(String text, int offset, int length, String sourceFile, String changeOrigin, String IDE) {
+	protected JSONObject buildJSONTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
 		if (text == null || sourceFile == null || changeOrigin == null) {
 			throw new RuntimeException("Change parameters cannot be null");
 		}
@@ -43,15 +43,13 @@ public class ClientRecorder {
 			throw new RuntimeException("Source File cannot be empty");
 		if (changeOrigin.isEmpty())
 			throw new RuntimeException("Change Origin cannot be empty");
-		JSONObject obj;
-		obj = new JSONObject();
-		obj.put("type", "Text");
+
+		JSONObject obj = buildCommonJSONObj(EventType.textChange);
 		obj.put("text", text);
 		obj.put("offset", offset);
 		obj.put("len", length);
 		obj.put("sourceFile", sourceFile);
 		obj.put("changeOrigin", changeOrigin);
-		obj.put("ide", IDE);
 		return obj;
 	}
 
