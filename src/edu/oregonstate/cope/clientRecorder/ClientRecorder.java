@@ -9,11 +9,15 @@ import org.json.simple.JSONObject;
 
 public class ClientRecorder {
 
-    private String IDE;
-    protected enum EventType{debugLaunch,normalLaunch,fileOpen,fileClose};
+	private String IDE;
 
-    /**
-	 * Parameter values are not checked for consistency.  Fully qualified names include the workspace of the file.
+	protected enum EventType {
+		debugLaunch, normalLaunch, fileOpen, fileClose
+	};
+
+	/**
+	 * Parameter values are not checked for consistency. Fully qualified names
+	 * include the workspace of the file.
 	 * 
 	 * @param text
 	 *            This is the text that was added to the document
@@ -56,7 +60,7 @@ public class ClientRecorder {
 	}
 
 	public void IDEEvent(String testMethod, String testResult, String testClass) {
-        ChangePersister.instance().persist(buildJSONIDEEvent(testMethod, testResult, testClass));
+		ChangePersister.instance().persist(buildJSONIDEEvent(testMethod, testResult, testClass));
 	}
 
 	protected JSONObject buildJSONIDEEvent(String testMethod, String testResult, String testClass) {
@@ -67,42 +71,45 @@ public class ClientRecorder {
 		return null;
 	}
 
-    public void recordDebugLaunch(String fullyQualifiedMainFunction){
-        ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.debugLaunch, fullyQualifiedMainFunction));
-    }
-    public void recordNormalLaunch(String fullyQualifiedMainFunction){
-        ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.normalLaunch, fullyQualifiedMainFunction));
-    }
-    public void recordFileOpen(String fullyQualifiedMainFunction){
-        ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileOpen, fullyQualifiedMainFunction));
-    }
-    public void recordFileClose(String fullyQualifiedMainFunction){
-        ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileClose, fullyQualifiedMainFunction));
-    }
+	public void recordDebugLaunch(String fullyQualifiedMainFunction) {
+		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.debugLaunch, fullyQualifiedMainFunction));
+	}
 
-    protected JSONObject buildIDEFileEventJSON(Enum EventType, String fullyQualifiedMainFunction) {
-        if(fullyQualifiedMainFunction == null) {
-            throw new RuntimeException("Fully Qualified Main Function cannot be null");
-        }
-        JSONObject obj;
-        obj = buildCommonJSONObj(EventType);
-        obj.put("fullyQualifiedMain", fullyQualifiedMainFunction);
-        return obj;
-    }
+	public void recordNormalLaunch(String fullyQualifiedMainFunction) {
+		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.normalLaunch, fullyQualifiedMainFunction));
+	}
 
-    public String getIDE() {
-        return IDE;
-    }
+	public void recordFileOpen(String fullyQualifiedMainFunction) {
+		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileOpen, fullyQualifiedMainFunction));
+	}
 
-    public void setIDE(String IDE) {
-        this.IDE = IDE;
-    }
+	public void recordFileClose(String fullyQualifiedMainFunction) {
+		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileClose, fullyQualifiedMainFunction));
+	}
 
-    protected JSONObject buildCommonJSONObj(Enum eventType){
-        JSONObject obj;
-        obj = new JSONObject();
-        obj.put("IDE", this.getIDE());
-        obj.put("eventType", eventType);
-        return obj;
-    }
+	protected JSONObject buildIDEFileEventJSON(Enum EventType, String fullyQualifiedMainFunction) {
+		if (fullyQualifiedMainFunction == null) {
+			throw new RuntimeException("Fully Qualified Main Function cannot be null");
+		}
+		JSONObject obj;
+		obj = buildCommonJSONObj(EventType);
+		obj.put("fullyQualifiedMain", fullyQualifiedMainFunction);
+		return obj;
+	}
+
+	public String getIDE() {
+		return IDE;
+	}
+
+	public void setIDE(String IDE) {
+		this.IDE = IDE;
+	}
+
+	protected JSONObject buildCommonJSONObj(Enum eventType) {
+		JSONObject obj;
+		obj = new JSONObject();
+		obj.put("IDE", this.getIDE());
+		obj.put("eventType", eventType);
+		return obj;
+	}
 }
