@@ -34,7 +34,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	// The shared instance
 	private static COPEPlugin plugin;
-	
+
 	/**
 	 * The constructor
 	 */
@@ -43,20 +43,23 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
+	 * )
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
+
 		UIJob uiJob = new UIJob("Registering listeners") {
-			
+
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				monitor.beginTask("Registering listeners", 1);
 				registerDocumentListenersForOpenEditors();
-				FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
-				monitor.done();
+				FileBuffers.getTextFileBufferManager().addFileBufferListener(
+						new FileBufferListener());
 				IWorkspace workspace = ResourcesPlugin.getWorkspace();
 				workspace.addResourceChangeListener(
 						new ResourceListener(),
@@ -70,28 +73,35 @@ public class COPEPlugin extends AbstractUIPlugin {
 			}
 
 			private void registerDocumentListenersForOpenEditors() {
-				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				IEditorReference[] editorReferences = activeWindow.getActivePage().getEditorReferences();
+				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow();
+				IEditorReference[] editorReferences = activeWindow
+						.getActivePage().getEditorReferences();
 				for (IEditorReference editorReference : editorReferences) {
 					IDocument document = getDocumentForEditor(editorReference);
 					document.addDocumentListener(new DocumentListener());
 				}
 			}
-			
-			private IDocument getDocumentForEditor(IEditorReference editorReference) {
+
+			private IDocument getDocumentForEditor(
+					IEditorReference editorReference) {
 				IEditorPart editorPart = editorReference.getEditor(true);
-				ISourceViewer sourceViewer = (ISourceViewer) editorPart.getAdapter(ITextOperationTarget.class);
+				ISourceViewer sourceViewer = (ISourceViewer) editorPart
+						.getAdapter(ITextOperationTarget.class);
 				IDocument document = sourceViewer.getDocument();
 				return document;
 			}
 		};
-		
+
 		uiJob.schedule();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
+	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
@@ -100,7 +110,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static COPEPlugin getDefault() {
