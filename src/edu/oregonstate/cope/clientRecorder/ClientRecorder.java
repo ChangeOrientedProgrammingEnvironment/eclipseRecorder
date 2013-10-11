@@ -53,22 +53,6 @@ public class ClientRecorder {
 		return obj;
 	}
 
-	public void recordIDEEvent(String event, String eventClass, String eventMethod, String eventType) {
-
-	}
-
-	public void IDEEvent(String testMethod, String testResult, String testClass) {
-		ChangePersister.instance().persist(buildJSONIDEEvent(testMethod, testResult, testClass));
-	}
-
-	protected JSONObject buildJSONIDEEvent(String testMethod, String testResult, String testClass) {
-
-		if (testMethod == null || testResult == null || testClass == null) {
-			throw new RuntimeException("Test Run parameters cannot be null");
-		}
-		return null;
-	}
-
 	public void recordDebugLaunch(String fullyQualifiedMainFunction) {
 		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.debugLaunch, fullyQualifiedMainFunction));
 	}
