@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ltk.internal.core.refactoring.history.RefactoringHistoryService;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -21,12 +22,14 @@ import org.osgi.framework.BundleContext;
 
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
+import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
 
 /**
  * The activator class controls the plug-in life cycle
  */
+@SuppressWarnings("restriction")
 public class COPEPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
@@ -69,6 +72,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 						.getWorkbench().getActiveWorkbenchWindow()
 						.getService(ICommandService.class);
 				commandService.addExecutionListener(new SaveCommandExecutionListener());
+				
+				RefactoringHistoryService refactoringHistoryService = RefactoringHistoryService.getInstance();
+				refactoringHistoryService.addExecutionListener(new RefactoringExecutionListener());
+				
 				return Status.OK_STATUS;
 			}
 
