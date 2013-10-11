@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 public class ClientRecorder {
 
     private String IDE;
-    protected enum EventType{debugLaunch};
+    protected enum EventType{debugLaunch,normalLaunch,fileOpen,fileClose};
 
     /**
 	 * Parameter values are not checked for consistency.  Fully qualified names include the workspace of the file.
@@ -68,10 +68,19 @@ public class ClientRecorder {
 	}
 
     public void recordDebugLaunch(String fullyQualifiedMainFunction){
-        ChangePersister.instance().persist(buildJSONDebugLaunch(EventType.debugLaunch,fullyQualifiedMainFunction));
+        ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.debugLaunch, fullyQualifiedMainFunction));
+    }
+    public void recordNormalLaunch(String fullyQualifiedMainFunction){
+        ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.normalLaunch, fullyQualifiedMainFunction));
+    }
+    public void recordFileOpen(String fullyQualifiedMainFunction){
+        ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileOpen, fullyQualifiedMainFunction));
+    }
+    public void recordFileClose(String fullyQualifiedMainFunction){
+        ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileClose, fullyQualifiedMainFunction));
     }
 
-    protected JSONObject buildJSONDebugLaunch(Enum EventType, String fullyQualifiedMainFunction) {
+    protected JSONObject buildIDEFileEventJSON(Enum EventType, String fullyQualifiedMainFunction) {
         if(fullyQualifiedMainFunction == null) {
             throw new RuntimeException("Fully Qualified Main Function cannot be null");
         }

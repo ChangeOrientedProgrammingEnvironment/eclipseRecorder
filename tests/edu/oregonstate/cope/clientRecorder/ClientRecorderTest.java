@@ -76,12 +76,12 @@ public class ClientRecorderTest {
 	/* Test DebugLaunch */
 	@Test(expected = RuntimeException.class)
 	public void testDebugLaunchNull() throws Exception {
-        clientRecorder.buildJSONDebugLaunch(null,null);
+        clientRecorder.buildIDEFileEventJSON(null, null);
 	}
 
     @Test
     public void testDebugLaunch() throws Exception {
-        JSONObject retObj = clientRecorder.buildJSONDebugLaunch(ClientRecorder.EventType.debugLaunch,"/workspace/package/filename.java");
+        JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.debugLaunch, "/workspace/package/filename.java");
         JSONObject expected = new JSONObject();
         expected.put("IDE","IDEA");
         expected.put("eventType",ClientRecorder.EventType.debugLaunch);
@@ -89,6 +89,33 @@ public class ClientRecorderTest {
         assertEquals(expected, retObj);
     }
 
+    @Test
+    public void testStdLaunch() throws Exception {
+        JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.normalLaunch, "/workspace/package/filename.java");
+        JSONObject expected = new JSONObject();
+        expected.put("IDE","IDEA");
+        expected.put("eventType",ClientRecorder.EventType.normalLaunch);
+        expected.put("fullyQualifiedMain","/workspace/package/filename.java") ;
+        assertEquals(expected, retObj);
+    }
 
+    @Test
+    public void testFileOpen() throws Exception {
+        JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.fileOpen, "/workspace/package/filename.java");
+        JSONObject expected = new JSONObject();
+        expected.put("IDE","IDEA");
+        expected.put("eventType",ClientRecorder.EventType.fileOpen);
+        expected.put("fullyQualifiedMain","/workspace/package/filename.java") ;
+        assertEquals(expected, retObj);
+    }
 
+    @Test
+    public void testFileClose() throws Exception {
+        JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.fileClose, "/workspace/package/filename.java");
+        JSONObject expected = new JSONObject();
+        expected.put("IDE","IDEA");
+        expected.put("eventType",ClientRecorder.EventType.fileClose);
+        expected.put("fullyQualifiedMain","/workspace/package/filename.java") ;
+        assertEquals(expected, retObj);
+    }
 }
