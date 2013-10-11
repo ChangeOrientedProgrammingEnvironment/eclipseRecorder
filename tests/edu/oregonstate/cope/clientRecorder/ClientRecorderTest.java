@@ -21,43 +21,43 @@ public class ClientRecorderTest {
 	/* Text Change Tests */
 	@Test(expected = RuntimeException.class)
 	public void testRecordTextChangeNull() throws Exception {
-        clientRecorder.buildJSONTextChange(null, 0, 0, null, null);
+        clientRecorder.buildTextChangeJSON(null, 0, 0, null, null);
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testRecordTextChangeNoSourceFile() throws Exception {
-        clientRecorder.buildJSONTextChange("", 0, 0, "", "");
+        clientRecorder.buildTextChangeJSON("", 0, 0, "", "");
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testRecordTextChangeNoOrigin() throws Exception {
-        clientRecorder.buildJSONTextChange("", 0, 0, "/sampleFile", "");
+        clientRecorder.buildTextChangeJSON("", 0, 0, "/sampleFile", "");
 	}
 
 	@Test
 	public void testRecordTextChangeNoOp() throws Exception {
-		JSONObject result1 = clientRecorder.buildJSONTextChange("", 0, 0, "/sampleFile", "changeOrigin");
+		JSONObject result1 = clientRecorder.buildTextChangeJSON("", 0, 0, "/sampleFile", "changeOrigin");
 		JSONObject obj = createChangeJSON("", 0, 0, "/sampleFile", "changeOrigin");
 		assertEquals(result1, obj);
 	}
 
 	@Test
 	public void testRecordTextChangeAdd() throws Exception {
-		JSONObject result1 = clientRecorder.buildJSONTextChange("addedText", 0, 0, "/sampleFile", "changeOrigin");
+		JSONObject result1 = clientRecorder.buildTextChangeJSON("addedText", 0, 0, "/sampleFile", "changeOrigin");
 		JSONObject obj = createChangeJSON("addedText", 0, 0, "/sampleFile", "changeOrigin");
 		assertEquals(result1, obj);
 	}
 
 	@Test
 	public void testRecordTextChangeDelete() throws Exception {
-		JSONObject result1 = clientRecorder.buildJSONTextChange("", 0, 0, "/sampleFile", "changeOrigin");
+		JSONObject result1 = clientRecorder.buildTextChangeJSON("", 0, 0, "/sampleFile", "changeOrigin");
 		JSONObject obj = createChangeJSON("", 0, 0, "/sampleFile", "changeOrigin");
 		assertEquals(result1, obj);
 	}
 
 	@Test
 	public void testRecordTextChangeReplace() throws Exception {
-		JSONObject result1 = clientRecorder.buildJSONTextChange("addedText", 3, 0, "/sampleFile", "changeOrigin");
+		JSONObject result1 = clientRecorder.buildTextChangeJSON("addedText", 3, 0, "/sampleFile", "changeOrigin");
 		JSONObject obj = createChangeJSON("addedText", 3, 0, "/sampleFile", "changeOrigin");
 		assertEquals(result1, obj);
 	}

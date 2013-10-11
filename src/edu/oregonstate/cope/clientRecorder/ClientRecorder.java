@@ -32,10 +32,10 @@ public class ClientRecorder {
 	 *            control
 	 */
 	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
-		ChangePersister.instance().persist(buildJSONTextChange(text, offset, length, sourceFile, changeOrigin));
+		ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
 	}
 
-	protected JSONObject buildJSONTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
+	protected JSONObject buildTextChangeJSON(String text, int offset, int length, String sourceFile, String changeOrigin) {
 		if (text == null || sourceFile == null || changeOrigin == null) {
 			throw new RuntimeException("Change parameters cannot be null");
 		}
