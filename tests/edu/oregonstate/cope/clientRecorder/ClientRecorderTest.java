@@ -5,10 +5,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created with IntelliJ IDEA. User: michaelhilton Date: 10/8/13 Time: 2:10 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ClientRecorderTest {
 	/*Text Change Tests*/
     @Test(expected = RuntimeException.class)
