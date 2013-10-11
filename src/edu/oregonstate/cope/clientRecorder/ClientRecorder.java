@@ -52,16 +52,16 @@ public class ClientRecorder {
 
 	}
 
-	/*
-	 * public void testRun(String testMethod, String testResult, String
-	 * testClass) { ChangePersister cp = new ChangePersister(); cp.persist(
-	 * buildJSONTestRun(testMethod,testResult,testClass)); }
-	 * 
-	 * protected JSONObject buildJSONTestRun(String testMethod, String
-	 * testResult, String testClass){
-	 * 
-	 * if(testMethod == null || testResult == null || testClass == null){ throw
-	 * new RuntimeException("Test Run parameters cannot be null"); } return
-	 * null; }
-	 */
+	public void IDEEvent(String testMethod, String testResult, String testClass) {
+        ChangePersister.instance().persist(buildJSONIDEEvent(testMethod, testResult, testClass));
+	}
+
+	protected JSONObject buildJSONIDEEvent(String testMethod, String testResult, String testClass) {
+
+		if (testMethod == null || testResult == null || testClass == null) {
+			throw new RuntimeException("Test Run parameters cannot be null");
+		}
+		return null;
+	}
+
 }

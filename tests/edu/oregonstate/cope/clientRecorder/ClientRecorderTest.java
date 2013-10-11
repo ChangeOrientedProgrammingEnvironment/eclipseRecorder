@@ -70,10 +70,10 @@ public class ClientRecorderTest {
 	}
 
 	/* Test Run Tests */
-	/*
-	 * @Test(expected = RuntimeException.class) public void testRunNull() throws
-	 * Exception { ClientRecorder cr = new ClientRecorder();
-	 * cr.buildJSONTestRun(null, null, null); }
-	 */
+
+	  @Test(expected = RuntimeException.class) public void testRunNull() throws
+	  Exception { ClientRecorder cr = new ClientRecorder();
+	  cr.buildJSONIDEEvent(null, null, null); }
+
 
 }
