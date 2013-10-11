@@ -12,7 +12,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun
 	};
 
 	/**
@@ -92,6 +92,23 @@ public class ClientRecorder {
 		obj = new JSONObject();
 		obj.put("IDE", this.getIDE());
 		obj.put("eventType", eventType);
+		return obj;
+	}
+	
+	public void recordTestRun(String fullyQualifiedTestMethod, String testResult){
+		ChangePersister.instance().persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult));
+	}
+
+	protected JSONObject buildTestEventJSON(String fullyQualifiedTestMethod, String testResult) {
+		if (fullyQualifiedTestMethod == null || testResult == null)
+			throw new RuntimeException("Arguments cannot be null");
+		if(fullyQualifiedTestMethod.isEmpty() || testResult.isEmpty())
+			throw new RuntimeException("Arguments cannot be empty");
+		
+		JSONObject obj = buildCommonJSONObj(EventType.testRun);
+		obj.put("fullyQualifiedTestMethod", fullyQualifiedTestMethod);
+		obj.put("testResult", testResult);
+		
 		return obj;
 	}
 }

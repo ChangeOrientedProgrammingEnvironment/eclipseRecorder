@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder.EventType;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ClientRecorderTest {
 
@@ -119,4 +119,27 @@ public class ClientRecorderTest {
         expected.put("fullyQualifiedMain","/workspace/package/filename.java") ;
         assertEquals(expected, retObj);
     }
+    
+    @Test(expected=RuntimeException.class)
+	public void testTestRunNull() throws Exception {
+		clientRecorder.buildTestEventJSON(null, null);
+	}
+    
+    @Test(expected=RuntimeException.class)
+	public void testTestRunEmpty() throws Exception {
+		clientRecorder.buildTestEventJSON("", "");
+	}
+    
+    @Test
+	public void testTestRun() throws Exception {
+		JSONObject actual = clientRecorder.buildTestEventJSON("/workspace/package/TestFoo/testBar", "success");
+		JSONObject expected = new JSONObject();
+		
+		expected.put("eventType", EventType.testRun);
+		expected.put("IDE", clientRecorder.getIDE());
+		expected.put("fullyQualifiedTestMethod", "/workspace/package/TestFoo/testBar");
+		expected.put("testResult", "success");
+		
+		assertEquals(expected, actual);
+	}
 }
