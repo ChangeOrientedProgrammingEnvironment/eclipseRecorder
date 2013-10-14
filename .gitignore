@@ -1,1 +1,6 @@
-/.metadata/
+/bin
+/.classpath
+/.metadata
+/.project
+/.idea
+clientRecorder.iml
