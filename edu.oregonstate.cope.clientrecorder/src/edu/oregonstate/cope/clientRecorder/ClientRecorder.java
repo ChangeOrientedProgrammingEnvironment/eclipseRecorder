@@ -9,8 +9,23 @@ import org.json.simple.JSONObject;
 
 public class ClientRecorder {
 
+	private String IDE;
+
+	protected enum EventType {
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun
+	};
+
+	public String getIDE() {
+		return IDE;
+	}
+
+	public void setIDE(String IDE) {
+		this.IDE = IDE;
+	}
+
 	/**
-	 * Parameter values are not checked for consistency.
+	 * Parameter values are not checked for consistency. Fully qualified names
+	 * include the workspace of the file.
 	 * 
 	 * @param text
 	 *            This is the text that was added to the document
@@ -24,11 +39,40 @@ public class ClientRecorder {
 	 *            who originated the change, ie user, refactoring engine, source
 	 *            control
 	 */
-	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin, String IDE) {
-		ChangePersister.instance().persist(buildJSONTextChange(text, offset, length, sourceFile, changeOrigin, IDE));
+	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
+		ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
 	}
 
-	protected JSONObject buildJSONTextChange(String text, int offset, int length, String sourceFile, String changeOrigin, String IDE) {
+	public void recordDebugLaunch(String fullyQualifiedMainFunction) {
+		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.debugLaunch, fullyQualifiedMainFunction));
+	}
+
+	public void recordNormalLaunch(String fullyQualifiedMainFunction) {
+		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.normalLaunch, fullyQualifiedMainFunction));
+	}
+
+	public void recordFileOpen(String fullyQualifiedMainFunction) {
+		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileOpen, fullyQualifiedMainFunction));
+	}
+
+	public void recordFileClose(String fullyQualifiedMainFunction) {
+		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileClose, fullyQualifiedMainFunction));
+	}
+
+	public void recordTestRun(String fullyQualifiedTestMethod, String testResult){
+		ChangePersister.instance().persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult));
+	}
+
+	protected JSONObject buildCommonJSONObj(Enum eventType) {
+		JSONObject obj;
+		obj = new JSONObject();
+		obj.put("IDE", this.getIDE());
+		obj.put("eventType", eventType);
+		
+		return obj;
+	}
+
+	protected JSONObject buildTextChangeJSON(String text, int offset, int length, String sourceFile, String changeOrigin) {
 		if (text == null || sourceFile == null || changeOrigin == null) {
 			throw new RuntimeException("Change parameters cannot be null");
 		}
@@ -36,32 +80,39 @@ public class ClientRecorder {
 			throw new RuntimeException("Source File cannot be empty");
 		if (changeOrigin.isEmpty())
 			throw new RuntimeException("Change Origin cannot be empty");
-		JSONObject obj;
-		obj = new JSONObject();
-		obj.put("type", "Text");
+
+		JSONObject obj = buildCommonJSONObj(EventType.textChange);
 		obj.put("text", text);
 		obj.put("offset", offset);
 		obj.put("len", length);
 		obj.put("sourceFile", sourceFile);
 		obj.put("changeOrigin", changeOrigin);
-		obj.put("ide", IDE);
+		
 		return obj;
 	}
 
-	public void recordIDEEvent(String event, String eventClass, String eventMethod, String eventType) {
-
+	protected JSONObject buildIDEFileEventJSON(Enum EventType, String fullyQualifiedMainFunction) {
+		if (fullyQualifiedMainFunction == null) {
+			throw new RuntimeException("Fully Qualified Main Function cannot be null");
+		}
+		
+		JSONObject obj;
+		obj = buildCommonJSONObj(EventType);
+		obj.put("fullyQualifiedMain", fullyQualifiedMainFunction);
+		
+		return obj;
 	}
 
-	/*
-	 * public void testRun(String testMethod, String testResult, String
-	 * testClass) { ChangePersister cp = new ChangePersister(); cp.persist(
-	 * buildJSONTestRun(testMethod,testResult,testClass)); }
-	 * 
-	 * protected JSONObject buildJSONTestRun(String testMethod, String
-	 * testResult, String testClass){
-	 * 
-	 * if(testMethod == null || testResult == null || testClass == null){ throw
-	 * new RuntimeException("Test Run parameters cannot be null"); } return
-	 * null; }
-	 */
+	protected JSONObject buildTestEventJSON(String fullyQualifiedTestMethod, String testResult) {
+		if (fullyQualifiedTestMethod == null || testResult == null)
+			throw new RuntimeException("Arguments cannot be null");
+		if(fullyQualifiedTestMethod.isEmpty() || testResult.isEmpty())
+			throw new RuntimeException("Arguments cannot be empty");
+		
+		JSONObject obj = buildCommonJSONObj(EventType.testRun);
+		obj.put("fullyQualifiedTestMethod", fullyQualifiedTestMethod);
+		obj.put("testResult", testResult);
+		
+		return obj;
+	}
 }
