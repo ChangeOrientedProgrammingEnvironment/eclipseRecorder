@@ -1,26 +1,46 @@
 package edu.oregonstate.cope.clientRecorder;
 
-import java.io.Writer;
-
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Persists JSON objects to disc. This class is a Singleton.
  */
 public class ChangePersister {
-	
-	private Writer writer;
+
+    private Writer writer;
 
 	private static class Instance {
 		public static final ChangePersister instance = new ChangePersister();
 	}
 
 	private ChangePersister() {
-		initFile();
+        try {
+            writer = new BufferedWriter(new FileWriter("testFileWrite.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        init();
 	}
 
-	private void initFile() {
-	}
+	public void init() {
+        JSONArray jsonArr = new JSONArray();
+        JSONObject markerObject = new JSONObject();
+        markerObject.put("value","marker");
+        jsonArr.add(markerObject);
+        try {
+            writer.write(jsonArr.toJSONString());
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+
+    }
 
 	public static ChangePersister instance() {
 		return Instance.instance;
@@ -30,7 +50,7 @@ public class ChangePersister {
 		
 	}
 
-	protected void testSetWriter(Writer stringWriter) {
+	protected void setWriter(Writer stringWriter) {
 		this.writer = stringWriter;
 	}
 }

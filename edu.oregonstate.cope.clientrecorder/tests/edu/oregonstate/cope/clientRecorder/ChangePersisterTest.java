@@ -1,25 +1,31 @@
 package edu.oregonstate.cope.clientRecorder;
 
-import static org.junit.Assert.*;
+import org.json.simple.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.StringWriter;
 
-import org.junit.Before;
-import org.junit.Test;
+import static junit.framework.Assert.assertEquals;
 
 public class ChangePersisterTest {
 	
 	private StringWriter stringWriter;
 
 	@Before
-	private void setup() {
+	public void setup() {
 		stringWriter = new StringWriter();
-		ChangePersister.instance().testSetWriter(stringWriter);
+		ChangePersister.instance().setWriter(stringWriter);
+
 	}
 
 	@Test
-	public void testPersistEmpty() {
-		fail("Not yet implemented");
-	}
+	public void testPersistInit() {
+        ChangePersister.instance().init();
+        JSONArray jarr = (JSONArray) JSONValue.parse(stringWriter.toString());
+        assertEquals(jarr.size(),1);
+    }
+
+
 
 }
