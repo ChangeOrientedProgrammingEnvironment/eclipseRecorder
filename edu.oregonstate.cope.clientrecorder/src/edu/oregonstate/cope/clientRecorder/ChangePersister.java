@@ -31,15 +31,13 @@ public class ChangePersister {
 	public void init() {
         JSONArray jsonArr = new JSONArray();
         JSONObject markerObject = new JSONObject();
-        markerObject.put("value","marker");
+        markerObject.put("eventType", "FileInit");
         jsonArr.add(markerObject);
         try {
             writer.write(jsonArr.toJSONString());
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-
-
     }
 
 	public static ChangePersister instance() {
