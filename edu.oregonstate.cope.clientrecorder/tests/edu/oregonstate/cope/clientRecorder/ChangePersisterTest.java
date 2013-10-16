@@ -31,28 +31,27 @@ public class ChangePersisterTest {
 	private JSONArray getJsonArray() {
 		return (JSONArray) JSONValue.parse(stringWriter.toString());
 	}
-	
+
 	@Test
 	public void testPersistNull() throws Exception {
 		RuntimeException caughtException = null;
-		
-		try{
+
+		try {
 			ChangePersister.instance().persist(null);
-		}
-		catch(RuntimeException exception){
+		} catch (RuntimeException exception) {
 			caughtException = exception;
 		}
 		assertEquals(caughtException.getClass(), RuntimeException.class);
 		testInit();
 	}
-	
+
 	@Test
 	public void testPersistRecord() {
 		JSONObject objToRecord = new JSONObject();
 		objToRecord.put("test", "fileIO");
-		
+
 		ChangePersister.instance().persist(objToRecord);
-		
+
 		JSONArray jarr = getJsonArray();
 		assertEquals(jarr.size(), 2);
 		assertEquals(((JSONObject) jarr.get(1)).get("test"), "FileIO");

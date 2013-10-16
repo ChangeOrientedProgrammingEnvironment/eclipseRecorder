@@ -54,13 +54,13 @@ public class ChangePersister {
 	}
 
 	public void persist(JSONObject jsonObject) {
-		if(jsonObject == null){
+		if (jsonObject == null) {
 			throw new RuntimeException("Argument cannot be null");
 		}
-		
+
 		JSONArray persistedContent = (JSONArray) JSONValue.parse(writer.toString());
 		persistedContent.add(jsonObject);
-		
+
 		try {
 			writer.write(persistedContent.toJSONString());
 			writer.flush();
