@@ -30,9 +30,9 @@ public class ChangePersister {
 
 	public void init() {
         JSONArray jsonArr = new JSONArray();
-        JSONObject markerObject = new JSONObject();
-        markerObject.put("eventType", "FileInit");
+        JSONObject markerObject = createInitJSON();
         jsonArr.add(markerObject);
+        
         try {
             writer.write(jsonArr.toJSONString());
         } catch (IOException e) {
@@ -40,11 +40,17 @@ public class ChangePersister {
         }
     }
 
+	private JSONObject createInitJSON() {
+		JSONObject markerObject = new JSONObject();
+        markerObject.put("eventType", "FileInit");
+		return markerObject;
+	}
+
 	public static ChangePersister instance() {
 		return Instance.instance;
 	}
 
-	public void persist(JSONObject change) {
+	public void persist(JSONObject jsonObject) {
 		
 	}
 
