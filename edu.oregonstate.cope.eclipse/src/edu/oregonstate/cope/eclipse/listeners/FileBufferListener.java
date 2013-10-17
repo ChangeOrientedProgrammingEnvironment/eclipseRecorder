@@ -5,11 +5,20 @@ import org.eclipse.core.filebuffers.IFileBufferListener;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.runtime.IPath;
 
+import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.eclipse.COPEPlugin;
+
 public class FileBufferListener implements IFileBufferListener {
+
+	private ClientRecorder clientRecorderInstance;
+	
+	public FileBufferListener() {
+		clientRecorderInstance = COPEPlugin.getDefault().getClientRecorderInstance();
+	}
 
 	@Override
 	public void bufferCreated(IFileBuffer buffer) {
-		System.out.println("File opened: " + buffer.getLocation().toPortableString());
+		clientRecorderInstance.recordFileOpen(buffer.getLocation().toPortableString());
 		if (!(buffer instanceof ITextFileBuffer))
 			return;
 		
@@ -19,8 +28,7 @@ public class FileBufferListener implements IFileBufferListener {
 
 	@Override
 	public void bufferDisposed(IFileBuffer buffer) {
-		System.out.println("File closed: " + buffer.getLocation().toPortableString());
-
+		clientRecorderInstance.recordFileClose(buffer.getLocation().toPortableString());
 	}
 
 	@Override
