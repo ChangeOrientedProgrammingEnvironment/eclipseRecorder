@@ -16,15 +16,18 @@ public class RefactoringExecutionListener implements
 		IRefactoringExecutionListener {
 	
 	private static boolean isRefactoringInProgress = false;
+	private static String refactoringName = "";
 	
 	@Override
 	public void executionNotification(RefactoringExecutionEvent event) {
 		if (event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_PERFORM) {
 			isRefactoringInProgress = true;
+			refactoringName = getRefactoringID(event);
 			System.out.println(getRefactoringID(event) + " refactoring started");
 		}
 		if (event.getEventType() == RefactoringExecutionEvent.PERFORMED) {
 			isRefactoringInProgress = false;
+			refactoringName = "";
 			System.out.println(getRefactoringID(event) + " refactoring done");
 		}
 	}
@@ -42,5 +45,15 @@ public class RefactoringExecutionListener implements
 	 */
 	public static boolean isRefactoringInProgress() {
 		return isRefactoringInProgress;
+	}
+	
+	/**
+	 * I return the name of the current refactoring that is being executed, 
+	 * or the empty String if no refactoring is being executed.
+	 * 
+	 * @return the ID of the refactoring being executed
+	 */
+	public static String getRefactoringName() {
+		return refactoringName;
 	}
 }
