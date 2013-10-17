@@ -7,7 +7,17 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 
+import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.eclipse.COPEPlugin;
+
 public class DocumentListener implements IDocumentListener {
+
+	private ClientRecorder clientRecorderInstance;
+
+	public DocumentListener() {
+		clientRecorderInstance = COPEPlugin.getDefault()
+				.getClientRecorderInstance();
+	}
 
 	@Override
 	public void documentAboutToBeChanged(DocumentEvent event) {
@@ -21,10 +31,12 @@ public class DocumentListener implements IDocumentListener {
 		ITextFileBuffer textFileBuffer = textFileBufferManager
 				.getTextFileBuffer(event.fDocument);
 		IPath fileLocation = textFileBuffer.getLocation();
-		System.out.println("Recorded a change in "
-				+ fileLocation.toPortableString() + " at offset "
-				+ event.getOffset() + " of length " + event.getLength()
-				+ " with the text: " + event.fText);
-	}
+		String changeType = ClientRecorder.USER_CHANGE;
+		if (RefactoringExecutionListener.isRefactoringInProgress())
+			changeType = ClientRecorder.REFACTORING_CHANGE;
 
+		clientRecorderInstance.recordTextChange(event.fText, event.fOffset,
+				event.fLength, fileLocation.toPortableString(), changeType);
+
+	}
 }
