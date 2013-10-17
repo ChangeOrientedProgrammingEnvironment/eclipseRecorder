@@ -21,6 +21,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
+import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
 import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
@@ -39,6 +40,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	// The shared instance
 	private static COPEPlugin plugin;
+	
+	private ClientRecorder clientRecorder;
 
 	/**
 	 * The constructor
@@ -62,6 +65,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				monitor.beginTask("Registering listeners", 1);
+				clientRecorder = new ClientRecorder();
+				clientRecorder.setIDE(ClientRecorder.ECLIPSE_IDE);
 				registerDocumentListenersForOpenEditors();
 				FileBuffers.getTextFileBufferManager().addFileBufferListener(
 						new FileBufferListener());
@@ -126,6 +131,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 	 */
 	public static COPEPlugin getDefault() {
 		return plugin;
+	}
+	
+	public ClientRecorder getClientRecorderInstance() {
+		return clientRecorder;
 	}
 
 }
