@@ -10,6 +10,11 @@ import org.json.simple.JSONObject;
 public class ClientRecorder {
 
 	private String IDE;
+	
+	public static final String USER_CHANGE = "user";
+	public static final String REFACTORING_CHANGE = "refactoring";
+	public static final String UI_EVENT = "ui-event";
+	public static final String ECLIPSE_IDE = "eclipse";
 
 	protected enum EventType {
 		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun
