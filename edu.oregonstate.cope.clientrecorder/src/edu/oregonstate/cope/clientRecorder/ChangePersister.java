@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.regex.Pattern;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 /**
  * Persists JSON objects to disc. This class is a Singleton.
