@@ -1,9 +1,7 @@
-/bin
+bin
 /.classpath
 /.metadata
 /.project
 /.idea
 clientRecorder.iml
-
-bin
 /edu.oregonstate.cope.clientrecorder/.idea/workspace.xml
