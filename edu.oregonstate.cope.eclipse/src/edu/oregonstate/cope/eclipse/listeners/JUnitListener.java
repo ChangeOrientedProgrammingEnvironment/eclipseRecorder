@@ -4,25 +4,23 @@ import org.eclipse.jdt.junit.TestRunListener;
 import org.eclipse.jdt.junit.model.ITestCaseElement;
 import org.eclipse.jdt.junit.model.ITestRunSession;
 
+import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.eclipse.COPEPlugin;
+
 /**
  * I listen to results.
  * 
  * @author Caius Brindescu
- *
+ * 
  */
 public class JUnitListener extends TestRunListener {
 
 	@Override
-	public void sessionFinished(ITestRunSession session) {
-		System.out.println("Session " + session.getTestRunName()
-				+ " has finished with the result "
-				+ session.getTestResult(true));
-	}
-
-	@Override
 	public void testCaseFinished(ITestCaseElement testCaseElement) {
-		System.out.println("Test case " + testCaseElement.getTestMethodName()
-				+ " has finished with the result "
-				+ testCaseElement.getTestResult(true));
+		ClientRecorder clientRecorderInstance = COPEPlugin.getDefault()
+				.getClientRecorderInstance();
+		clientRecorderInstance.recordTestRun(testCaseElement.getTestClassName()
+				+ "." + testCaseElement.getTestMethodName(), testCaseElement
+				.getTestResult(true).toString());
 	}
 }
