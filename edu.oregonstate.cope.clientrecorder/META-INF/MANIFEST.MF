@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Clientrecorder
+Bundle-SymbolicName: edu.oregonstate.cope.clientrecorder
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: clientrecorder.jar,
+ thirdParty/json-simple-1.1.1.jar
+Export-Package: edu.oregonstate.cope.clientRecorder,
+ org.json.simple,
+ org.json.simple.parser
