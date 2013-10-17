@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="edu.oregonstate.cope.eclipse.EarlyStartup"></startup>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.junit.testRunListeners">
+      <testRunListener
+            class="edu.oregonstate.cope.eclipse.listeners.JUnitListener">
+      </testRunListener>
+   </extension>
+
+</plugin>
