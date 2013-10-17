@@ -1,21 +1,23 @@
 package edu.oregonstate.cope.clientRecorder;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.regex.Pattern;
 
-import javax.management.RuntimeErrorException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  * Persists JSON objects to disc. This class is a Singleton.
  */
 public class ChangePersister {
 
+	private static final String SEPARATOR = "$)@!%";
+	public static final Pattern ELEMENT_REGEX = Pattern.compile(Pattern.quote(SEPARATOR) + "(\\{.*?\\})");
+	
 	private Writer writer;
 
 	private static class Instance {
@@ -32,12 +34,10 @@ public class ChangePersister {
 	}
 
 	public void init() {
-		JSONArray jsonArr = new JSONArray();
-		JSONObject markerObject = createInitJSON();
-		jsonArr.add(markerObject);
-
 		try {
-			writer.write(jsonArr.toJSONString());
+			writer.write(ChangePersister.SEPARATOR);
+			JSONObject markerObject = createInitJSON();
+			writer.write(markerObject.toJSONString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -58,11 +58,9 @@ public class ChangePersister {
 			throw new RuntimeException("Argument cannot be null");
 		}
 
-		JSONArray persistedContent = (JSONArray) JSONValue.parse(writer.toString());
-		persistedContent.add(jsonObject);
-
 		try {
-			writer.write(persistedContent.toJSONString());
+			writer.write(ChangePersister.SEPARATOR);
+			writer.write(jsonObject.toJSONString());
 			writer.flush();
 		} catch (IOException e) {
 			throw new RuntimeException("could not write JSON to file");
