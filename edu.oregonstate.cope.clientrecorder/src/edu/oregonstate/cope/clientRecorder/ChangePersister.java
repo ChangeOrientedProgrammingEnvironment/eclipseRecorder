@@ -13,7 +13,7 @@ import org.json.simple.JSONObject;
  */
 public class ChangePersister {
 
-	private static final String SEPARATOR = "$@$";
+	private static final String SEPARATOR = "\n$@$";
 	public static final Pattern ELEMENT_REGEX = Pattern.compile(Pattern.quote(SEPARATOR) + "(\\{.*?\\})");
 	
 	private Writer writer;
