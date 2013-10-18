@@ -1,22 +1,33 @@
 package edu.oregonstate.cope.clientRecorder;
 
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Calendar;
 
 public class FileManager {
+	
+	private String parent = "outputFiles";
 
+	//TODO do not change state and also return
 	public Path getFilePath() throws IOException {
-		String pathName = getFileName();
-		Path path = Paths.get(pathName);
+		Path filePath = Paths.get(parent, getFileName());
 		
-		if (!Files.exists(path)) {
-			Files.createFile(path);
+		if (!Files.exists(filePath)) {
+			Files.createFile(filePath);
 		}
+
+		return filePath;
+	}
+
+	public void deleteEventFiles() throws IOException{
+		DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(parent));
 		
-		return path;
+		for (Path path : directoryStream) {
+			Files.delete(path);
+		}
 	}
 
 	protected String getFileName() {
@@ -25,5 +36,4 @@ public class FileManager {
 		
 		return pathName;
 	}
-	
 }
