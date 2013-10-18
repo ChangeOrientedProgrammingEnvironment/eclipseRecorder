@@ -72,7 +72,7 @@ public class ClientRecorder {
 		JSONObject obj;
 		obj = new JSONObject();
 		obj.put("IDE", this.getIDE());
-		obj.put("eventType", eventType);
+		obj.put("eventType", eventType.toString());
 		
 		return obj;
 	}

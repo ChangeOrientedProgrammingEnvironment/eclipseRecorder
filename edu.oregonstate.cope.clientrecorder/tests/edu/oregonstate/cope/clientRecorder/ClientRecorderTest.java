@@ -64,7 +64,7 @@ public class ClientRecorderTest {
 
 	private JSONObject createChangeJSON(String text, int offset, int length, String sourceFile, String changeOrigin) {
 		JSONObject j = new JSONObject();
-		j.put("eventType", EventType.textChange);
+		j.put("eventType", EventType.textChange.toString());
 		j.put("text", text);
 		j.put("offset", offset);
 		j.put("len", length);
@@ -85,7 +85,7 @@ public class ClientRecorderTest {
         JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.debugLaunch, "/workspace/package/filename.java");
         JSONObject expected = new JSONObject();
         expected.put("IDE","IDEA");
-        expected.put("eventType",ClientRecorder.EventType.debugLaunch);
+        expected.put("eventType",ClientRecorder.EventType.debugLaunch.toString());
         expected.put("fullyQualifiedMain","/workspace/package/filename.java") ;
         assertEquals(expected, retObj);
     }
@@ -95,7 +95,7 @@ public class ClientRecorderTest {
         JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.normalLaunch, "/workspace/package/filename.java");
         JSONObject expected = new JSONObject();
         expected.put("IDE","IDEA");
-        expected.put("eventType",ClientRecorder.EventType.normalLaunch);
+        expected.put("eventType",ClientRecorder.EventType.normalLaunch.toString());
         expected.put("fullyQualifiedMain","/workspace/package/filename.java") ;
         assertEquals(expected, retObj);
     }
@@ -105,7 +105,7 @@ public class ClientRecorderTest {
         JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.fileOpen, "/workspace/package/filename.java");
         JSONObject expected = new JSONObject();
         expected.put("IDE","IDEA");
-        expected.put("eventType",ClientRecorder.EventType.fileOpen);
+        expected.put("eventType",ClientRecorder.EventType.fileOpen.toString());
         expected.put("fullyQualifiedMain","/workspace/package/filename.java") ;
         assertEquals(expected, retObj);
     }
@@ -115,7 +115,7 @@ public class ClientRecorderTest {
         JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.fileClose, "/workspace/package/filename.java");
         JSONObject expected = new JSONObject();
         expected.put("IDE","IDEA");
-        expected.put("eventType",ClientRecorder.EventType.fileClose);
+        expected.put("eventType",ClientRecorder.EventType.fileClose.toString());
         expected.put("fullyQualifiedMain","/workspace/package/filename.java") ;
         assertEquals(expected, retObj);
     }
@@ -135,7 +135,7 @@ public class ClientRecorderTest {
 		JSONObject actual = clientRecorder.buildTestEventJSON("/workspace/package/TestFoo/testBar", "success");
 		JSONObject expected = new JSONObject();
 		
-		expected.put("eventType", EventType.testRun);
+		expected.put("eventType", EventType.testRun.toString());
 		expected.put("IDE", clientRecorder.getIDE());
 		expected.put("fullyQualifiedTestMethod", "/workspace/package/TestFoo/testBar");
 		expected.put("testResult", "success");
