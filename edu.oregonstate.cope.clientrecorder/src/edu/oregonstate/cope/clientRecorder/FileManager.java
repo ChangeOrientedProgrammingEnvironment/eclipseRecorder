@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.util.Calendar;
 
 public class FileManager {
-	
+
 	private String rootDirectory = "outputFiles";
 
 	//TODO do not change state and also return
@@ -20,6 +20,10 @@ public class FileManager {
 		}
 
 		return filePath;
+	}
+	
+	public void setRootDirectory(String rootDirectory){
+		this.rootDirectory = rootDirectory;
 	}
 
 	public void deleteEventFiles() throws IOException{
