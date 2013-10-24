@@ -40,4 +40,24 @@ public class FileManager {
 		
 		return pathName;
 	}
+
+	public void write(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isCurrentFileEmpty() {
+		try {
+			return getFilePath().toFile().length() == 0;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false; 
+	}
+
+	public void commitChanges() {
+		// TODO Auto-generated method stub
+		
+	}
 }
