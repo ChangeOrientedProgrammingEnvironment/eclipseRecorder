@@ -67,5 +67,6 @@ public class ChangePersister {
 
 	protected void setWriter(Writer stringWriter) {
 		this.writer = stringWriter;
+		init();
 	}
 }

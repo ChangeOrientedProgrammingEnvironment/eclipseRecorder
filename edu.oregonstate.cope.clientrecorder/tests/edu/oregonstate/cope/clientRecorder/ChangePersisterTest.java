@@ -23,7 +23,6 @@ public class ChangePersisterTest {
 	public void setup() {
 		stringWriter = new StringWriter();
 		ChangePersister.instance().setWriter(stringWriter);
-		ChangePersister.instance().init();
 		testInit();
 	}
 
