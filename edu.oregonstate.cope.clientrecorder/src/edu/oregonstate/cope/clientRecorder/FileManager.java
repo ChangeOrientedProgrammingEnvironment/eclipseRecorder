@@ -9,11 +9,11 @@ import java.util.Calendar;
 
 public class FileManager {
 	
-	private String parent = "outputFiles";
+	private String rootDirectory = "outputFiles";
 
 	//TODO do not change state and also return
 	public Path getFilePath() throws IOException {
-		Path filePath = Paths.get(parent, getFileName());
+		Path filePath = Paths.get(rootDirectory, getFileName());
 		
 		if (!Files.exists(filePath)) {
 			Files.createFile(filePath);
@@ -23,7 +23,7 @@ public class FileManager {
 	}
 
 	public void deleteEventFiles() throws IOException{
-		DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(parent));
+		DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(rootDirectory));
 		
 		for (Path path : directoryStream) {
 			Files.delete(path);
