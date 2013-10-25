@@ -18,7 +18,7 @@ public class FileManager {
 
 	public void write(String string) {
 		try {
-			Files.write(getFilePath(), string.getBytes(), StandardOpenOption.APPEND);
+			Files.write(getFilePath(), string.getBytes(), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -32,7 +32,7 @@ public class FileManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false; 
+		return false;
 	}
 
 	public void deleteEventFiles() throws IOException {
@@ -45,12 +45,7 @@ public class FileManager {
 
 	protected Path getFilePath() throws IOException {
 		Path filePath = Paths.get(rootDirectory, getFileName());
-		
-		if (!Files.exists(filePath)) {
-			Files.createDirectories(filePath.getParent());
-			Files.createFile(filePath);
-		}
-	
+
 		return filePath;
 	}
 
