@@ -35,8 +35,10 @@ public class DocumentListener implements IDocumentListener {
 		if (RefactoringExecutionListener.isRefactoringInProgress())
 			changeType = ClientRecorder.REFACTORING_CHANGE;
 
+		String filePath = fileLocation.toPortableString();
+		filePath = COPEPlugin.getDefault().getWorkspaceID() + "/" + filePath;
 		clientRecorderInstance.recordTextChange(event.fText, event.fOffset,
-				event.fLength, fileLocation.toPortableString(), changeType);
+				event.fLength, filePath, changeType);
 
 	}
 }
