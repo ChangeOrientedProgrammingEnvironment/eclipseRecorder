@@ -108,7 +108,6 @@ class StartPluginUIJob extends UIJob {
 	private void getInitialSnapshot() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		String zipFile = getLocalStorage().getAbsolutePath() + "/" + System.currentTimeMillis() + ".zip";
-		System.out.println(zipFile);
 		ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(root, zipFile);
 		archiveFileExportOperation.setUseCompression(true);
 		archiveFileExportOperation.setUseTarFormat(false);
