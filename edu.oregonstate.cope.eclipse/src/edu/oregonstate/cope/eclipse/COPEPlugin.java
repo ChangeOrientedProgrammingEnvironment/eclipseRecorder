@@ -79,8 +79,9 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
-				monitor.beginTask("Registering listeners", 1);
+				monitor.beginTask("Starting Recorder", 2);
 				getInitialSnapshot();
+				monitor.worked(1);
 				workspaceID = getWorkspaceID();
 				clientRecorder = new ClientRecorder();
 				clientRecorder.setIDE(ClientRecorder.ECLIPSE_IDE);
@@ -107,7 +108,9 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 			private void getInitialSnapshot() {
 				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(root, "smth.zip");
+				String zipFile = getLocalStorage().getAbsolutePath() + "/" + System.currentTimeMillis() + ".zip";
+				System.out.println(zipFile);
+				ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(root, zipFile);
 				archiveFileExportOperation.setUseCompression(true);
 				archiveFileExportOperation.setUseTarFormat(false);
 				archiveFileExportOperation.setCreateLeadupStructure(true);
@@ -119,7 +122,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 			}
 
 			private String getWorkspaceID() {
-				File pluginStoragePath = plugin.getBundle().getDataFile("");
+				File pluginStoragePath = getLocalStorage();
 				File workspaceIdFile = new File (pluginStoragePath.getAbsolutePath() + "workspace_id");
 				String workspaceID = "";
 				if (workspaceIdFile.exists()) {
@@ -141,6 +144,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 					}
 				}
 				return workspaceID;
+			}
+
+			private File getLocalStorage() {
+				return plugin.getBundle().getDataFile("");
 			}
 
 			private void registerDocumentListenersForOpenEditors() {
