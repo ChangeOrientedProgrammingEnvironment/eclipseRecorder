@@ -23,7 +23,7 @@ public class FileManagerTest {
 	@After
 	public void tearDown() throws IOException {
 		Path parent = fm.getFilePath().getParent();
-		fm.deleteEventFiles();
+		fm.deleteFiles();
 
 		assertEquals(0, parent.toFile().listFiles().length);
 	}
