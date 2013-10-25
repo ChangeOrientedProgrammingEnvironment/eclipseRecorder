@@ -22,18 +22,19 @@ public class FileManagerTest {
 	public void setup() {
 		fm = new FileManager();
 	}
-	
-	@AfterClass
-	public static void tearDown() throws IOException{
+
+	@After
+	public void tearDown() throws IOException {
 		Path parent = fm.getFilePath().getParent();
 		fm.deleteEventFiles();
-		
+
 		assertEquals(0, parent.toFile().listFiles().length);
 	}
 
 	@Test
 	public void testFileExists() throws Exception {
 		assertTrue(Files.exists(fm.getFilePath()));
+		assertTrue(fm.isCurrentFileEmpty());
 	}
 
 	@Test

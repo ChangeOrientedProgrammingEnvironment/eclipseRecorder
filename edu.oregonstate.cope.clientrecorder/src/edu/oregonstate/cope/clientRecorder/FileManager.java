@@ -43,11 +43,12 @@ public class FileManager {
 		
 	}
 
-	//TODO do not change state and also return
+	//TODO modify this method so it does not return AND also change the state
 	protected Path getFilePath() throws IOException {
 		Path filePath = Paths.get(rootDirectory, getFileName());
 		
 		if (!Files.exists(filePath)) {
+			Files.createDirectories(filePath.getParent());
 			Files.createFile(filePath);
 		}
 	
