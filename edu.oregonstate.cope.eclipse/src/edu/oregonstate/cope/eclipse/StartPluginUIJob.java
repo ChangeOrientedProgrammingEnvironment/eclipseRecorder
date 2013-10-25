@@ -74,7 +74,6 @@ class StartPluginUIJob extends UIJob {
 		refactoringHistoryService.addExecutionListener(new RefactoringExecutionListener());
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
-		;
 
 		return Status.OK_STATUS;
 	}
