@@ -30,10 +30,6 @@ public class ChangePersisterTest {
 			public boolean isCurrentFileEmpty() {
 				return stringWriter.toString().isEmpty();
 			}
-
-			@Override
-			public void commitChanges() {
-			}
 		});
 
 		testInit();

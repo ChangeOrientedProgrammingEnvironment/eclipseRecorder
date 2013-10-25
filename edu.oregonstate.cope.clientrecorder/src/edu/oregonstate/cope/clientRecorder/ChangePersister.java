@@ -5,8 +5,8 @@ import java.util.regex.Pattern;
 import org.json.simple.JSONObject;
 
 /**
- * Persists JSON objects. This class is a Singleton.
- * A FileManager must be set in order for the ChangePersister to function.
+ * Persists JSON objects. This class is a Singleton. A FileManager must be set
+ * in order for the ChangePersister to function.
  */
 public class ChangePersister {
 
@@ -28,7 +28,6 @@ public class ChangePersister {
 
 			fileManager.write(ChangePersister.SEPARATOR);
 			fileManager.write(markerObject.toJSONString());
-			fileManager.commitChanges();
 		}
 	}
 
@@ -49,7 +48,6 @@ public class ChangePersister {
 
 		fileManager.write(ChangePersister.SEPARATOR);
 		fileManager.write(jsonObject.toJSONString());
-		fileManager.commitChanges();
 	}
 
 	public void setFileManager(FileManager fileManager) {
