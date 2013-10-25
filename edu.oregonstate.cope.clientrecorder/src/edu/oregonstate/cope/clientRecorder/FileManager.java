@@ -19,17 +19,17 @@ import java.util.Calendar;
  */
 public class FileManager {
 
-	private String rootDirectory;
+	private Path rootDirectory;
 	
 	public FileManager() {
 		setRootDirectory("outputFiles");
 	}
 
 	public void setRootDirectory(String rootDirectory) {
-		this.rootDirectory = rootDirectory;
+		this.rootDirectory = Paths.get(rootDirectory).toAbsolutePath();
 		
 		try {
-			Files.createDirectories(Paths.get(rootDirectory));
+			Files.createDirectories(this.rootDirectory);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,7 +56,7 @@ public class FileManager {
 	}
 
 	public void deleteFiles() throws IOException {
-		DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(rootDirectory));
+		DirectoryStream<Path> directoryStream = Files.newDirectoryStream(rootDirectory);
 
 		for (Path path : directoryStream) {
 			Files.delete(path);
@@ -64,9 +64,7 @@ public class FileManager {
 	}
 
 	protected Path getFilePath() throws IOException {
-		Path filePath = Paths.get(rootDirectory, getFileName());
-
-		return filePath;
+		return rootDirectory.resolve(getFileName());
 	}
 
 	protected String getFileName() {
