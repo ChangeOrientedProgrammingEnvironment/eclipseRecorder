@@ -20,6 +20,7 @@ public class ChangePersister {
 	}
 
 	private ChangePersister() {
+		fileManager = new FileManager();
 	}
 
 	public void init() {
@@ -53,5 +54,9 @@ public class ChangePersister {
 	public void setFileManager(FileManager fileManager) {
 		this.fileManager = fileManager;
 		init();
+	}
+
+	public void setRootDirectory(String rootDirectory) {
+		fileManager.setRootDirectory(rootDirectory);
 	}
 }

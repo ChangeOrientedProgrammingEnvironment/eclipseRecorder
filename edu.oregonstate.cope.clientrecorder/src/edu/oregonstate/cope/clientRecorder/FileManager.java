@@ -19,15 +19,26 @@ import java.util.Calendar;
  */
 public class FileManager {
 
-	private String rootDirectory = "outputFiles";
+	private String rootDirectory;
+	
+	public FileManager() {
+		setRootDirectory("outputFiles");
+	}
 
 	public void setRootDirectory(String rootDirectory) {
 		this.rootDirectory = rootDirectory;
+		
+		try {
+			Files.createDirectories(Paths.get(rootDirectory));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void write(String string) {
 		try {
-			Files.write(getFilePath(), string.getBytes(), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+			Files.write(getFilePath(), string.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -16,8 +16,9 @@ public class FileManagerTest {
 	private static FileManager fm;
 
 	@Before
-	public void setup() {
+	public void setup() throws IOException {
 		fm = new FileManager();
+		fm.deleteFiles();
 	}
 
 	@After
