@@ -1,5 +1,14 @@
 package edu.oregonstate.cope.eclipse;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.UUID;
+
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
@@ -41,6 +50,9 @@ public class COPEPlugin extends AbstractUIPlugin {
 	// The shared instance
 	private static COPEPlugin plugin;
 	
+	// The ID of the current workspace
+	private static String workspaceID;
+	
 	private ClientRecorder clientRecorder;
 
 	/**
@@ -62,9 +74,11 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 		UIJob uiJob = new UIJob("Registering listeners") {
 
+
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				monitor.beginTask("Registering listeners", 1);
+				workspaceID = getWorkspaceID();
 				clientRecorder = new ClientRecorder();
 				clientRecorder.setIDE(ClientRecorder.ECLIPSE_IDE);
 				registerDocumentListenersForOpenEditors();
@@ -86,6 +100,31 @@ public class COPEPlugin extends AbstractUIPlugin {
 				DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());;
 				
 				return Status.OK_STATUS;
+			}
+
+			private String getWorkspaceID() {
+				File pluginStoragePath = plugin.getBundle().getDataFile("");
+				File workspaceIdFile = new File (pluginStoragePath.getAbsolutePath() + "workspace_id");
+				String workspaceID = "";
+				if (workspaceIdFile.exists()) {
+					BufferedReader reader;
+					try {
+						reader = new BufferedReader(new FileReader(workspaceIdFile));
+						workspaceID = reader.readLine();
+						reader.close();
+					} catch (IOException e) {
+					}
+				} else {
+					try {
+						workspaceIdFile.createNewFile();
+						workspaceID = UUID.randomUUID().toString();
+						BufferedWriter writer = new BufferedWriter(new FileWriter(workspaceIdFile));
+						writer.write(workspaceID);
+						writer.close();
+					} catch (IOException e) {
+					}
+				}
+				return workspaceID;
 			}
 
 			private void registerDocumentListenersForOpenEditors() {
@@ -135,6 +174,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 	
 	public ClientRecorder getClientRecorderInstance() {
 		return clientRecorder;
+	}
+	
+	public String getWorkspaceID() {
+		return workspaceID;
 	}
 
 }
