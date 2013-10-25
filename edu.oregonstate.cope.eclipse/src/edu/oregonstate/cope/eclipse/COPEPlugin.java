@@ -3,18 +3,20 @@ package edu.oregonstate.cope.eclipse;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jface.text.IDocument;
@@ -26,6 +28,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
@@ -74,10 +77,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 		UIJob uiJob = new UIJob("Registering listeners") {
 
-
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				monitor.beginTask("Registering listeners", 1);
+				getInitialSnapshot();
 				workspaceID = getWorkspaceID();
 				clientRecorder = new ClientRecorder();
 				clientRecorder.setIDE(ClientRecorder.ECLIPSE_IDE);
@@ -100,6 +103,19 @@ public class COPEPlugin extends AbstractUIPlugin {
 				DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());;
 				
 				return Status.OK_STATUS;
+			}
+
+			private void getInitialSnapshot() {
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(root, "smth.zip");
+				archiveFileExportOperation.setUseCompression(true);
+				archiveFileExportOperation.setUseTarFormat(false);
+				archiveFileExportOperation.setCreateLeadupStructure(true);
+				try {
+					archiveFileExportOperation.run(new NullProgressMonitor());
+				} catch (InvocationTargetException | InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 
 			private String getWorkspaceID() {
