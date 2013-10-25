@@ -21,6 +21,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
+import edu.oregonstate.cope.clientRecorder.ChangePersister;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
@@ -67,6 +68,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 				monitor.beginTask("Registering listeners", 1);
 				clientRecorder = new ClientRecorder();
 				clientRecorder.setIDE(ClientRecorder.ECLIPSE_IDE);
+				ChangePersister.instance().setRootDirectory("eventFiles");
 				registerDocumentListenersForOpenEditors();
 				FileBuffers.getTextFileBufferManager().addFileBufferListener(
 						new FileBufferListener());

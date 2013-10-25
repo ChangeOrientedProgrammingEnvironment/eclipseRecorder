@@ -18,7 +18,7 @@ public class FileManagerTest {
 	@Before
 	public void setup() throws IOException {
 		fm = new FileManager();
-		fm.deleteFiles();
+		fm.setRootDirectory("outputFiles");
 	}
 
 	@After
@@ -27,6 +27,8 @@ public class FileManagerTest {
 		fm.deleteFiles();
 
 		assertEquals(0, parent.toFile().listFiles().length);
+		
+		Files.delete(parent);
 	}
 
 	@Test

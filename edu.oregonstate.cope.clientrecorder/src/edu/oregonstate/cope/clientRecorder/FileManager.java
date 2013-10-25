@@ -12,19 +12,17 @@ import java.util.Calendar;
  * Class responsible with file persistence policy: <br>
  * <ul>
  * <li>Writing to files</li>
- * <li>Where to store files. Location should be set at startup</li>
+ * <li>Where to store files.</li>
  * <li>When to switch to a new file</li>
  * <li>File naming policy</li>
  * </ul>
+ * 
+ * Root location must be set.
  */
 public class FileManager {
 
 	private Path rootDirectory;
 	
-	public FileManager() {
-		setRootDirectory("outputFiles");
-	}
-
 	public void setRootDirectory(String rootDirectory) {
 		this.rootDirectory = Paths.get(rootDirectory).toAbsolutePath();
 		
@@ -34,6 +32,8 @@ public class FileManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.err.println("set the event root to " + this.rootDirectory.toString());
 	}
 
 	public void write(String string) {
