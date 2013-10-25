@@ -46,15 +46,36 @@ public class FileManagerTest {
 	}
 
 	@Test
-	public void testGetSameFileAfterEdit() throws IOException{
+	public void testWriteOnce() throws IOException {
 		String expected = "test";
-		
-		try (FileWriter fw = new FileWriter(fm.getFilePath().toFile())) {
-			fw.write(expected);
-		}
-		
-		byte[] lines = Files.readAllBytes(fm.getFilePath());
-		assertTrue(lines.length == expected.length());
-		assertTrue(Arrays.equals(lines, expected.getBytes()));
+
+		assertTrue(fm.isCurrentFileEmpty());
+
+		fm.write(expected);
+
+		assertFileContents(expected);
+	}
+
+	@Test
+	public void testWriteTwice() throws IOException {
+		String expected = "test";
+
+		assertTrue(fm.isCurrentFileEmpty());
+
+		fm.write(expected + "\n");
+		fm.write(expected);
+
+		assertFileContents(expected + "\n" + expected);
+	}
+
+	private void assertFileContents(String expected) throws IOException {
+		byte[] fileBytes = Files.readAllBytes(fm.getFilePath());
+
+		if (expected.isEmpty())
+			assertTrue(fm.isCurrentFileEmpty());
+		else
+			assertFalse(fm.isCurrentFileEmpty());
+
+		assertEquals(expected, new String(fileBytes));
 	}
 }

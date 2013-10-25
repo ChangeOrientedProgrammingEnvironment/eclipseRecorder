@@ -16,8 +16,12 @@ public class FileManager {
 	}
 
 	public void write(String string) {
-		// TODO Auto-generated method stub
-		
+		try {
+			Files.write(getFilePath(), string.getBytes(), StandardOpenOption.APPEND);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public boolean isCurrentFileEmpty() {
