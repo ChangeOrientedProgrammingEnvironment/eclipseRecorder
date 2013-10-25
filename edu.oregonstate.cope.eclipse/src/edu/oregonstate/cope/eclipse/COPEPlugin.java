@@ -9,7 +9,6 @@ import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 /**
  * The activator class controls the plug-in life cycle
  */
-@SuppressWarnings("restriction")
 public class COPEPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID

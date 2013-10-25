@@ -39,7 +39,8 @@ import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
 
-final class StartPluginUIJob extends UIJob {
+@SuppressWarnings("restriction")
+class StartPluginUIJob extends UIJob {
 	/**
 	 * 
 	 */
