@@ -45,6 +45,7 @@ class StartPluginUIJob extends UIJob {
 	 * 
 	 */
 	private final COPEPlugin copePlugin;
+	private File workspaceIdFile;
 
 	StartPluginUIJob(COPEPlugin copePlugin, String name) {
 		super(name);
@@ -54,7 +55,10 @@ class StartPluginUIJob extends UIJob {
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
-		getInitialSnapshot();
+		if (!isWorkspaceKnown()) {
+			getToKnowWorkspace();
+			getInitialSnapshot();
+		}
 		monitor.worked(1);
 		COPEPlugin.workspaceID = getWorkspaceID();
 		this.copePlugin.clientRecorder = new ClientRecorder();
@@ -80,6 +84,27 @@ class StartPluginUIJob extends UIJob {
 		return Status.OK_STATUS;
 	}
 
+	protected boolean isWorkspaceKnown() {
+		workspaceIdFile = getWorkspaceIdFile();
+		return workspaceIdFile.exists();
+	}
+
+	protected File getWorkspaceIdFile() {
+		File pluginStoragePath = getLocalStorage();
+		return new File (pluginStoragePath.getAbsolutePath() + "workspace_id");
+	}
+	
+	protected void getToKnowWorkspace() {
+		try {
+			workspaceIdFile.createNewFile();
+			String workspaceID = UUID.randomUUID().toString();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(workspaceIdFile));
+			writer.write(workspaceID);
+			writer.close();
+		} catch (IOException e) {
+		}
+	}
+
 	private void getInitialSnapshot() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		String zipFile = getLocalStorage().getAbsolutePath() + "/" + System.currentTimeMillis() + ".zip";
@@ -96,26 +121,14 @@ class StartPluginUIJob extends UIJob {
 	}
 
 	private String getWorkspaceID() {
-		File pluginStoragePath = getLocalStorage();
-		File workspaceIdFile = new File (pluginStoragePath.getAbsolutePath() + "workspace_id");
+		File workspaceIdFile = getWorkspaceIdFile();
 		String workspaceID = "";
-		if (workspaceIdFile.exists()) {
-			BufferedReader reader;
-			try {
-				reader = new BufferedReader(new FileReader(workspaceIdFile));
-				workspaceID = reader.readLine();
-				reader.close();
-			} catch (IOException e) {
-			}
-		} else {
-			try {
-				workspaceIdFile.createNewFile();
-				workspaceID = UUID.randomUUID().toString();
-				BufferedWriter writer = new BufferedWriter(new FileWriter(workspaceIdFile));
-				writer.write(workspaceID);
-				writer.close();
-			} catch (IOException e) {
-			}
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(workspaceIdFile));
+			workspaceID = reader.readLine();
+			reader.close();
+		} catch (IOException e) {
 		}
 		return workspaceID;
 	}
