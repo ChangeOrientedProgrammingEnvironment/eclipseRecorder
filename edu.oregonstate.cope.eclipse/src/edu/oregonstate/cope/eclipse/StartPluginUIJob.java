@@ -64,23 +64,18 @@ class StartPluginUIJob extends UIJob {
 		this.copePlugin.clientRecorder = new ClientRecorder();
 		this.copePlugin.clientRecorder.setIDE(ClientRecorder.ECLIPSE_IDE);
 		registerDocumentListenersForOpenEditors();
-		FileBuffers.getTextFileBufferManager().addFileBufferListener(
-				new FileBufferListener());
+		FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		workspace.addResourceChangeListener(
-				new ResourceListener(),
-				IResourceChangeEvent.PRE_REFRESH
-						| IResourceChangeEvent.POST_CHANGE);
-		ICommandService commandService = (ICommandService) PlatformUI
-				.getWorkbench().getActiveWorkbenchWindow()
-				.getService(ICommandService.class);
+		workspace.addResourceChangeListener(new ResourceListener(), IResourceChangeEvent.PRE_REFRESH | IResourceChangeEvent.POST_CHANGE);
+		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(ICommandService.class);
 		commandService.addExecutionListener(new SaveCommandExecutionListener());
-		
+
 		RefactoringHistoryService refactoringHistoryService = RefactoringHistoryService.getInstance();
 		refactoringHistoryService.addExecutionListener(new RefactoringExecutionListener());
-		
-		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());;
-		
+
+		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
+		;
+
 		return Status.OK_STATUS;
 	}
 
@@ -91,9 +86,9 @@ class StartPluginUIJob extends UIJob {
 
 	protected File getWorkspaceIdFile() {
 		File pluginStoragePath = getLocalStorage();
-		return new File (pluginStoragePath.getAbsolutePath() + "workspace_id");
+		return new File(pluginStoragePath.getAbsolutePath() + "workspace_id");
 	}
-	
+
 	protected void getToKnowWorkspace() {
 		try {
 			workspaceIdFile.createNewFile();
@@ -137,21 +132,17 @@ class StartPluginUIJob extends UIJob {
 	}
 
 	private void registerDocumentListenersForOpenEditors() {
-		IWorkbenchWindow activeWindow = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
-		IEditorReference[] editorReferences = activeWindow
-				.getActivePage().getEditorReferences();
+		IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IEditorReference[] editorReferences = activeWindow.getActivePage().getEditorReferences();
 		for (IEditorReference editorReference : editorReferences) {
 			IDocument document = getDocumentForEditor(editorReference);
 			document.addDocumentListener(new DocumentListener());
 		}
 	}
 
-	private IDocument getDocumentForEditor(
-			IEditorReference editorReference) {
+	private IDocument getDocumentForEditor(IEditorReference editorReference) {
 		IEditorPart editorPart = editorReference.getEditor(true);
-		ISourceViewer sourceViewer = (ISourceViewer) editorPart
-				.getAdapter(ITextOperationTarget.class);
+		ISourceViewer sourceViewer = (ISourceViewer) editorPart.getAdapter(ITextOperationTarget.class);
 		IDocument document = sourceViewer.getDocument();
 		return document;
 	}

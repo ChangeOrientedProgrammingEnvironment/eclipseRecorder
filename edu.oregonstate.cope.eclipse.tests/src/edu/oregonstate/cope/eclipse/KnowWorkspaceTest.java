@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class KnowWorkspaceTest {
-	
+
 	private StartPluginUIJob job;
 
 	@Before
@@ -20,14 +20,14 @@ public class KnowWorkspaceTest {
 	public void testIKnowThisWorkspace() {
 		assertTrue(job.isWorkspaceKnown());
 	}
-	
+
 	@Test
 	public void testIDontKnowThisWorkspace() {
 		File workspaceIdFile = job.getWorkspaceIdFile();
 		workspaceIdFile.delete();
 		assertFalse(job.isWorkspaceKnown());
 	}
-	
+
 	@Test
 	public void testGetToKnowWorkspace() {
 		testIDontKnowThisWorkspace();

@@ -16,10 +16,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	// The shared instance
 	static COPEPlugin plugin;
-	
+
 	// The ID of the current workspace
 	static String workspaceID;
-	
+
 	ClientRecorder clientRecorder;
 
 	/**
@@ -64,11 +64,11 @@ public class COPEPlugin extends AbstractUIPlugin {
 	public static COPEPlugin getDefault() {
 		return plugin;
 	}
-	
+
 	public ClientRecorder getClientRecorderInstance() {
 		return clientRecorder;
 	}
-	
+
 	public String getWorkspaceID() {
 		return workspaceID;
 	}
