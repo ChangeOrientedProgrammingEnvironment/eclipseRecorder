@@ -61,8 +61,9 @@ class StartPluginUIJob extends UIJob {
 		}
 		monitor.worked(1);
 		COPEPlugin.workspaceID = getWorkspaceID();
-		this.copePlugin.clientRecorder = new ClientRecorder();
-		this.copePlugin.clientRecorder.setIDE(ClientRecorder.ECLIPSE_IDE);
+		this.copePlugin.setClientRecorder(new ClientRecorder());
+		this.copePlugin.clientRecorder().setIDE(ClientRecorder.ECLIPSE_IDE);
+		this.copePlugin.setEventFilesRootDirectory("eventFiles");
 		registerDocumentListenersForOpenEditors();
 		FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();

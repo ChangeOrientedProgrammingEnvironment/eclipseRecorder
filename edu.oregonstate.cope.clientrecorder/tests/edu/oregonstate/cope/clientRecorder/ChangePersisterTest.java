@@ -1,7 +1,6 @@
 package edu.oregonstate.cope.clientRecorder;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.*;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -11,9 +10,7 @@ import java.util.regex.Matcher;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
 
 public class ChangePersisterTest {
 
@@ -22,8 +19,19 @@ public class ChangePersisterTest {
 	@Before
 	public void setup() {
 		stringWriter = new StringWriter();
-		ChangePersister.instance().setWriter(stringWriter);
-		ChangePersister.instance().init();
+
+		ChangePersister.instance().setFileManager(new FileManager() {
+			@Override
+			public void write(String string) {
+				stringWriter.write(string);
+			}
+
+			@Override
+			public boolean isCurrentFileEmpty() {
+				return stringWriter.toString().isEmpty();
+			}
+		});
+
 		testInit();
 	}
 
@@ -31,6 +39,10 @@ public class ChangePersisterTest {
 	public void testInit() {
 		List<JSONObject> jarr = getJsonArray();
 		assertEquals(jarr.size(), 1);
+		testMarkerJSON(jarr);
+	}
+
+	private void testMarkerJSON(List<JSONObject> jarr) {
 		assertEquals(jarr.get(0).get("eventType"), "FileInit");
 	}
 
@@ -41,16 +53,16 @@ public class ChangePersisterTest {
 		while (m.find()) {
 			allMatches.add(m.group(1));
 		}
-		
+
 		List<JSONObject> jsonEvents = new ArrayList<>();
 		for (String jsonString : allMatches) {
 			JSONObject obj = (JSONObject) JSONValue.parse(jsonString);
 			jsonEvents.add(obj);
 		}
-		
+
 		return jsonEvents;
 	}
-	
+
 	@Test
 	public void testPersistNull() throws Exception {
 		RuntimeException caughtException = null;
@@ -65,7 +77,7 @@ public class ChangePersisterTest {
 	}
 
 	@Test
-	public void testPersistRecord() {
+	public void testPersistOneRecord() {
 		JSONObject objToRecord = new JSONObject();
 		objToRecord.put("test", "fileIO");
 
@@ -74,5 +86,26 @@ public class ChangePersisterTest {
 		List<JSONObject> jarr = getJsonArray();
 		assertEquals(jarr.size(), 2);
 		assertEquals(jarr.get(1).get("test"), "fileIO");
+
+		testMarkerJSON(jarr);
+	}
+
+	@Test
+	public void testPersistTwoRecords() {
+		JSONObject objToRecord1 = new JSONObject();
+		objToRecord1.put("test", "fileIO");
+
+		JSONObject objToRecord2 = new JSONObject();
+		objToRecord1.put("test2", "fileIO2");
+
+		ChangePersister.instance().persist(objToRecord1);
+		ChangePersister.instance().persist(objToRecord2);
+
+		List<JSONObject> jarr = getJsonArray();
+		assertEquals(jarr.size(), 3);
+		assertEquals(jarr.get(1).get("test"), "fileIO");
+		assertEquals(jarr.get(1).get("test2"), "fileIO2");
+
+		testMarkerJSON(jarr);
 	}
 }
