@@ -128,7 +128,7 @@ class StartPluginUIJob extends UIJob {
 	}
 
 	private File getLocalStorage() {
-		return COPEPlugin.plugin.getBundle().getDataFile("");
+		return COPEPlugin.plugin.getStateLocation().toFile();
 	}
 
 	private void registerDocumentListenersForOpenEditors() {
