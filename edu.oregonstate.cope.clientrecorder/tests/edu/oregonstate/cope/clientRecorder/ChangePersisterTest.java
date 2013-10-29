@@ -20,9 +20,9 @@ public class ChangePersisterTest {
 	public void setup() {
 		stringWriter = new StringWriter();
 
-		ChangePersister.instance().setFileManager(new FileManager() {
+		ChangePersister.instance().setFileManager(new EventFilesProvider() {
 			@Override
-			public void write(String string) {
+			public void appendToCurrentFile(String string) {
 				stringWriter.write(string);
 			}
 

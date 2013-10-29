@@ -13,22 +13,22 @@ public class ChangePersister {
 	private static final String SEPARATOR = "\n$@$";
 	public static final Pattern ELEMENT_REGEX = Pattern.compile(Pattern.quote(SEPARATOR) + "(\\{.*?\\})");
 
-	private FileManager fileManager;
+	private FileProvider fileManager;
 
 	private static class Instance {
 		public static final ChangePersister instance = new ChangePersister();
 	}
 
 	private ChangePersister() {
-		fileManager = new FileManager();
+		fileManager = new EventFilesProvider();
 	}
 
 	public void init() {
 		if (fileManager.isCurrentFileEmpty()) {
 			JSONObject markerObject = createInitJSON();
 
-			fileManager.write(ChangePersister.SEPARATOR);
-			fileManager.write(markerObject.toJSONString());
+			fileManager.appendToCurrentFile(ChangePersister.SEPARATOR);
+			fileManager.appendToCurrentFile(markerObject.toJSONString());
 		}
 	}
 
@@ -47,11 +47,11 @@ public class ChangePersister {
 			throw new RuntimeException("Argument cannot be null");
 		}
 
-		fileManager.write(ChangePersister.SEPARATOR);
-		fileManager.write(jsonObject.toJSONString());
+		fileManager.appendToCurrentFile(ChangePersister.SEPARATOR);
+		fileManager.appendToCurrentFile(jsonObject.toJSONString());
 	}
 
-	public void setFileManager(FileManager fileManager) {
+	public void setFileManager(FileProvider fileManager) {
 		this.fileManager = fileManager;
 		init();
 	}
