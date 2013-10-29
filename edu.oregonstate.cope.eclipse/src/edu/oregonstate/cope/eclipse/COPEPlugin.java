@@ -4,6 +4,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
+import edu.oregonstate.cope.clientRecorder.ChangePersister;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 
 /**
@@ -20,7 +21,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	// The ID of the current workspace
 	static String workspaceID;
 
-	ClientRecorder clientRecorder;
+	private ClientRecorder clientRecorder;
 
 	/**
 	 * The constructor
@@ -40,7 +41,6 @@ public class COPEPlugin extends AbstractUIPlugin {
 		plugin = this;
 
 		UIJob uiJob = new StartPluginUIJob(this, "Registering listeners");
-
 		uiJob.schedule();
 	}
 
@@ -73,4 +73,15 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return workspaceID;
 	}
 
+	public void setClientRecorder(ClientRecorder clientRecorder) {
+		this.clientRecorder = clientRecorder;
+	}
+
+	public ClientRecorder clientRecorder() {
+		return clientRecorder;
+	}
+
+	public void setEventFilesRootDirectory(String rootDirectory) {
+		ChangePersister.instance().setRootDirectory(rootDirectory);
+	}
 }
