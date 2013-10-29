@@ -2,6 +2,7 @@ package edu.oregonstate.cope.clientRecorder;
 
 import static junit.framework.Assert.assertEquals;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,27 +13,43 @@ import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
+import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
 
 public class ChangePersisterTest {
 
-	private StringWriter stringWriter;
+	private final class StubFileProvider extends FileProvider {
+		private String stringWriter = "";
+
+		@Override
+		public void appendToCurrentFile(String string) {
+			stringWriter = stringWriter.concat(string);
+		}
+
+		@Override
+		public boolean isCurrentFileEmpty() {
+			return stringWriter.isEmpty();
+		}
+
+		@Override
+		public void deleteFiles() throws IOException {
+		}
+
+		@Override
+		protected String getFileName() {
+			return null;
+		}
+		
+		public String testGetContent(){
+			return stringWriter;
+		}
+	}
+
+	private StubFileProvider fileManager;
 
 	@Before
 	public void setup() {
-		stringWriter = new StringWriter();
-
-		ChangePersister.instance().setFileManager(new EventFilesProvider() {
-			@Override
-			public void appendToCurrentFile(String string) {
-				stringWriter.write(string);
-			}
-
-			@Override
-			public boolean isCurrentFileEmpty() {
-				return stringWriter.toString().isEmpty();
-			}
-		});
+		fileManager = new StubFileProvider();
+		ChangePersister.instance().setFileManager(fileManager);
 
 		testInit();
 	}
@@ -40,7 +57,7 @@ public class ChangePersisterTest {
 	@Test
 	public void testInit() {
 		List<JSONObject> jarr = getJsonArray();
-		assertEquals(jarr.size(), 1);
+		assertEquals(1, jarr.size());
 		testMarkerJSON(jarr);
 	}
 
@@ -51,7 +68,7 @@ public class ChangePersisterTest {
 	private List<JSONObject> getJsonArray() {
 		// return (JSONArray) JSONValue.parse(stringWriter.toString());
 		List<String> allMatches = new ArrayList<>();
-		Matcher m = ChangePersister.ELEMENT_REGEX.matcher(stringWriter.toString());
+		Matcher m = ChangePersister.ELEMENT_REGEX.matcher(fileManager.testGetContent());
 		while (m.find()) {
 			allMatches.add(m.group(1));
 		}
