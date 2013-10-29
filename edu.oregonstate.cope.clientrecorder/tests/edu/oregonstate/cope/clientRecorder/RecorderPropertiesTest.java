@@ -32,9 +32,22 @@ public class RecorderPropertiesTest {
 	}
 	
 	@Test
-	public void testAddNonEmpty() throws Exception {
+	public void testAddOneKey() throws Exception {
 		properties.addProperty("k", "v");
-		assertEquals("v", properties.getProperty("k"));
-		assertEquals("v", new RecorderProperties(fileProvider).getProperty("k"));
+		testForKey("k", "v");
+	}
+
+	@Test
+	public void testAddTwoKeys() throws Exception {
+		properties.addProperty("k1", "v1");
+		properties.addProperty("k2", "v2");
+		
+		testForKey("k1", "v1");
+		testForKey("k2", "v2");
+	}
+
+	private void testForKey(String key, String value) {
+		assertEquals(value, properties.getProperty(key));
+		assertEquals(value, new RecorderProperties(fileProvider).getProperty(key));
 	}
 }
