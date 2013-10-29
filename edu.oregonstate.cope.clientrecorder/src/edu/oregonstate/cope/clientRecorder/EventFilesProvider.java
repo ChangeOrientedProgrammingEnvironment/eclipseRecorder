@@ -33,10 +33,6 @@ public class EventFilesProvider extends FileProvider {
 	}
 
 	@Override
-	protected Path getCurrentFilePath() throws IOException {
-		return rootDirectory.resolve(getFileName());
-	}
-
 	protected String getFileName() {
 		Calendar cal = Calendar.getInstance();
 		String pathName = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);

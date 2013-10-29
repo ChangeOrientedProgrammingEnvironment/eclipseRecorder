@@ -13,7 +13,7 @@ import org.junit.Test;
 
 public class EventFilesProviderTest {
 
-	private static EventFilesProvider fm;
+	private static FileProvider fm;
 
 	@Before
 	public void setup() throws IOException {

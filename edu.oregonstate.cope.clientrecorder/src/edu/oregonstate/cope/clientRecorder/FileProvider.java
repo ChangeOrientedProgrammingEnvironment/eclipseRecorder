@@ -18,11 +18,9 @@ public abstract class FileProvider {
 
 	protected Path rootDirectory;
 
-	protected abstract Path getCurrentFilePath() throws IOException;
-
 	/**
-	 * Deletes all managed file or files.
-	 * If this provider creates a directory hierarchy, the directory hierarchy is not deleted.
+	 * Deletes all managed file or files. If this provider creates a directory
+	 * hierarchy, the directory hierarchy is not deleted.
 	 * 
 	 * @throws IOException
 	 */
@@ -64,5 +62,11 @@ public abstract class FileProvider {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	protected abstract String getFileName();
+
+	protected Path getCurrentFilePath() throws IOException {
+		return rootDirectory.resolve(getFileName());
 	}
 }
