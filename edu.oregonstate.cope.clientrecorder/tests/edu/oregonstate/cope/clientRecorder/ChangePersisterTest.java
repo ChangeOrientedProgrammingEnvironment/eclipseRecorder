@@ -12,6 +12,8 @@ import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
+
 public class ChangePersisterTest {
 
 	private StringWriter stringWriter;

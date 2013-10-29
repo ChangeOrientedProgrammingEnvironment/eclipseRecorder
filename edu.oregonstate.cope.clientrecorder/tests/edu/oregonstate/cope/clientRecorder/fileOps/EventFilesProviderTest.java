@@ -1,4 +1,4 @@
-package edu.oregonstate.cope.clientRecorder;
+package edu.oregonstate.cope.clientRecorder.fileOps;
 
 import static org.junit.Assert.*;
 
@@ -10,6 +10,9 @@ import java.util.Calendar;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
+import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
 
 public class EventFilesProviderTest {
 

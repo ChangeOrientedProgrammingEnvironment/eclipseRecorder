@@ -1,4 +1,4 @@
-package edu.oregonstate.cope.clientRecorder;
+package edu.oregonstate.cope.clientRecorder.fileOps;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;

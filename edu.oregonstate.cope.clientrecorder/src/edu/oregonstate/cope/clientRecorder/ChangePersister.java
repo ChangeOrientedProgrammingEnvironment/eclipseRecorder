@@ -4,6 +4,9 @@ import java.util.regex.Pattern;
 
 import org.json.simple.JSONObject;
 
+import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
+import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
+
 /**
  * Persists JSON objects. This class is a Singleton. A FileManager must be set
  * in order for the ChangePersister to function.
