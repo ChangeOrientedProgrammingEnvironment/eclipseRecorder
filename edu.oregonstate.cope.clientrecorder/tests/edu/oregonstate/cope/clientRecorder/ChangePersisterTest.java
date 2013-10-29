@@ -2,8 +2,6 @@ package edu.oregonstate.cope.clientRecorder;
 
 import static junit.framework.Assert.assertEquals;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,36 +11,9 @@ import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
+import edu.oregonstate.cope.tests.util.StubFileProvider;
 
 public class ChangePersisterTest {
-
-	private final class StubFileProvider extends FileProvider {
-		private String stringWriter = "";
-
-		@Override
-		public void appendToCurrentFile(String string) {
-			stringWriter = stringWriter.concat(string);
-		}
-
-		@Override
-		public boolean isCurrentFileEmpty() {
-			return stringWriter.isEmpty();
-		}
-
-		@Override
-		public void deleteFiles() throws IOException {
-		}
-
-		@Override
-		protected String getFileName() {
-			return null;
-		}
-		
-		public String testGetContent(){
-			return stringWriter;
-		}
-	}
 
 	private StubFileProvider fileManager;
 
