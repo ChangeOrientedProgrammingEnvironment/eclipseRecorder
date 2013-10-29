@@ -5,16 +5,21 @@ import java.io.IOException;
 import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
 
 public class StubFileProvider extends FileProvider {
-	private String stringWriter = "";
+	private String fileStub = "";
 
 	@Override
 	public void appendToCurrentFile(String string) {
-		stringWriter = stringWriter.concat(string);
+		fileStub = fileStub.concat(string);
+	}
+	
+	@Override
+	public void writeToCurrentFile(String string) {
+		fileStub = string;
 	}
 
 	@Override
 	public boolean isCurrentFileEmpty() {
-		return stringWriter.isEmpty();
+		return fileStub.isEmpty();
 	}
 
 	@Override
@@ -27,6 +32,6 @@ public class StubFileProvider extends FileProvider {
 	}
 
 	public String testGetContent() {
-		return stringWriter;
+		return fileStub;
 	}
 }

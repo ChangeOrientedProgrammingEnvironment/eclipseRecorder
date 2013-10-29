@@ -49,7 +49,7 @@ public abstract class FileProvider {
 		doFileWriteOperation(string, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 	}
 
-	private void writeToCurrentFile(String string) {
+	public void writeToCurrentFile(String string) {
 		doFileWriteOperation(string, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 	}
 
