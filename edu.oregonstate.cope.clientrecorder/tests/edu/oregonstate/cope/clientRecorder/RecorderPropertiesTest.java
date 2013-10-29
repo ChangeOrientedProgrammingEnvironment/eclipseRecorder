@@ -19,15 +19,15 @@ public class RecorderPropertiesTest {
 	}
 
 	@Test
+	public void initFromEmpty() throws Exception {
+		testForKey(null, null);
+		testForKey("", null);
+	}
+
+	@Test
 	public void testAddNull() {
 		properties.addProperty(null, null);
 		assertNull(properties.getProperty(null), null);
-		assertTrue(fileProvider.isCurrentFileEmpty());
-	}
-	
-	@Test
-	public void testAddEmpty() throws Exception {
-		properties.addProperty("", "");
 		assertTrue(fileProvider.isCurrentFileEmpty());
 	}
 	

@@ -31,9 +31,6 @@ public class RecorderProperties {
 		if(key == null)
 			return;
 		
-		if(key.isEmpty() && value.isEmpty())
-			return;
-		
 		properties.put(key, value);
 		persist();
 	}
@@ -51,9 +48,6 @@ public class RecorderProperties {
 	public String getProperty(String key) {
 		if (key == null)
 			return null;
-		
-		if(key.isEmpty() && properties.get(key).isEmpty())
-			return "";
 		
 		return properties.get(key);
 	}
