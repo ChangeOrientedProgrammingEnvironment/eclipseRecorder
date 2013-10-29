@@ -22,6 +22,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ltk.internal.core.refactoring.history.RefactoringHistoryService;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -75,6 +76,8 @@ class StartPluginUIJob extends UIJob {
 		refactoringHistoryService.addExecutionListener(new RefactoringExecutionListener());
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
+
+		Repository.getGlobalListenerList().addRefsChangedListener(new GitListener());
 
 		return Status.OK_STATUS;
 	}
