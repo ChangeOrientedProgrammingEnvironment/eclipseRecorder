@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The file provider encapsulates file persistence rules. Each subclass provides
@@ -63,6 +65,20 @@ public abstract class FileProvider {
 
 	}
 
+	public List<String> readAllLines() {
+		if(isCurrentFileEmpty())
+			return new ArrayList<String>();
+		
+		try {
+			return Files.readAllLines(getCurrentFilePath(), null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
 	public boolean isCurrentFileEmpty() {
 		try {
 			return getCurrentFilePath().toFile().length() == 0;
@@ -78,4 +94,5 @@ public abstract class FileProvider {
 	protected Path getCurrentFilePath() throws IOException {
 		return rootDirectory.resolve(getFileName());
 	}
+
 }
