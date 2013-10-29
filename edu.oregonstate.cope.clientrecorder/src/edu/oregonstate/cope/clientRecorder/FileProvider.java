@@ -46,12 +46,21 @@ public abstract class FileProvider {
 	}
 
 	public void appendToCurrentFile(String string) {
+		doFileWriteOperation(string, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+	}
+
+	private void writeToCurrentFile(String string) {
+		doFileWriteOperation(string, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+	}
+
+	private void doFileWriteOperation(String string, StandardOpenOption... options) {
 		try {
-			Files.write(getCurrentFilePath(), string.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+			Files.write(getCurrentFilePath(), string.getBytes(), options);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
 	public boolean isCurrentFileEmpty() {
