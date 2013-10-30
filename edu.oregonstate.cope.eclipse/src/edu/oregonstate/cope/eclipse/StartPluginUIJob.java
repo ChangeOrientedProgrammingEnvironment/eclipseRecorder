@@ -86,7 +86,7 @@ class StartPluginUIJob extends UIJob {
 
 	protected File getWorkspaceIdFile() {
 		File pluginStoragePath = getLocalStorage();
-		return new File(pluginStoragePath.getAbsolutePath() + "workspace_id");
+		return new File(pluginStoragePath.getAbsolutePath() + "/workspace_id");
 	}
 
 	protected void getToKnowWorkspace() {
