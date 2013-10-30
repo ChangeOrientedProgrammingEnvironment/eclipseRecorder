@@ -163,10 +163,19 @@ public class ClientRecorderTest {
 
 		for (Object key : expected.keySet()) {
 			if (key.equals("timestamp")) {
-				continue;
+				assertTimestampsEqual(expected.get(key), actual.get(key));
 			} else {
 				assertEquals(expected.get(key), actual.get(key));
 			}
 		}
+	}
+
+	private void assertTimestampsEqual(Object expected, Object actual) {
+		int oneSecond = 3600;
+		
+		Long expectedTimestamp = Long.parseLong((String) expected);
+		Long actualTimestamp = Long.parseLong((String) actual);
+		
+		assertTrue(expectedTimestamp > actualTimestamp - oneSecond);
 	}
 }
