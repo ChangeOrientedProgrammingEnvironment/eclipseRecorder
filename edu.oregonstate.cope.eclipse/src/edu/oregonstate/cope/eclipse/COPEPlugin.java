@@ -71,11 +71,11 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return workspaceID;
 	}
 
-	public ClientRecorder getClientRecorderInstance() {
+	public ClientRecorder getClientRecorder() {
 		return recorderFacade.getClientRecorder();
 	}
 	
-	public RecorderProperties getClientProperties(){
+	public RecorderProperties getRecorderProperties(){
 		return recorderFacade.getRecorderProperties();
 	}
 

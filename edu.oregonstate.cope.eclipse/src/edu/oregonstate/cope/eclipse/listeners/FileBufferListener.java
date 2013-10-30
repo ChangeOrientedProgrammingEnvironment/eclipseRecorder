@@ -13,7 +13,7 @@ public class FileBufferListener implements IFileBufferListener {
 	private ClientRecorder clientRecorderInstance;
 	
 	public FileBufferListener() {
-		clientRecorderInstance = COPEPlugin.getDefault().getClientRecorderInstance();
+		clientRecorderInstance = COPEPlugin.getDefault().getClientRecorder();
 	}
 
 	@Override

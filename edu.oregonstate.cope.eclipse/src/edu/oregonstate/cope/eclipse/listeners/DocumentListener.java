@@ -16,7 +16,7 @@ public class DocumentListener implements IDocumentListener {
 
 	public DocumentListener() {
 		clientRecorderInstance = COPEPlugin.getDefault()
-				.getClientRecorderInstance();
+				.getClientRecorder();
 	}
 
 	@Override
