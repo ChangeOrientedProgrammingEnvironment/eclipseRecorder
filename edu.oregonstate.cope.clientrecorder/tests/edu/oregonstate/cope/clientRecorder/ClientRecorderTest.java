@@ -7,6 +7,7 @@ import org.junit.Test;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder.EventType;
 import static org.junit.Assert.*;
 
+//TODO refactor this test class. Too many hardcoded strings. Too much duplication with tested class.
 public class ClientRecorderTest {
 
 	private ClientRecorder clientRecorder;
@@ -70,7 +71,7 @@ public class ClientRecorderTest {
 		j.put("sourceFile", sourceFile);
 		j.put("changeOrigin", changeOrigin);
 		j.put("IDE", clientRecorder.getIDE());
-		j.put("timestamp", System.currentTimeMillis() / 1000);
+		addTimeStamp(j);
 		return j;
 	}
 
@@ -87,7 +88,7 @@ public class ClientRecorderTest {
 		expected.put("IDE", "IDEA");
 		expected.put("eventType", ClientRecorder.EventType.debugLaunch.toString());
 		expected.put("fullyQualifiedMain", "/workspace/package/filename.java");
-		expected.put("timestamp", System.currentTimeMillis() / 1000);
+		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
 	}
@@ -99,7 +100,7 @@ public class ClientRecorderTest {
 		expected.put("IDE", "IDEA");
 		expected.put("eventType", ClientRecorder.EventType.normalLaunch.toString());
 		expected.put("fullyQualifiedMain", "/workspace/package/filename.java");
-		expected.put("timestamp", System.currentTimeMillis() / 1000);
+		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
 	}
@@ -111,7 +112,7 @@ public class ClientRecorderTest {
 		expected.put("IDE", "IDEA");
 		expected.put("eventType", ClientRecorder.EventType.fileOpen.toString());
 		expected.put("fullyQualifiedMain", "/workspace/package/filename.java");
-		expected.put("timestamp", System.currentTimeMillis() / 1000);
+		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
 	}
@@ -123,7 +124,7 @@ public class ClientRecorderTest {
 		expected.put("IDE", "IDEA");
 		expected.put("eventType", ClientRecorder.EventType.fileClose.toString());
 		expected.put("fullyQualifiedMain", "/workspace/package/filename.java");
-		expected.put("timestamp", System.currentTimeMillis() / 1000);
+		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
 	}
@@ -147,9 +148,13 @@ public class ClientRecorderTest {
 		expected.put("IDE", clientRecorder.getIDE());
 		expected.put("fullyQualifiedTestMethod", "/workspace/package/TestFoo/testBar");
 		expected.put("testResult", "success");
-		expected.put("timestamp", System.currentTimeMillis() / 1000);
+		addTimeStamp(expected);
 
 		assertJSONEquals(expected, actual);
+	}
+
+	private void addTimeStamp(JSONObject expected) {
+		expected.put("timestamp", (System.currentTimeMillis() / 1000) + "");
 	}
 
 	private void assertJSONEquals(JSONObject expected, JSONObject actual) {

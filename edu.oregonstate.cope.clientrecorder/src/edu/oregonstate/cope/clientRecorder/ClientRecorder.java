@@ -74,7 +74,7 @@ public class ClientRecorder {
 		obj = new JSONObject();
 		obj.put("IDE", this.getIDE());
 		obj.put("eventType", eventType.toString());
-		obj.put("timestamp", System.currentTimeMillis() / 1000);
+		obj.put("timestamp", (System.currentTimeMillis() / 1000) + "");
 
 		return obj;
 	}
