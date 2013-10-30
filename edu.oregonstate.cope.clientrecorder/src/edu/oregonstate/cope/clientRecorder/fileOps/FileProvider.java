@@ -62,20 +62,19 @@ public abstract class FileProvider {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	public List<String> readAllLines() {
-		if(isCurrentFileEmpty())
+		if (isCurrentFileEmpty())
 			return new ArrayList<String>();
-		
+
 		try {
 			return Files.readAllLines(getCurrentFilePath(), null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 

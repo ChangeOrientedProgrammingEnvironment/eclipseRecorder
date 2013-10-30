@@ -20,8 +20,7 @@ import java.util.Calendar;
 public class EventFilesProvider extends FileProvider {
 
 	/**
-	 *	Deletes all the event files.
-	 *	Does not delete the parent directory. 
+	 * Deletes all the event files. Does not delete the parent directory.
 	 */
 	@Override
 	public void deleteFiles() throws IOException {

@@ -1,6 +1,8 @@
 package edu.oregonstate.cope.clientRecorder.fileOps;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,9 +12,6 @@ import java.util.Calendar;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
-import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
 
 public class EventFilesProviderTest {
 
@@ -30,7 +29,7 @@ public class EventFilesProviderTest {
 		fm.deleteFiles();
 
 		assertEquals(0, parent.toFile().listFiles().length);
-		
+
 		Files.delete(parent);
 	}
 

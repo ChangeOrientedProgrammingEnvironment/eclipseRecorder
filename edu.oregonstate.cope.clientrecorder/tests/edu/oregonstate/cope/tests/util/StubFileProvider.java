@@ -14,17 +14,17 @@ public class StubFileProvider extends FileProvider {
 	public void appendToCurrentFile(String string) {
 		fileStub = fileStub.concat(string);
 	}
-	
+
 	@Override
 	public void writeToCurrentFile(String string) {
 		fileStub = string;
 	}
-	
+
 	@Override
 	public List<String> readAllLines() {
 		if (isCurrentFileEmpty())
 			return new ArrayList<String>();
-		
+
 		return Arrays.asList(fileStub.split(System.lineSeparator()));
 	}
 

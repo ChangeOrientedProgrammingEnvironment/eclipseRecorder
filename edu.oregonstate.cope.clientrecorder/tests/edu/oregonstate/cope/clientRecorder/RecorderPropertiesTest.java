@@ -1,6 +1,8 @@
 package edu.oregonstate.cope.clientRecorder;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,14 +25,14 @@ public class RecorderPropertiesTest {
 		testForKey(null, null);
 		testForKey("", null);
 	}
-	
+
 	@Test
 	public void testAddNull() {
 		properties.addProperty(null, null);
 		assertNull(properties.getProperty(null), null);
 		assertTrue(fileProvider.isCurrentFileEmpty());
 	}
-	
+
 	@Test
 	public void testAddOneKey() throws Exception {
 		properties.addProperty("k", "v");
@@ -41,11 +43,11 @@ public class RecorderPropertiesTest {
 	public void testAddTwoKeys() throws Exception {
 		properties.addProperty("k1", "v1");
 		properties.addProperty("k2", "v2");
-		
+
 		testForKey("k1", "v1");
 		testForKey("k2", "v2");
 	}
-	
+
 	@Test
 	public void testStrangeValue() throws Exception {
 		String strangeKey = " strange. !@#$%^&*() key ";
@@ -53,19 +55,19 @@ public class RecorderPropertiesTest {
 
 		properties.addProperty("k1", "v1");
 		properties.addProperty(strangeKey, strangeValue);
-		
+
 		testForKey("k1", "v1");
 		testForKey(strangeKey, strangeValue);
 	}
-	
-	@Test(expected=AssertionError.class)
+
+	@Test(expected = AssertionError.class)
 	public void testStrangeBreakingKey() throws Exception {
 		String strangeKey = " strange. !@#$%^&*() key ";
 		String strangeValue = " = 123 \t strange \n = !@#$%^&*() value/= ";
 
 		properties.addProperty("k1", "v1");
 		properties.addProperty(strangeKey, strangeValue);
-		
+
 		testForKey("k1", "v1");
 		testForKey(strangeKey, strangeValue);
 	}

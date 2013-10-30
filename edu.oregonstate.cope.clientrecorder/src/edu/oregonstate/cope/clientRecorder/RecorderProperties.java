@@ -5,6 +5,16 @@ import java.util.List;
 
 import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
 
+/**
+ * Represents configuration properties.<br>
+ * These configurations can be accessed and edited at runtime via this class, or
+ * manually, directly in the configuration file.<br>
+ * <br>
+ * 
+ * Manual edits to the configuration file during runtime will not be taken into
+ * account, and lost if new properties are written during runtime.
+ * 
+ */
 public class RecorderProperties {
 
 	private FileProvider fileProvider;
@@ -16,7 +26,7 @@ public class RecorderProperties {
 	}
 
 	private void initFromProvider(FileProvider fileProvider) {
-		List<String> lines = fileProvider.readAllLines(); 
+		List<String> lines = fileProvider.readAllLines();
 
 		for (String line : lines) {
 			int separatorIndex = line.indexOf("=");
@@ -28,9 +38,9 @@ public class RecorderProperties {
 	}
 
 	public void addProperty(String key, String value) {
-		if(key == null)
+		if (key == null)
 			return;
-		
+
 		properties.put(key, value);
 		persist();
 	}
@@ -39,7 +49,7 @@ public class RecorderProperties {
 		StringBuffer sb = new StringBuffer();
 
 		for (String key : properties.keySet()) {
-			sb.append(key + "=" + properties.get(key) + "\n");
+			sb.append(key + "=" + properties.get(key) + System.lineSeparator());
 		}
 
 		fileProvider.writeToCurrentFile(sb.toString());
@@ -48,7 +58,7 @@ public class RecorderProperties {
 	public String getProperty(String key) {
 		if (key == null)
 			return null;
-		
+
 		return properties.get(key);
 	}
 }

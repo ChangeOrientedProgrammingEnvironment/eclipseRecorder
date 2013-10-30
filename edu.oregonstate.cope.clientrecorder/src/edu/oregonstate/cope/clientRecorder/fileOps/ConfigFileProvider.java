@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 /**
- * Represents the configuration file. 
- *
+ * Represents the configuration file.
+ * 
  */
-public class SettingsFileProvider extends FileProvider{
+public class ConfigFileProvider extends FileProvider {
 
 	private static final String fileName = "config";
 
