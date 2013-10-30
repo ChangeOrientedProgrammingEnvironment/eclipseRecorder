@@ -29,12 +29,14 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
+import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.progress.UIJob;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
 import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
+import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
@@ -136,12 +138,18 @@ class StartPluginUIJob extends UIJob {
 		IEditorReference[] editorReferences = activeWindow.getActivePage().getEditorReferences();
 		for (IEditorReference editorReference : editorReferences) {
 			IDocument document = getDocumentForEditor(editorReference);
+			if (document == null)
+				continue;
 			document.addDocumentListener(new DocumentListener());
 		}
 	}
 
 	private IDocument getDocumentForEditor(IEditorReference editorReference) {
 		IEditorPart editorPart = editorReference.getEditor(true);
+		if (editorPart instanceof MultiPageEditorPart) {
+			((MultiPageEditorPart)editorPart).addPageChangedListener(new MultiEditorPageChangedListener());
+			return null;
+		}
 		ISourceViewer sourceViewer = (ISourceViewer) editorPart.getAdapter(ITextOperationTarget.class);
 		IDocument document = sourceViewer.getDocument();
 		return document;
