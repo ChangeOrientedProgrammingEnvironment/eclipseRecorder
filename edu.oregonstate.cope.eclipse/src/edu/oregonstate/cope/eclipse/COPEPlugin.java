@@ -6,6 +6,8 @@ import org.osgi.framework.BundleContext;
 
 import edu.oregonstate.cope.clientRecorder.ChangePersister;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.clientRecorder.RecorderProperties;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -21,7 +23,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	// The ID of the current workspace
 	static String workspaceID;
 
-	private ClientRecorder clientRecorder;
+	private RecorderFacade recorderFacade;
 
 	/**
 	 * The constructor
@@ -65,23 +67,20 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public ClientRecorder getClientRecorderInstance() {
-		return clientRecorder;
-	}
-
 	public String getWorkspaceID() {
 		return workspaceID;
 	}
 
-	public void setClientRecorder(ClientRecorder clientRecorder) {
-		this.clientRecorder = clientRecorder;
+	public ClientRecorder getClientRecorder() {
+		return recorderFacade.getClientRecorder();
+	}
+	
+	public RecorderProperties getRecorderProperties(){
+		return recorderFacade.getRecorderProperties();
 	}
 
-	public ClientRecorder clientRecorder() {
-		return clientRecorder;
-	}
-
-	public void setEventFilesRootDirectory(String rootDirectory) {
-		ChangePersister.instance().setRootDirectory(rootDirectory);
+	public void initializeRecorder(String rootDirectory, String workspaceID, String IDE) {
+		this.workspaceID = workspaceID;
+		recorderFacade = new RecorderFacade().initialize(rootDirectory, IDE);
 	}
 }

@@ -15,7 +15,7 @@ import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class ResourceListener implements IResourceChangeListener {
 
-	ClientRecorder recorder = COPEPlugin.getDefault().getClientRecorderInstance();
+	ClientRecorder recorder = COPEPlugin.getDefault().getClientRecorder();
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {

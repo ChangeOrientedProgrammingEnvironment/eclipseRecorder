@@ -1,4 +1,4 @@
-package edu.oregonstate.cope.clientRecorder;
+package edu.oregonstate.cope.clientRecorder.fileOps;
 
 import static org.junit.Assert.*;
 
@@ -11,24 +11,29 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class FileManagerTest {
+public class EventFilesProviderTest {
 
-	private static FileManager fm;
+	private static FileProvider fm;
 
 	@Before
 	public void setup() throws IOException {
-		fm = new FileManager();
+		fm = new EventFilesProvider();
 		fm.setRootDirectory("outputFiles");
 	}
 
 	@After
 	public void tearDown() throws IOException {
-		Path parent = fm.getFilePath().getParent();
+		Path parent = fm.getCurrentFilePath().getParent();
 		fm.deleteFiles();
 
 		assertEquals(0, parent.toFile().listFiles().length);
-		
+
 		Files.delete(parent);
+	}
+
+	@Test
+	public void testRootDirectory() throws Exception {
+		assertEquals(EventFilesProvider.EVENTFILE_ROOTDIR, fm.rootDirectory.getFileName().toString());
 	}
 
 	@Test
@@ -45,30 +50,30 @@ public class FileManagerTest {
 	}
 
 	@Test
-	public void testWriteOnce() throws IOException {
+	public void testAppendOnce() throws IOException {
 		String expected = "test";
 
 		assertTrue(fm.isCurrentFileEmpty());
 
-		fm.write(expected);
+		fm.appendToCurrentFile(expected);
 
 		assertFileContents(expected);
 	}
 
 	@Test
-	public void testWriteTwice() throws IOException {
+	public void testAppendTwice() throws IOException {
 		String expected = "test";
 
 		assertTrue(fm.isCurrentFileEmpty());
 
-		fm.write(expected + "\n");
-		fm.write(expected);
+		fm.appendToCurrentFile(expected + "\n");
+		fm.appendToCurrentFile(expected);
 
 		assertFileContents(expected + "\n" + expected);
 	}
 
 	private void assertFileContents(String expected) throws IOException {
-		byte[] fileBytes = Files.readAllBytes(fm.getFilePath());
+		byte[] fileBytes = Files.readAllBytes(fm.getCurrentFilePath());
 
 		if (expected.isEmpty())
 			assertTrue(fm.isCurrentFileEmpty());

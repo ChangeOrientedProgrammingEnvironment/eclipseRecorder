@@ -17,7 +17,7 @@ public class LaunchListener implements ILaunchListener {
 
 	@Override
 	public void launchChanged(ILaunch launch) {
-		ClientRecorder clientRecorderInstance = COPEPlugin.getDefault().getClientRecorderInstance();
+		ClientRecorder clientRecorderInstance = COPEPlugin.getDefault().getClientRecorder();
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		String mainType = getMainType(launchConfiguration);
 		String launchMode = launch.getLaunchMode();
