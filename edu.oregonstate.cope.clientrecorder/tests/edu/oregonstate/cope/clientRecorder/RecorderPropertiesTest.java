@@ -23,7 +23,7 @@ public class RecorderPropertiesTest {
 		testForKey(null, null);
 		testForKey("", null);
 	}
-
+	
 	@Test
 	public void testAddNull() {
 		properties.addProperty(null, null);
@@ -44,6 +44,30 @@ public class RecorderPropertiesTest {
 		
 		testForKey("k1", "v1");
 		testForKey("k2", "v2");
+	}
+	
+	@Test
+	public void testStrangeValue() throws Exception {
+		String strangeKey = " strange. !@#$%^&*() key ";
+		String strangeValue = " = 123 \t strange = !@#$%^&*() value/= ";
+
+		properties.addProperty("k1", "v1");
+		properties.addProperty(strangeKey, strangeValue);
+		
+		testForKey("k1", "v1");
+		testForKey(strangeKey, strangeValue);
+	}
+	
+	@Test(expected=AssertionError.class)
+	public void testStrangeBreakingKey() throws Exception {
+		String strangeKey = " strange. !@#$%^&*() key ";
+		String strangeValue = " = 123 \t strange \n = !@#$%^&*() value/= ";
+
+		properties.addProperty("k1", "v1");
+		properties.addProperty(strangeKey, strangeValue);
+		
+		testForKey("k1", "v1");
+		testForKey(strangeKey, strangeValue);
 	}
 
 	private void testForKey(String key, String value) {
