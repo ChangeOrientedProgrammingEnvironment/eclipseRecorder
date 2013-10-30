@@ -1,8 +1,6 @@
 package edu.oregonstate.cope.clientRecorder.fileOps;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,6 +29,11 @@ public class EventFilesProviderTest {
 		assertEquals(0, parent.toFile().listFiles().length);
 
 		Files.delete(parent);
+	}
+
+	@Test
+	public void testRootDirectory() throws Exception {
+		assertEquals(EventFilesProvider.EVENTFILE_ROOTDIR, fm.rootDirectory.getFileName().toString());
 	}
 
 	@Test

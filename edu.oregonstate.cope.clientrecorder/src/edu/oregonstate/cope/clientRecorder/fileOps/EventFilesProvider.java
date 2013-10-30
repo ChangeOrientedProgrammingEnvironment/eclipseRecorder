@@ -19,6 +19,8 @@ import java.util.Calendar;
  */
 public class EventFilesProvider extends FileProvider {
 
+	protected static final String EVENTFILE_ROOTDIR = "eventFiles";
+
 	/**
 	 * Deletes all the event files. Does not delete the parent directory.
 	 */
@@ -37,5 +39,10 @@ public class EventFilesProvider extends FileProvider {
 		String pathName = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);
 
 		return pathName;
+	}
+
+	@Override
+	public void setRootDirectory(String rootDirectory) {
+		super.setRootDirectory(rootDirectory, EVENTFILE_ROOTDIR);
 	}
 }

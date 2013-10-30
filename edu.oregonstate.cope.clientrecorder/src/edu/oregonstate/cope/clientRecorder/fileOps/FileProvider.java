@@ -10,7 +10,8 @@ import java.util.List;
 
 /**
  * The file provider encapsulates file persistence rules. Each subclass provides
- * different rules. <br>
+ * different rules. Each class could also represent an important file to the
+ * system. <br>
  * <br>
  * This entity behaves as a cursor: at each moment it points to a particular
  * file. When it switches to a new file, or how it does that is transparent to
@@ -35,7 +36,20 @@ public abstract class FileProvider {
 	 * @param rootDirectory
 	 */
 	public void setRootDirectory(String rootDirectory) {
-		this.rootDirectory = Paths.get(rootDirectory).toAbsolutePath();
+		setRootDirectory(rootDirectory);
+	}
+
+	/**
+	 * Sets the parent directory under which this provider will create its
+	 * structure
+	 * 
+	 * @param first
+	 *            First directory name in path
+	 * @param more
+	 *            Other directory names for the rest of the path
+	 */
+	protected void setRootDirectory(String first, String... more) {
+		this.rootDirectory = Paths.get(first, more).toAbsolutePath();
 
 		try {
 			Files.createDirectories(this.rootDirectory);
@@ -44,7 +58,7 @@ public abstract class FileProvider {
 			e.printStackTrace();
 		}
 
-		System.err.println("set the root to " + this.rootDirectory.toString());
+		System.err.println(getClass().getSimpleName() + " set the root to " + this.rootDirectory.toString());
 	}
 
 	public void appendToCurrentFile(String string) {
