@@ -7,15 +7,11 @@ import java.nio.file.Path;
 import java.util.Calendar;
 
 /**
- * Class responsible with file persistence policy: <br>
- * <ul>
- * <li>Writing to files</li>
- * <li>Where to store files.</li>
- * <li>When to switch to a new file</li>
- * <li>File naming policy</li>
- * </ul>
- * 
- * Root location must be set.
+ * Class that represents event files. <br>
+ * It makes a new file each day.<br>
+ * The file name format is: YYYY-MM-DD<br>
+ * <br>
+ * All event files are stored in rootDirectory/eventFiles/
  */
 public class EventFilesProvider extends FileProvider {
 
