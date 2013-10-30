@@ -12,8 +12,18 @@ import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
  * <br>
  * 
  * Manual edits to the configuration file during runtime will not be taken into
- * account, and lost if new properties are written during runtime.
+ * account, and lost if new properties are written during runtime. <br>
+ * <br>
  * 
+ * Property file format:<br>
+ * {@literal<properties> ::= <property>*}<br>
+ * {@literal<property> ::= <key>=<value>\n}<br>
+ * {@literal<key> ::= any character but \n and =}<br>
+ * {@literal<value> ::= any character but \n}<br>
+ * 
+ * <br>
+ * 
+ * Filename of the properties file: "config".
  */
 public class RecorderProperties {
 
@@ -37,14 +47,6 @@ public class RecorderProperties {
 		}
 	}
 
-	public void addProperty(String key, String value) {
-		if (key == null)
-			return;
-
-		properties.put(key, value);
-		persist();
-	}
-
 	private void persist() {
 		StringBuffer sb = new StringBuffer();
 
@@ -53,6 +55,14 @@ public class RecorderProperties {
 		}
 
 		fileProvider.writeToCurrentFile(sb.toString());
+	}
+
+	public void addProperty(String key, String value) {
+		if (key == null)
+			return;
+	
+		properties.put(key, value);
+		persist();
 	}
 
 	public String getProperty(String key) {
