@@ -36,7 +36,7 @@ public abstract class FileProvider {
 	 * @param rootDirectory
 	 */
 	public void setRootDirectory(String rootDirectory) {
-		setRootDirectory(rootDirectory);
+		setLongerRootDirectory(rootDirectory);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public abstract class FileProvider {
 	 * @param more
 	 *            Other directory names for the rest of the path
 	 */
-	protected void setRootDirectory(String first, String... more) {
+	protected void setLongerRootDirectory(String first, String... more) {
 		this.rootDirectory = Paths.get(first, more).toAbsolutePath();
 
 		try {
@@ -107,5 +107,4 @@ public abstract class FileProvider {
 	protected Path getCurrentFilePath() throws IOException {
 		return rootDirectory.resolve(getFileName());
 	}
-
 }

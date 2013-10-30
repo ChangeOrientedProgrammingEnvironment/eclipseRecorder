@@ -43,6 +43,6 @@ public class EventFilesProvider extends FileProvider {
 
 	@Override
 	public void setRootDirectory(String rootDirectory) {
-		super.setRootDirectory(rootDirectory, EVENTFILE_ROOTDIR);
+		super.setLongerRootDirectory(rootDirectory, EVENTFILE_ROOTDIR);
 	}
 }
