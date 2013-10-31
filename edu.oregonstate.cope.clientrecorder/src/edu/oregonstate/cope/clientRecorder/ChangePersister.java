@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import org.json.simple.JSONObject;
 
-import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
 import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
 
 /**
@@ -23,7 +22,6 @@ public class ChangePersister {
 	}
 
 	private ChangePersister() {
-		fileManager = new EventFilesProvider();
 	}
 
 	public void init() {
@@ -57,9 +55,5 @@ public class ChangePersister {
 	public void setFileManager(FileProvider fileManager) {
 		this.fileManager = fileManager;
 		init();
-	}
-
-	public void setRootDirectory(String rootDirectory) {
-		fileManager.setRootDirectory(rootDirectory);
 	}
 }
