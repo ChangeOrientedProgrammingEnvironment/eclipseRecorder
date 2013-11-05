@@ -32,6 +32,13 @@ public class ChangePersisterTest {
 		testMarkerJSON(jarr);
 	}
 
+	@Test
+	public void testInitFileAfterDelete() throws Exception {
+		testInit();
+		fileManager.deleteFiles();
+		testPersistOneRecord();
+	}
+
 	private void testMarkerJSON(List<JSONObject> jarr) {
 		assertEquals(jarr.get(0).get("eventType"), "FileInit");
 	}

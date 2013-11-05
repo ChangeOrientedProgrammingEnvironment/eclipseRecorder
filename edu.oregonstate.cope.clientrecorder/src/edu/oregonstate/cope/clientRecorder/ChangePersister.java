@@ -47,6 +47,8 @@ public class ChangePersister {
 		if (jsonObject == null) {
 			throw new RuntimeException("Argument cannot be null");
 		}
+		
+		init();
 
 		fileManager.appendToCurrentFile(ChangePersister.SEPARATOR);
 		fileManager.appendToCurrentFile(jsonObject.toJSONString());
