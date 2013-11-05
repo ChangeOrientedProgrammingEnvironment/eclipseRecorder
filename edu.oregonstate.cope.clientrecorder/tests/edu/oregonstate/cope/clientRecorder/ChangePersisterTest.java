@@ -32,6 +32,13 @@ public class ChangePersisterTest {
 		testMarkerJSON(jarr);
 	}
 
+	@Test
+	public void testInitFileAfterDelete() throws Exception {
+		testInit();
+		fileManager.deleteFiles();
+		testPersistOneRecord();
+	}
+
 	private void testMarkerJSON(List<JSONObject> jarr) {
 		assertEquals(jarr.get(0).get("eventType"), "FileInit");
 	}
@@ -74,8 +81,8 @@ public class ChangePersisterTest {
 		ChangePersister.instance().persist(objToRecord);
 
 		List<JSONObject> jarr = getJsonArray();
-		assertEquals(jarr.size(), 2);
-		assertEquals(jarr.get(1).get("test"), "fileIO");
+		assertEquals(2, jarr.size());
+		assertEquals("fileIO", jarr.get(1).get("test"));
 
 		testMarkerJSON(jarr);
 	}
