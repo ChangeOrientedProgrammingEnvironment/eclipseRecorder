@@ -39,7 +39,7 @@ public class ResourceListener implements IResourceChangeListener {
 				Scanner scanner = new Scanner(inputStream, affectedFile.getCharset());
 				String contents = scanner.useDelimiter("\\A").next();	
 				scanner.close();
-				recorder.recordTextChange(contents, 0, 0, affectedFile.getFullPath().toPortableString(), ClientRecorder.REFRESH_CHANGE);
+				recorder.recordTextChange(contents, 0, 0, COPEPlugin.getDefault().getWorkspaceID() + "/" + affectedFile.getFullPath().toPortableString(), ClientRecorder.REFRESH_CHANGE);
 			} catch (CoreException e) {
 			}
 		}
