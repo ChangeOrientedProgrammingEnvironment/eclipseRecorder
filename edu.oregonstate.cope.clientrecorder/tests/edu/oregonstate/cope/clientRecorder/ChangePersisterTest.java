@@ -81,8 +81,8 @@ public class ChangePersisterTest {
 		ChangePersister.instance().persist(objToRecord);
 
 		List<JSONObject> jarr = getJsonArray();
-		assertEquals(jarr.size(), 2);
-		assertEquals(jarr.get(1).get("test"), "fileIO");
+		assertEquals(2, jarr.size());
+		assertEquals("fileIO", jarr.get(1).get("test"));
 
 		testMarkerJSON(jarr);
 	}
