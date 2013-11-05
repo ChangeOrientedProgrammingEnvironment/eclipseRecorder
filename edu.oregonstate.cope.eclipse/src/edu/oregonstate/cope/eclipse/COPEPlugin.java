@@ -1,5 +1,7 @@
 package edu.oregonstate.cope.eclipse;
 
+import java.io.File;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
@@ -82,5 +84,9 @@ public class COPEPlugin extends AbstractUIPlugin {
 	public void initializeRecorder(String rootDirectory, String workspaceID, String IDE) {
 		this.workspaceID = workspaceID;
 		recorderFacade = new RecorderFacade().initialize(rootDirectory, IDE);
+	}
+
+	public static File getLocalStorage() {
+		return COPEPlugin.plugin.getStateLocation().toFile();
 	}
 }
