@@ -9,13 +9,26 @@ import org.json.simple.JSONObject;
 
 public class ClientRecorder {
 
-	private String IDE;
-
-	public static final String USER_CHANGE = "user";
-	public static final String REFRESH_CHANGE = "refresh";
-	public static final String REFACTORING_CHANGE = "refactoring";
-	public static final String UI_EVENT = "ui-event";
 	public static final String ECLIPSE_IDE = "eclipse";
+
+	//change origin types
+	public static final String CHANGE_ORIGIN_USER = "user";
+	public static final String CHANGE_ORIGIN_REFRESH = "refresh";
+	public static final String CHANGE_ORIGIN_REFACTORING = "refactoring";
+	public static final String CHANGE_ORIGIN_UI_EVENT = "ui-event";
+
+	//JSON property names
+	protected static final String JSON_TEST_RESULT = "testResult";
+	protected static final String JSON_CHANGE_ORIGIN = "changeOrigin";
+	protected static final String JSON_LENGTH = "len";
+	protected static final String JSON_OFFSET = "offset";
+	protected static final String JSON_TIMESTAMP = "timestamp";
+	protected static final String JSON_EVENT_TYPE = "eventType";
+	protected static final String JSON_IDE = "IDE";
+	protected static final String JSON_TEXT = "text";
+	protected static final String JSON_ENTITY_ADDRESS = "entityAddress";
+
+	private String IDE;
 
 	protected enum EventType {
 		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun
@@ -49,20 +62,20 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
 	}
 
-	public void recordDebugLaunch(String fullyQualifiedMainFunction) {
-		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.debugLaunch, fullyQualifiedMainFunction));
+	public void recordDebugLaunch(String fullyQualifiedMainMethod) {
+		ChangePersister.instance().persist(buildIDEEventJSON(EventType.debugLaunch, fullyQualifiedMainMethod));
 	}
 
-	public void recordNormalLaunch(String fullyQualifiedMainFunction) {
-		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.normalLaunch, fullyQualifiedMainFunction));
+	public void recordNormalLaunch(String fullyQualifiedMainMethod) {
+		ChangePersister.instance().persist(buildIDEEventJSON(EventType.normalLaunch, fullyQualifiedMainMethod));
 	}
 
-	public void recordFileOpen(String fullyQualifiedMainFunction) {
-		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileOpen, fullyQualifiedMainFunction));
+	public void recordFileOpen(String fullyQualifiedFileAddress) {
+		ChangePersister.instance().persist(buildIDEEventJSON(EventType.fileOpen, fullyQualifiedFileAddress));
 	}
 
-	public void recordFileClose(String fullyQualifiedMainFunction) {
-		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileClose, fullyQualifiedMainFunction));
+	public void recordFileClose(String fullyQualifiedFileAddress) {
+		ChangePersister.instance().persist(buildIDEEventJSON(EventType.fileClose, fullyQualifiedFileAddress));
 	}
 
 	public void recordTestRun(String fullyQualifiedTestMethod, String testResult) {
@@ -72,9 +85,9 @@ public class ClientRecorder {
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
 		JSONObject obj;
 		obj = new JSONObject();
-		obj.put("IDE", this.getIDE());
-		obj.put("eventType", eventType.toString());
-		obj.put("timestamp", (System.currentTimeMillis() / 1000) + "");
+		obj.put(JSON_IDE, this.getIDE());
+		obj.put(JSON_EVENT_TYPE, eventType.toString());
+		obj.put(JSON_TIMESTAMP, (System.currentTimeMillis() / 1000) + "");
 
 		return obj;
 	}
@@ -89,23 +102,23 @@ public class ClientRecorder {
 			throw new RuntimeException("Change Origin cannot be empty");
 
 		JSONObject obj = buildCommonJSONObj(EventType.textChange);
-		obj.put("text", text);
-		obj.put("offset", offset);
-		obj.put("len", length);
-		obj.put("sourceFile", sourceFile);
-		obj.put("changeOrigin", changeOrigin);
+		obj.put(JSON_TEXT, text);
+		obj.put(JSON_OFFSET, offset);
+		obj.put(JSON_LENGTH, length);
+		obj.put(JSON_ENTITY_ADDRESS, sourceFile);
+		obj.put(JSON_CHANGE_ORIGIN, changeOrigin);
 
 		return obj;
 	}
 
-	protected JSONObject buildIDEFileEventJSON(Enum EventType, String fullyQualifiedMainFunction) {
-		if (fullyQualifiedMainFunction == null) {
-			throw new RuntimeException("Fully Qualified Main Function cannot be null");
+	protected JSONObject buildIDEEventJSON(Enum EventType, String fullyQualifiedEntityAddress) {
+		if (fullyQualifiedEntityAddress == null) {
+			throw new RuntimeException("Fully Qualified Entity address cannot be null");
 		}
 
 		JSONObject obj;
 		obj = buildCommonJSONObj(EventType);
-		obj.put("fullyQualifiedMain", fullyQualifiedMainFunction);
+		obj.put(JSON_ENTITY_ADDRESS, fullyQualifiedEntityAddress);
 
 		return obj;
 	}
@@ -117,8 +130,8 @@ public class ClientRecorder {
 			throw new RuntimeException("Arguments cannot be empty");
 
 		JSONObject obj = buildCommonJSONObj(EventType.testRun);
-		obj.put("fullyQualifiedTestMethod", fullyQualifiedTestMethod);
-		obj.put("testResult", testResult);
+		obj.put(JSON_ENTITY_ADDRESS, fullyQualifiedTestMethod);
+		obj.put(JSON_TEST_RESULT, testResult);
 
 		return obj;
 	}
