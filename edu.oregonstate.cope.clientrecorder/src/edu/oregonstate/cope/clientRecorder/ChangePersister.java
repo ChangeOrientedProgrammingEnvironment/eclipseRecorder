@@ -1,43 +1,37 @@
 package edu.oregonstate.cope.clientRecorder;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.regex.Pattern;
 
 import org.json.simple.JSONObject;
 
+import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
+import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
+
 /**
- * Persists JSON objects to disc. This class is a Singleton.
+ * Persists JSON objects. This class is a Singleton. A FileManager must be set
+ * in order for the ChangePersister to function.
  */
 public class ChangePersister {
 
 	private static final String SEPARATOR = "\n$@$";
 	public static final Pattern ELEMENT_REGEX = Pattern.compile(Pattern.quote(SEPARATOR) + "(\\{.*?\\})");
-	
-	private Writer writer;
+
+	private FileProvider fileManager;
 
 	private static class Instance {
 		public static final ChangePersister instance = new ChangePersister();
 	}
 
 	private ChangePersister() {
-		try {
-			writer = new BufferedWriter(new FileWriter("testFileWrite.txt"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		init();
+		fileManager = new EventFilesProvider();
 	}
 
 	public void init() {
-		try {
-			writer.write(ChangePersister.SEPARATOR);
+		if (fileManager.isCurrentFileEmpty()) {
 			JSONObject markerObject = createInitJSON();
-			writer.write(markerObject.toJSONString());
-		} catch (IOException e) {
-			e.printStackTrace();
+
+			fileManager.appendToCurrentFile(ChangePersister.SEPARATOR);
+			fileManager.appendToCurrentFile(markerObject.toJSONString());
 		}
 	}
 
@@ -56,16 +50,16 @@ public class ChangePersister {
 			throw new RuntimeException("Argument cannot be null");
 		}
 
-		try {
-			writer.write(ChangePersister.SEPARATOR);
-			writer.write(jsonObject.toJSONString());
-			writer.flush();
-		} catch (IOException e) {
-			throw new RuntimeException("could not write JSON to file");
-		}
+		fileManager.appendToCurrentFile(ChangePersister.SEPARATOR);
+		fileManager.appendToCurrentFile(jsonObject.toJSONString());
 	}
 
-	protected void setWriter(Writer stringWriter) {
-		this.writer = stringWriter;
+	public void setFileManager(FileProvider fileManager) {
+		this.fileManager = fileManager;
+		init();
+	}
+
+	public void setRootDirectory(String rootDirectory) {
+		fileManager.setRootDirectory(rootDirectory);
 	}
 }

@@ -10,8 +10,9 @@ import org.json.simple.JSONObject;
 public class ClientRecorder {
 
 	private String IDE;
-	
+
 	public static final String USER_CHANGE = "user";
+	public static final String REFRESH_CHANGE = "refresh";
 	public static final String REFACTORING_CHANGE = "refactoring";
 	public static final String UI_EVENT = "ui-event";
 	public static final String ECLIPSE_IDE = "eclipse";
@@ -64,7 +65,7 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildIDEFileEventJSON(EventType.fileClose, fullyQualifiedMainFunction));
 	}
 
-	public void recordTestRun(String fullyQualifiedTestMethod, String testResult){
+	public void recordTestRun(String fullyQualifiedTestMethod, String testResult) {
 		ChangePersister.instance().persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult));
 	}
 
@@ -72,8 +73,9 @@ public class ClientRecorder {
 		JSONObject obj;
 		obj = new JSONObject();
 		obj.put("IDE", this.getIDE());
-		obj.put("eventType", eventType);
-		
+		obj.put("eventType", eventType.toString());
+		obj.put("timestamp", (System.currentTimeMillis() / 1000) + "");
+
 		return obj;
 	}
 
@@ -92,7 +94,7 @@ public class ClientRecorder {
 		obj.put("len", length);
 		obj.put("sourceFile", sourceFile);
 		obj.put("changeOrigin", changeOrigin);
-		
+
 		return obj;
 	}
 
@@ -100,24 +102,24 @@ public class ClientRecorder {
 		if (fullyQualifiedMainFunction == null) {
 			throw new RuntimeException("Fully Qualified Main Function cannot be null");
 		}
-		
+
 		JSONObject obj;
 		obj = buildCommonJSONObj(EventType);
 		obj.put("fullyQualifiedMain", fullyQualifiedMainFunction);
-		
+
 		return obj;
 	}
 
 	protected JSONObject buildTestEventJSON(String fullyQualifiedTestMethod, String testResult) {
 		if (fullyQualifiedTestMethod == null || testResult == null)
 			throw new RuntimeException("Arguments cannot be null");
-		if(fullyQualifiedTestMethod.isEmpty() || testResult.isEmpty())
+		if (fullyQualifiedTestMethod.isEmpty() || testResult.isEmpty())
 			throw new RuntimeException("Arguments cannot be empty");
-		
+
 		JSONObject obj = buildCommonJSONObj(EventType.testRun);
 		obj.put("fullyQualifiedTestMethod", fullyQualifiedTestMethod);
 		obj.put("testResult", testResult);
-		
+
 		return obj;
 	}
 }
