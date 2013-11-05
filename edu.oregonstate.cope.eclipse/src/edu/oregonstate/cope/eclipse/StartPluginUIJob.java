@@ -63,7 +63,7 @@ class StartPluginUIJob extends UIJob {
 		}
 		monitor.worked(1);
 
-		this.copePlugin.initializeRecorder(getLocalStorage().getAbsolutePath(), getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
+		this.copePlugin.initializeRecorder(COPEPlugin.getLocalStorage().getAbsolutePath(), getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
 
 		registerDocumentListenersForOpenEditors();
 		FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
@@ -86,7 +86,7 @@ class StartPluginUIJob extends UIJob {
 	}
 
 	protected File getWorkspaceIdFile() {
-		File pluginStoragePath = getLocalStorage();
+		File pluginStoragePath = COPEPlugin.getLocalStorage();
 		return new File(pluginStoragePath.getAbsolutePath() + "/workspace_id");
 	}
 
@@ -103,7 +103,7 @@ class StartPluginUIJob extends UIJob {
 
 	private void getInitialSnapshot() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		String zipFile = getLocalStorage().getAbsolutePath() + "/" + System.currentTimeMillis() + ".zip";
+		String zipFile = COPEPlugin.getLocalStorage().getAbsolutePath() + "/" + System.currentTimeMillis() + ".zip";
 		ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(root, zipFile);
 		archiveFileExportOperation.setUseCompression(true);
 		archiveFileExportOperation.setUseTarFormat(false);
@@ -126,10 +126,6 @@ class StartPluginUIJob extends UIJob {
 		} catch (IOException e) {
 		}
 		return workspaceID;
-	}
-
-	private File getLocalStorage() {
-		return COPEPlugin.plugin.getStateLocation().toFile();
 	}
 
 	private void registerDocumentListenersForOpenEditors() {
