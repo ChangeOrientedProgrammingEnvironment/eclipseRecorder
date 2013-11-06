@@ -45,7 +45,7 @@ public class FTPUploader {
 			}
 		}
 	}
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		System.out.println("Start");
 		FTPUploader ftpUploader = new FTPUploader("ftp.journaldev.com", "ftpUser", "ftpPassword");
 		//FTP server path is relative. So if FTP account HOME directory is "/home/pankaj/public_html/" and you need to upload 
@@ -53,5 +53,5 @@ public class FTPUploader {
 		ftpUploader.uploadFile("D:\\Pankaj\\images\\MyImage.png", "image.png", "/wp-content/uploads/image2/");
 		ftpUploader.disconnect();
 		System.out.println("Done");
-	}
+	}*/
 }
