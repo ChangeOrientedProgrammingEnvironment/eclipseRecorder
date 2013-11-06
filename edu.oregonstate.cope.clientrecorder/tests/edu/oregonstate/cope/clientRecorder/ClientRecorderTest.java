@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder.EventType;
+import static edu.oregonstate.cope.clientRecorder.ClientRecorder.*;
 import static org.junit.Assert.*;
 
 //TODO refactor this test class. Too many hardcoded strings. Too much duplication with tested class.
@@ -64,13 +65,13 @@ public class ClientRecorderTest {
 
 	private JSONObject createChangeJSON(String text, int offset, int length, String sourceFile, String changeOrigin) {
 		JSONObject j = new JSONObject();
-		j.put("eventType", EventType.textChange.toString());
-		j.put("text", text);
-		j.put("offset", offset);
-		j.put("len", length);
-		j.put("sourceFile", sourceFile);
-		j.put("changeOrigin", changeOrigin);
-		j.put("IDE", clientRecorder.getIDE());
+		j.put(JSON_EVENT_TYPE, EventType.textChange.toString());
+		j.put(JSON_TEXT, text);
+		j.put(JSON_OFFSET, offset);
+		j.put(JSON_LENGTH, length);
+		j.put(JSON_ENTITY_ADDRESS, sourceFile);
+		j.put(JSON_CHANGE_ORIGIN, changeOrigin);
+		j.put(JSON_IDE, clientRecorder.getIDE());
 		addTimeStamp(j);
 		return j;
 	}
@@ -78,16 +79,16 @@ public class ClientRecorderTest {
 	/* Test DebugLaunch */
 	@Test(expected = RuntimeException.class)
 	public void testDebugLaunchNull() throws Exception {
-		clientRecorder.buildIDEFileEventJSON(null, null);
+		clientRecorder.buildIDEEventJSON(null, null);
 	}
 
 	@Test
 	public void testDebugLaunch() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.debugLaunch, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.debugLaunch, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
-		expected.put("IDE", "IDEA");
-		expected.put("eventType", ClientRecorder.EventType.debugLaunch.toString());
-		expected.put("fullyQualifiedMain", "/workspace/package/filename.java");
+		expected.put(JSON_IDE, "IDEA");
+		expected.put(JSON_EVENT_TYPE, ClientRecorder.EventType.debugLaunch.toString());
+		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
@@ -95,11 +96,11 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testStdLaunch() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.normalLaunch, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.normalLaunch, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
-		expected.put("IDE", "IDEA");
-		expected.put("eventType", ClientRecorder.EventType.normalLaunch.toString());
-		expected.put("fullyQualifiedMain", "/workspace/package/filename.java");
+		expected.put(JSON_IDE, "IDEA");
+		expected.put(JSON_EVENT_TYPE, ClientRecorder.EventType.normalLaunch.toString());
+		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
@@ -107,11 +108,11 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testFileOpen() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.fileOpen, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.fileOpen, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
-		expected.put("IDE", "IDEA");
-		expected.put("eventType", ClientRecorder.EventType.fileOpen.toString());
-		expected.put("fullyQualifiedMain", "/workspace/package/filename.java");
+		expected.put(JSON_IDE, "IDEA");
+		expected.put(JSON_EVENT_TYPE, ClientRecorder.EventType.fileOpen.toString());
+		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
@@ -119,11 +120,11 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testFileClose() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEFileEventJSON(ClientRecorder.EventType.fileClose, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.fileClose, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
-		expected.put("IDE", "IDEA");
-		expected.put("eventType", ClientRecorder.EventType.fileClose.toString());
-		expected.put("fullyQualifiedMain", "/workspace/package/filename.java");
+		expected.put(JSON_IDE, "IDEA");
+		expected.put(JSON_EVENT_TYPE, ClientRecorder.EventType.fileClose.toString());
+		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
@@ -144,17 +145,17 @@ public class ClientRecorderTest {
 		JSONObject actual = clientRecorder.buildTestEventJSON("/workspace/package/TestFoo/testBar", "success");
 		JSONObject expected = new JSONObject();
 
-		expected.put("eventType", EventType.testRun.toString());
-		expected.put("IDE", clientRecorder.getIDE());
-		expected.put("fullyQualifiedTestMethod", "/workspace/package/TestFoo/testBar");
-		expected.put("testResult", "success");
+		expected.put(JSON_EVENT_TYPE, EventType.testRun.toString());
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/TestFoo/testBar");
+		expected.put(JSON_TEST_RESULT, "success");
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, actual);
 	}
 
 	private void addTimeStamp(JSONObject expected) {
-		expected.put("timestamp", (System.currentTimeMillis() / 1000) + "");
+		expected.put(JSON_TIMESTAMP, (System.currentTimeMillis() / 1000) + "");
 	}
 
 	private void assertJSONEquals(JSONObject expected, JSONObject actual) {
@@ -162,7 +163,7 @@ public class ClientRecorderTest {
 		assertEquals(expected.keySet(), actual.keySet());
 
 		for (Object key : expected.keySet()) {
-			if (key.equals("timestamp")) {
+			if (key.equals(JSON_TIMESTAMP)) {
 				assertTimestampsEqual(expected.get(key), actual.get(key));
 			} else {
 				assertEquals(expected.get(key), actual.get(key));

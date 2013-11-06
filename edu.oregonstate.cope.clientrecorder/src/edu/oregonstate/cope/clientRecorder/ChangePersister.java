@@ -4,12 +4,14 @@ import java.util.regex.Pattern;
 
 import org.json.simple.JSONObject;
 
-import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
 import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
 
 /**
- * Persists JSON objects. This class is a Singleton. A FileManager must be set
- * in order for the ChangePersister to function.
+ * Defines and implements JSON event persistence format. A FileManager must be
+ * set in order for the ChangePersister to function.
+ * 
+ * <br>
+ * This class is a Singleton.
  */
 public class ChangePersister {
 
@@ -23,10 +25,11 @@ public class ChangePersister {
 	}
 
 	private ChangePersister() {
-		fileManager = new EventFilesProvider();
 	}
 
-	public void init() {
+	// TODO This gets called on every persist. Maybe create a special
+	// FileProvider that knows how to initialize things on file swap
+	public void addInitEventIfAbsent() {
 		if (fileManager.isCurrentFileEmpty()) {
 			JSONObject markerObject = createInitJSON();
 
@@ -50,16 +53,14 @@ public class ChangePersister {
 			throw new RuntimeException("Argument cannot be null");
 		}
 
+		addInitEventIfAbsent();
+
 		fileManager.appendToCurrentFile(ChangePersister.SEPARATOR);
 		fileManager.appendToCurrentFile(jsonObject.toJSONString());
 	}
 
 	public void setFileManager(FileProvider fileManager) {
 		this.fileManager = fileManager;
-		init();
-	}
-
-	public void setRootDirectory(String rootDirectory) {
-		fileManager.setRootDirectory(rootDirectory);
+		addInitEventIfAbsent();
 	}
 }

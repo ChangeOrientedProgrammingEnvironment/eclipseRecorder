@@ -35,6 +35,7 @@ public class StubFileProvider extends FileProvider {
 
 	@Override
 	public void deleteFiles() throws IOException {
+		fileStub = "";
 	}
 
 	@Override
