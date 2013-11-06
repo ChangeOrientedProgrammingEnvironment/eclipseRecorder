@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/edu.oregonstate.cope.eclipse.feature_0.0.2.qualifier.jar" id="edu.oregonstate.cope.eclipse.feature" version="0.0.1.qualifier"/>
+   <feature url="features/edu.oregonstate.cope.eclipse.feature_0.2.0.201311060059.jar" id="edu.oregonstate.cope.eclipse.feature" version="0.2.0.201311060059"/>
 </site>
