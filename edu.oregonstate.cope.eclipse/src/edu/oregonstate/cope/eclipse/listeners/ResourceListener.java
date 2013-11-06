@@ -37,9 +37,9 @@ public class ResourceListener implements IResourceChangeListener {
 			try {
 				inputStream = affectedFile.getContents();
 				Scanner scanner = new Scanner(inputStream, affectedFile.getCharset());
-				String contents = scanner.useDelimiter("\\A").next();	
+				String contents = scanner.useDelimiter("\\A").next();
 				scanner.close();
-				recorder.recordTextChange(contents, 0, 0, affectedFile.getFullPath().toPortableString(), ClientRecorder.CHANGE_ORIGIN_REFRESH);
+				recorder.recordTextChange(contents, 0, 0,affectedFile.getFullPath().toPortableString(), ClientRecorder.CHANGE_ORIGIN_REFRESH);
 			} catch (CoreException e) {
 			}
 		}

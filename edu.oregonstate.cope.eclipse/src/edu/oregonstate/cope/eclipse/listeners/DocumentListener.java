@@ -36,7 +36,6 @@ public class DocumentListener implements IDocumentListener {
 			changeType = ClientRecorder.CHANGE_ORIGIN_REFACTORING;
 
 		String filePath = fileLocation.toPortableString();
-		filePath = COPEPlugin.getDefault().getWorkspaceID() + "/" + filePath;
 		clientRecorderInstance.recordTextChange(event.fText, event.fOffset,
 				event.fLength, filePath, changeType);
 
