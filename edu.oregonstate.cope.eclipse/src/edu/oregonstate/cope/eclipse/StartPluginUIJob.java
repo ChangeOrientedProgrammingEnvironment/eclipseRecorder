@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -103,6 +104,9 @@ class StartPluginUIJob extends UIJob {
 
 	private void getInitialSnapshot() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject[] projects = root.getProjects();
+		if (projects.length == 0)
+			return; //don't take snapshot of empty workspace
 		String zipFile = COPEPlugin.getLocalStorage().getAbsolutePath() + "/" + System.currentTimeMillis() + ".zip";
 		ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(root, zipFile);
 		archiveFileExportOperation.setUseCompression(true);
