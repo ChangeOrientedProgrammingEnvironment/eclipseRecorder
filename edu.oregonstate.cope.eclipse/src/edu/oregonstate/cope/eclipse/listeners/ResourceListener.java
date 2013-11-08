@@ -33,6 +33,9 @@ public class ResourceListener implements IResourceChangeListener {
 		int type = affectedResource.getType();
 		if (type == IResource.FILE) {
 			IFile affectedFile = (IFile) affectedResource;
+			if (isClassFile(affectedFile)) {
+				return;
+			}
 			InputStream inputStream;
 			try {
 				inputStream = affectedFile.getContents();
@@ -47,6 +50,13 @@ public class ResourceListener implements IResourceChangeListener {
 		for (IResourceDelta child : children) {
 			recordRefresh(child);
 		}
+	}
+
+	private boolean isClassFile(IFile affectedFile) {
+		String fileExtension = affectedFile.getFileExtension();
+		if (fileExtension.equals("class"))
+			return true;
+		return false;
 	}
 
 	private boolean isSavedAction() {
