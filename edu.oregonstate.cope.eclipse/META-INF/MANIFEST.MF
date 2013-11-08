@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Eclipse
+Bundle-Name: COPE ClientRecorder Listeners
 Bundle-SymbolicName: edu.oregonstate.cope.eclipse;singleton:=true
-Bundle-Version: 0.0.2.qualifier
+Bundle-Version: 0.2.0.qualifier
 Bundle-Activator: edu.oregonstate.cope.eclipse.COPEPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -17,4 +17,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors;bundle-version="3.8.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Main-Class: edu.oregonstate.cope.fileSender.FileSender
+Bundle-ClassPath: .,
+ thirdParty/commons-codec-1.8.jar,
+ thirdParty/commons-io-1.4.jar,
+ thirdParty/commons-net-3.3.jar,
+ thirdParty/commons-vfs2-2.0.jar,
+ thirdParty/jsch-0.1.50.jar,
+ thirdParty/quartz-1.8.6.jar
