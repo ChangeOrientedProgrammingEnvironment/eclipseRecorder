@@ -37,14 +37,35 @@ public class SFTPUploader {
 		this.uploadPathToFTP(localPath, remotePath);
 	}
 	
+	private void createRemoteDir(String path) throws SftpException {
+		String[] folders = path.split( "/" );
+		for ( String folder : folders ) {
+		    if ( folder.length() > 0 ) {
+		        try {
+		            this.channelSftp.cd( folder );
+		        }
+		        catch ( SftpException e ) {
+		            this.channelSftp.mkdir( folder );
+		            this.channelSftp.cd( folder );
+		        }
+		    }
+		}
+	}
+	
 	private void uploadPathToFTP(String localPath, String remotePath) throws FileNotFoundException, SftpException {
 		File[] files = new File(localPath).listFiles();
+		try {
+			channelSftp.cd( remotePath );
+		} catch ( SftpException e ) {
+			this.createRemoteDir(remotePath);
+		}
+//		channelSftp.cd( remotePath );
 		for(File file : files) {
 			if(file.isFile()) {
-				this.channelSftp.put(new FileInputStream(file), remotePath + '/' + file.getName());
+				channelSftp.put(new FileInputStream(file), file.getName());
 			} else {
-				this.channelSftp.mkdir(remotePath + '/' + file.getName());
-				this.uploadPathToFTP(localPath + '/' + file.getName(), remotePath + '/' + file.getName());
+				channelSftp.mkdir(remotePath + '/' + file.getName());
+				this.uploadPathToFTP(localPath + '/' + file.getName(), file.getName());
 			}
 		}
 	}

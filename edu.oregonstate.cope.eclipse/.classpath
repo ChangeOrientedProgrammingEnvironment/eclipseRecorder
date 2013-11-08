@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="thirdParty/quartz-1.8.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="thirdParty/commons-codec-1.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="thirdParty/commons-io-1.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="thirdParty/commons-net-3.3.jar"/>

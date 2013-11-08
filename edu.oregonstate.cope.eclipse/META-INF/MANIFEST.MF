@@ -23,4 +23,4 @@ Bundle-ClassPath: .,
  thirdParty/commons-net-3.3.jar,
  thirdParty/commons-vfs2-2.0.jar,
  thirdParty/jsch-0.1.50.jar,
- thirdParty/quartz-2.2.1.jar
+ thirdParty/quartz-1.8.6.jar
