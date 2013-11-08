@@ -40,14 +40,25 @@ public class FTPConnectionProperties {
 	}
 	
 	public static String getHost() {
+		if(properties == null) {LoadProperties();}
 		return properties.getProperty("host");
 	}
 	
 	public static String getUsername() {
+		if(properties == null) {LoadProperties();}
 		return properties.getProperty("username");
 	}
 	
+	public static String getCronConfiguration() {
+		return getFrequency();
+	}
+	public static String getFrequency() {
+		if(properties == null) {LoadProperties();}
+		return properties.getProperty("frequency");
+	}
+	
 	public static String getPassword() throws GeneralSecurityException, IOException {
+		if(properties == null) {LoadProperties();}
 		String encodedPassword = properties.getProperty("password");
 		return decrypt(encodedPassword);
 	}

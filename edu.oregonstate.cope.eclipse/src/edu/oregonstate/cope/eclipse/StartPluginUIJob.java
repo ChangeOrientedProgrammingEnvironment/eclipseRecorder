@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.UUID;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -31,6 +32,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.progress.UIJob;
+import org.quartz.SchedulerException;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
@@ -40,6 +42,7 @@ import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
+import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
 class StartPluginUIJob extends UIJob {
@@ -60,6 +63,7 @@ class StartPluginUIJob extends UIJob {
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
 			getInitialSnapshot();
+			initializeFileSender();
 		}
 		monitor.worked(1);
 
@@ -148,5 +152,17 @@ class StartPluginUIJob extends UIJob {
 		ISourceViewer sourceViewer = (ISourceViewer) editorPart.getAdapter(ITextOperationTarget.class);
 		IDocument document = sourceViewer.getDocument();
 		return document;
+	}
+	
+	private void initializeFileSender() {
+		try {
+			new FileSender();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SchedulerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
