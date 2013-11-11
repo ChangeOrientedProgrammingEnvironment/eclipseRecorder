@@ -64,7 +64,7 @@ class StartPluginUIJob extends UIJob {
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
 			getInitialSnapshot();
-			initializeFileSender();
+			//initializeFileSender();
 		}
 		monitor.worked(1);
 
