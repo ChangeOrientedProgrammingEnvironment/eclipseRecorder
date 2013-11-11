@@ -10,7 +10,7 @@ public class GetWorkspaceIDTest {
 	public void testGetWorkspaceID() {
 		String workspaceID = COPEPlugin.getDefault().getWorkspaceID();
 		assertNotNull(workspaceID);
-		assertNotEquals("", workspaceID);
+		assertFalse(workspaceID.equals(""));
 		String secondWorkspaceID = COPEPlugin.getDefault().getWorkspaceID();
 		assertEquals(workspaceID, secondWorkspaceID);
 	}
