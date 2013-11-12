@@ -64,8 +64,8 @@ class StartPluginUIJob extends UIJob {
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
 			getInitialSnapshot();
-			//initializeFileSender();
 		}
+		
 		monitor.worked(1);
 
 		this.copePlugin.initializeRecorder(COPEPlugin.getLocalStorage().getAbsolutePath(), getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
@@ -82,6 +82,8 @@ class StartPluginUIJob extends UIJob {
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
+		initializeFileSender();
+		
 		return Status.OK_STATUS;
 	}
 
@@ -162,10 +164,8 @@ class StartPluginUIJob extends UIJob {
 		try {
 			new FileSender();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

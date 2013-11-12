@@ -7,33 +7,43 @@ import com.jcraft.jsch.*;
 public class SFTPUploader {
 	
 	private ChannelSftp channelSftp = null;
-	private Channel channel = null;
 	private Session session = null;
 	
-	public SFTPUploader(String host, String username, String password) throws Exception{
+	private String host = "";
+	private String username = "";
+	private String password = "";
+	
+	private void initializeSession(String host, String username, String password) {
+		this.host = host;
+		this.username = username;
+		this.password = password;
+		
 		try {
 			JSch jsch = new JSch();
-			this.session = jsch.getSession(username, host, 22);
-			this.session.setPassword(password);
+			this.session = jsch.getSession(this.username, this.host, 22);
+			this.session.setPassword(this.password);
 			java.util.Properties config = new java.util.Properties();
 			config.put("StrictHostKeyChecking", "no");
 			this.session.setConfig(config);
+			this.session.setServerAliveInterval(70000);
 			this.session.connect();
-			this.channel = session.openChannel("sftp");
-			this.channel.connect();
+			Channel channel = this.session.openChannel("sftp");
+			channel.connect();
 			this.channelSftp = (ChannelSftp) channel;
 			
 		} catch (Exception ex) {
-//			 System.out.println("Exception found while tranfer the response.");
-		}
-		finally{
-			channelSftp.exit();
-			channel.disconnect();
+			ex.printStackTrace();
+			this.channelSftp.exit();
+			this.channelSftp.disconnect();
 			this.session.disconnect();
 		}
 	}
 	
-	public void upload(String localPath, String remotePath) throws FileNotFoundException, SftpException {
+	public SFTPUploader(String host, String username, String password) throws Exception{
+		this.initializeSession(host, username, password);
+	}
+	
+	public void upload(String localPath, String remotePath) throws FileNotFoundException, SftpException, JSchException {
 		this.uploadPathToFTP(localPath, remotePath);
 	}
 	
@@ -45,27 +55,25 @@ public class SFTPUploader {
 		            this.channelSftp.cd( folder );
 		        }
 		        catch ( SftpException e ) {
-		            this.channelSftp.mkdir( folder );
+		        	this.channelSftp.mkdir( folder );
 		            this.channelSftp.cd( folder );
 		        }
 		    }
 		}
 	}
 	
-	private void uploadPathToFTP(String localPath, String remotePath) throws FileNotFoundException, SftpException {
+	private void uploadPathToFTP(String localPath, String remotePath) throws FileNotFoundException, SftpException, JSchException {
 		File[] files = new File(localPath).listFiles();
 		try {
-			channelSftp.cd( remotePath );
+			this.channelSftp.cd( remotePath );
 		} catch ( SftpException e ) {
 			this.createRemoteDir(remotePath);
 		}
-//		channelSftp.cd( remotePath );
 		for(File file : files) {
 			if(file.isFile()) {
-				channelSftp.put(new FileInputStream(file), file.getName());
-			} else {
-				channelSftp.mkdir(remotePath + '/' + file.getName());
-				this.uploadPathToFTP(localPath + '/' + file.getName(), file.getName());
+				this.channelSftp.put(new FileInputStream(file), file.getName());
+			} else {	
+				this.uploadPathToFTP(localPath + '/' + file.getName(),  file.getName());
 			}
 		}
 	}
