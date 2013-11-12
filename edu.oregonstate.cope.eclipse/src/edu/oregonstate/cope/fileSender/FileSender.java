@@ -1,66 +1,40 @@
 package edu.oregonstate.cope.fileSender;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.text.ParseException;
+import java.util.Date;
 
 import org.quartz.CronTrigger;
-import org.quartz.Job;
 import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
+import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
-
-import com.jcraft.jsch.SftpException;
-
-import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class FileSender {
 	
-	class FileSenderJob implements Job
-	{
-		public void execute(JobExecutionContext context) throws JobExecutionException {
-			try {
-				SFTPUploader uploader = new SFTPUploader(
-						FTPConnectionProperties.getHost(), 
-						FTPConnectionProperties.getUsername(), 
-						FTPConnectionProperties.getPassword()
-				);
-				// using eclipse workspace ID as a remote dir to store data
-				uploader.upload(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getDefault().getWorkspaceID());
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SftpException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (GeneralSecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
-		}
-	}
-	
 	public FileSender() throws ParseException, SchedulerException  {
-		CronTrigger trigger = new CronTrigger();
-		trigger.setName("ftpUploadTrigger");
-		trigger.setCronExpression(FTPConnectionProperties.getCronConfiguration()); 
+		CronTrigger cronTrigger = new CronTrigger();
+		cronTrigger.setName("ftpUploadTrigger");
+		String cronJobConfig = FTPConnectionProperties.getCronConfiguration();
+		cronTrigger.setCronExpression(cronJobConfig);
 		
-		JobDetail job = new JobDetail();
-		job.setName("File Sender Job");
-		job.setJobClass(FileSenderJob.class);
+		Trigger nowTrigger = new SimpleTrigger();
+		nowTrigger.setName("File Send Now");
+		nowTrigger.setStartTime(new Date());
+		
+		JobDetail jobCron = new JobDetail();
+		jobCron.setName("File Sender Job");
+		jobCron.setJobClass(FileSenderJob.class);
+		
+		JobDetail jobNow = new JobDetail();
+		jobNow.setName("File Send Now");
+		jobNow.setJobClass(FileSenderJob.class);
 		
 		Scheduler scheduler = new StdSchedulerFactory().getScheduler();
 		scheduler.start();
-		scheduler.scheduleJob(job, trigger);
+		scheduler.scheduleJob(jobCron, cronTrigger);
+		scheduler.scheduleJob(jobNow, nowTrigger);
+		
 	}
 }
