@@ -31,7 +31,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot
 	};
 
 	public String getIDE() {
@@ -80,6 +80,10 @@ public class ClientRecorder {
 
 	public void recordTestRun(String fullyQualifiedTestMethod, String testResult) {
 		ChangePersister.instance().persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult));
+	}
+	
+	public void recordSnapshot(String snapshotPath) {
+		ChangePersister.instance().persist(buildSnapshotJSON(snapshotPath));
 	}
 
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
@@ -133,6 +137,19 @@ public class ClientRecorder {
 		obj.put(JSON_ENTITY_ADDRESS, fullyQualifiedTestMethod);
 		obj.put(JSON_TEST_RESULT, testResult);
 
+		return obj;
+	}
+
+	protected JSONObject buildSnapshotJSON(String snapshotPath) {
+		if (snapshotPath == null)
+			throw new RuntimeException("Arguments cannot be null");
+		
+		if(snapshotPath.isEmpty())
+			throw new RuntimeException("Arguments cannot be empty");
+		
+		JSONObject obj = buildCommonJSONObj(EventType.snapshot);
+		obj.put(JSON_ENTITY_ADDRESS, snapshotPath);
+		
 		return obj;
 	}
 }
