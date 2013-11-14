@@ -153,6 +153,29 @@ public class ClientRecorderTest {
 
 		assertJSONEquals(expected, actual);
 	}
+	
+	@Test(expected = RuntimeException.class)
+	public void testSnapshotNull() throws Exception {
+		clientRecorder.buildSnapshotJSON(null);
+	}
+	
+	@Test(expected = RuntimeException.class)
+	public void testSnapshotEmpty() throws Exception {
+		clientRecorder.buildSnapshotJSON("");
+	}
+	
+	@Test
+	public void testSnapshot() throws Exception {
+		JSONObject actual = clientRecorder.buildSnapshotJSON("/path/to/snapshot/theSnapshot");
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_EVENT_TYPE, EventType.snapshot + "");
+		expected.put(JSON_ENTITY_ADDRESS, "/path/to/snapshot/theSnapshot");
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
 
 	private void addTimeStamp(JSONObject expected) {
 		expected.put(JSON_TIMESTAMP, (System.currentTimeMillis() / 1000) + "");
