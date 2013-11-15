@@ -5,7 +5,7 @@ import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
 
 public class RecorderFacade {
 	private ClientRecorder clientRecorder;
-	private RecorderProperties recorderProperties;
+	private Properties properties;
 
 	public RecorderFacade initialize(String rootDirectory, String IDE) {
 		EventFilesProvider eventFileProvider = new EventFilesProvider();
@@ -14,7 +14,7 @@ public class RecorderFacade {
 		
 		ConfigFileProvider configFileProvider = new ConfigFileProvider();
 		configFileProvider.setRootDirectory(rootDirectory);
-		recorderProperties = new RecorderProperties(configFileProvider);
+		properties = new Properties(configFileProvider);
 
 		clientRecorder = new ClientRecorder();
 		clientRecorder.setIDE(IDE);
@@ -26,7 +26,7 @@ public class RecorderFacade {
 		return clientRecorder;
 	}
 
-	public RecorderProperties getRecorderProperties() {
-		return recorderProperties;
+	public Properties getProperties() {
+		return properties;
 	}
 }

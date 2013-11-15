@@ -5,7 +5,7 @@ import java.nio.file.Files;
 
 /**
  * Represents the configuration file.
- * 
+ * It is called "config".
  */
 public class ConfigFileProvider extends FileProvider {
 
