@@ -33,15 +33,6 @@ public class SampleHandler extends AbstractHandler {
 //				"Hello, Eclipse world");
 		DemoSurveyDialog dsd = new DemoSurveyDialog(window.getShell());
 		dsd.open();
-//		
-//		// customized MessageDialog with configured buttons
-//		MessageDialog dialog = new MessageDialog(window.getShell(), "My Title", null,
-//		    "My message", MessageDialog.ERROR, new String[] { "First",
-//		  "Second", "Third" }, 0);
-//		int result = dialog.open();
-//		System.out.println(result); 
-		
-		
 		
 		return null;
 	}

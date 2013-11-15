@@ -1,12 +1,11 @@
 package edu.oregonstate.cope.eclipse;
 
-import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class GetWorkspaceIDTest {
 	
-	@Test
+	//@Test
 	public void testGetWorkspaceID() {
 		String workspaceID = COPEPlugin.getDefault().getWorkspaceID();
 		assertNotNull(workspaceID);
