@@ -1,6 +1,6 @@
 package edu.oregonstate.cope.clientRecorder;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Calendar;
 
@@ -46,5 +46,14 @@ public class UninstallerTest {
 		Uninstaller newUninstaller = new Uninstaller(uninstaller.testGetProps());
 		
 		assertInit(3, newUninstaller);
+	}
+	
+	@Test
+	public void testInitTwice() throws Exception {
+		uninstaller.initUninstall(3);
+		assertInit(3, uninstaller);
+		
+		uninstaller.initUninstall(5);
+		assertInit(5, uninstaller);
 	}
 }
