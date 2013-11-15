@@ -12,13 +12,13 @@ import edu.oregonstate.cope.tests.util.StubFileProvider;
 public class UninstallerTest {
 	
 	private Uninstaller uninstaller;
-	private RecorderProperties props;
+	private Properties props;
 	private Calendar uninstallDate;
 	private Calendar currentDate;
 	
 	@Before
 	public void setup() {
-		props = new RecorderProperties(new StubFileProvider());
+		props = new Properties(new StubFileProvider());
 		uninstaller = new Uninstaller(props);
 
 		uninstallDate = Calendar.getInstance();

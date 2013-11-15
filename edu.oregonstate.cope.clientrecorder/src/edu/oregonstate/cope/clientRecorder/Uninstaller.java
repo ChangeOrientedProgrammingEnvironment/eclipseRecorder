@@ -11,9 +11,9 @@ public class Uninstaller {
 	private static final DateFormat DATE_FORMATTER = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ROOT);
 	private static final String UNINSTALL_DATE = "uninstallDate";
 
-	private RecorderProperties props;
+	private Properties props;
 
-	public Uninstaller(RecorderProperties props) {
+	public Uninstaller(Properties props) {
 		this.props = props;
 	}
 
@@ -49,7 +49,7 @@ public class Uninstaller {
 		return cal;
 	}
 
-	protected RecorderProperties testGetProps() {
+	protected Properties testGetProps() {
 		return props;
 	}
 
