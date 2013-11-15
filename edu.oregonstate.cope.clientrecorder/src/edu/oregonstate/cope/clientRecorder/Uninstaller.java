@@ -9,8 +9,7 @@ import java.util.Locale;
 public class Uninstaller {
 
 	private static final DateFormat DATE_FORMATTER = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ROOT);
-	private static final String UNINSTALL_BASE_TIME = "uninstallBaseTime";
-	private static final String UNINSTALL_DAY_OFFSET = "uninstallDayOffset";
+	private static final String UNINSTALL_DATE = "uninstallDate";
 
 	private RecorderProperties props;
 
@@ -18,24 +17,27 @@ public class Uninstaller {
 		this.props = props;
 	}
 
-	public void initUninstall(Integer i) {
-		props.addProperty(UNINSTALL_DAY_OFFSET, i.toString());
-		props.addProperty(UNINSTALL_BASE_TIME, getDateString());
+	public void initUninstall(Integer dayOffset) {
+		Calendar now = Calendar.getInstance();
+		now.add(Calendar.DAY_OF_MONTH, dayOffset);
+
+		props.addProperty(UNINSTALL_DATE, getDateString(now));
 	}
 
-	private String getDateString() {
-		return DATE_FORMATTER.format(Calendar.getInstance().getTime());
+	public Boolean shouldUninstall() {
+		return shouldUninstall(getUninstallDate(), Calendar.getInstance());
 	}
 
-	protected Object getUninstallOffset() {
-		return Integer.parseInt(props.getProperty(UNINSTALL_DAY_OFFSET));
+	private String getDateString(Calendar date) {
+
+		return DATE_FORMATTER.format(date.getTime());
 	}
 
-	protected Calendar getUninstallBase() {
+	protected Calendar getUninstallDate() {
 		Date date = null;
 
 		try {
-			date = DATE_FORMATTER.parse(props.getProperty(UNINSTALL_BASE_TIME));
+			date = DATE_FORMATTER.parse(props.getProperty(UNINSTALL_DATE));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,5 +51,9 @@ public class Uninstaller {
 
 	protected RecorderProperties testGetProps() {
 		return props;
+	}
+
+	protected boolean shouldUninstall(Calendar uninstallDate, Calendar currentDate) {
+		return currentDate.after(uninstallDate);
 	}
 }
