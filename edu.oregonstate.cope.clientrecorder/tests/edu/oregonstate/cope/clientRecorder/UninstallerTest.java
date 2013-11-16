@@ -3,6 +3,7 @@ package edu.oregonstate.cope.clientRecorder;
 import static org.junit.Assert.*;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,18 @@ public class UninstallerTest {
 		assertEquals(expectedTimeBase.get(Calendar.DAY_OF_MONTH), timeBase.get(Calendar.DAY_OF_MONTH));
 	}
 
+	@Test
+	public void testInitNoDateSet() throws Exception {
+		Calendar actual = uninstaller.getUninstallDate();
+		
+		Calendar expected = Calendar.getInstance();
+		expected.setTime(new Date(Long.MAX_VALUE));
+		
+		assertEquals(expected.get(Calendar.YEAR), actual.get(Calendar.YEAR));
+		assertEquals(expected.get(Calendar.MONTH), actual.get(Calendar.MONTH));
+		assertEquals(expected.get(Calendar.DAY_OF_MONTH), actual.get(Calendar.DAY_OF_MONTH));
+	}
+	
 	@Test
 	public void testInit() {
 		uninstaller.initUninstall(3);
@@ -84,5 +97,10 @@ public class UninstallerTest {
 	public void testShouldNotUninstallMinutes() throws Exception {
 		uninstallDate.add(Calendar.MINUTE, 1);
 		assertFalse(uninstaller.shouldUninstall(uninstallDate, currentDate));
+	}
+	
+	@Test
+	public void testShouldNotUninstallWhenNoDateSet() throws Exception {
+		assertFalse(uninstaller.shouldUninstall());
 	}
 }
