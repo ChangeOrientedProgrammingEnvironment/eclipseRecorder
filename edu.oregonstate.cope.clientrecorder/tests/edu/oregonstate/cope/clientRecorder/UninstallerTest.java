@@ -56,7 +56,6 @@ public class UninstallerTest {
 		assertInit(3, uninstaller);
 	}
 
-
 	@Test
 	public void testPersistedInit() throws Exception {
 		uninstaller.initUninstall(3);
@@ -102,5 +101,18 @@ public class UninstallerTest {
 	@Test
 	public void testShouldNotUninstallWhenNoDateSet() throws Exception {
 		assertFalse(uninstaller.shouldUninstall());
+	}
+	
+	@Test
+	public void testIsUninstalledNoInit() throws Exception {
+		assertFalse(uninstaller.isUninstalled());
+	}
+	
+	@Test
+	public void testSetUninstall() throws Exception {
+		uninstaller.setUninstall();
+		assertTrue(uninstaller.isUninstalled());
+		
+		assertTrue(new Uninstaller(uninstaller.testGetProps()).isUninstalled());
 	}
 }

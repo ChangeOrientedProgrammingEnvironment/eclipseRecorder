@@ -16,7 +16,9 @@ import java.util.Locale;
  */
 public class Uninstaller {
 
-	private static final DateFormat DATE_FORMATTER = DateFormat.getDateInstance(DateFormat.FULL, Locale.ROOT);
+	private static final String IS_UNINSTALLED = "isUninstalled";
+	//TODO choose a prettier format
+	private static final DateFormat DATE_FORMATTER = DateFormat.getDateInstance(DateFormat.FULL, Locale.ROOT); 
 	private static final String UNINSTALL_DATE = "uninstallDate";
 
 	private Properties props;
@@ -85,5 +87,18 @@ public class Uninstaller {
 
 	protected boolean shouldUninstall(Calendar uninstallDate, Calendar currentDate) {
 		return currentDate.after(uninstallDate);
+	}
+
+	public boolean isUninstalled() {
+		String string = props.getProperty(IS_UNINSTALLED);
+
+		if (string == null)
+			return false;
+
+		return Boolean.parseBoolean(string);
+	}
+
+	public void setUninstall() {
+		props.addProperty(IS_UNINSTALLED, "true");
 	}
 }
