@@ -64,7 +64,7 @@ public class OutsideLibrariesTest {
 		StartPluginUIJob job = new StartPluginUIJob(COPEPlugin.getDefault(), "");
 		List<String> nonWorkspaceLibraries = job.getNonWorkspaceLibraries(javaProject);
 		assertEquals(1, nonWorkspaceLibraries.size());
-		assertEquals("",nonWorkspaceLibraries.get(0));
+		assertEquals("/Users/caius/osu/COPE/clientRecorder/edu.oregonstate.cope.eclipse.tests/projects/json-simple-1.1.1.jar",nonWorkspaceLibraries.get(0));
 	}
 
 }
