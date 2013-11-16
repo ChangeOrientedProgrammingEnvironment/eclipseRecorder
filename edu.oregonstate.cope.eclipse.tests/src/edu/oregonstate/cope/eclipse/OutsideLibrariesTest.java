@@ -27,8 +27,7 @@ public class OutsideLibrariesTest {
 	}
 	
 	@Test
-	public void testGetWorkspaceLibrary() {
-		
+	public void testGetNonWorkspaceLibrary() throws Exception {
 	}
 
 }
