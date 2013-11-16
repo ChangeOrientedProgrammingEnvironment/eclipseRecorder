@@ -1,6 +1,9 @@
 package edu.oregonstate.cope.eclipse;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
@@ -68,10 +71,6 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public String getWorkspaceID() {
-		return workspaceID;
-	}
-
 	public ClientRecorder getClientRecorder() {
 		return recorderFacade.getClientRecorder();
 	}
@@ -83,6 +82,24 @@ public class COPEPlugin extends AbstractUIPlugin {
 	public void initializeRecorder(String rootDirectory, String workspaceID, String IDE) {
 		this.workspaceID = workspaceID;
 		recorderFacade = new RecorderFacade().initialize(rootDirectory, IDE);
+	}
+
+	protected File getWorkspaceIdFile() {
+		File pluginStoragePath = COPEPlugin.getLocalStorage();
+		return new File(pluginStoragePath.getAbsolutePath() + "/workspace_id");
+	}
+
+	public String getWorkspaceID() {
+		File workspaceIdFile = getWorkspaceIdFile();
+		String workspaceID = "";
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(workspaceIdFile));
+			workspaceID = reader.readLine();
+			reader.close();
+		} catch (IOException e) {
+		}
+		return workspaceID;
 	}
 
 	public static File getLocalStorage() {

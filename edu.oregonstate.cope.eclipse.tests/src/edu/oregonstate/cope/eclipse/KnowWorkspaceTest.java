@@ -23,7 +23,7 @@ public class KnowWorkspaceTest {
 
 	@Test
 	public void testIDontKnowThisWorkspace() {
-		File workspaceIdFile = job.getWorkspaceIdFile();
+		File workspaceIdFile = job.copePlugin.getWorkspaceIdFile();
 		workspaceIdFile.delete();
 		assertFalse(job.isWorkspaceKnown());
 	}

@@ -1,9 +1,7 @@
 package edu.oregonstate.cope.eclipse;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -50,7 +48,7 @@ class StartPluginUIJob extends UIJob {
 	/**
 	 * 
 	 */
-	private final COPEPlugin copePlugin;
+	final COPEPlugin copePlugin;
 	private File workspaceIdFile;
 
 	StartPluginUIJob(COPEPlugin copePlugin, String name) {
@@ -68,7 +66,7 @@ class StartPluginUIJob extends UIJob {
 		
 		monitor.worked(1);
 
-		this.copePlugin.initializeRecorder(COPEPlugin.getLocalStorage().getAbsolutePath(), getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
+		this.copePlugin.initializeRecorder(COPEPlugin.getLocalStorage().getAbsolutePath(), copePlugin.getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
 
 		registerDocumentListenersForOpenEditors();
 		FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
@@ -88,13 +86,8 @@ class StartPluginUIJob extends UIJob {
 	}
 
 	protected boolean isWorkspaceKnown() {
-		workspaceIdFile = getWorkspaceIdFile();
+		workspaceIdFile = copePlugin.getWorkspaceIdFile();
 		return workspaceIdFile.exists();
-	}
-
-	protected File getWorkspaceIdFile() {
-		File pluginStoragePath = COPEPlugin.getLocalStorage();
-		return new File(pluginStoragePath.getAbsolutePath() + "/workspace_id");
 	}
 
 	protected void getToKnowWorkspace() {
@@ -123,19 +116,6 @@ class StartPluginUIJob extends UIJob {
 		} catch (InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private String getWorkspaceID() {
-		File workspaceIdFile = getWorkspaceIdFile();
-		String workspaceID = "";
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new FileReader(workspaceIdFile));
-			workspaceID = reader.readLine();
-			reader.close();
-		} catch (IOException e) {
-		}
-		return workspaceID;
 	}
 
 	private void registerDocumentListenersForOpenEditors() {
