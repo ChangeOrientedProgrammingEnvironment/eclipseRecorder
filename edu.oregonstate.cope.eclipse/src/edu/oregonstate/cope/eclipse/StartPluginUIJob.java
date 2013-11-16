@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -16,11 +18,15 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -82,7 +88,7 @@ class StartPluginUIJob extends UIJob {
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
-		initializeFileSender();
+//		initializeFileSender();
 		
 		return Status.OK_STATUS;
 	}
@@ -168,5 +174,21 @@ class StartPluginUIJob extends UIJob {
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public List<String> getNonWorkspaceLibraries(IJavaProject project) {
+		IClasspathEntry[] resolvedClasspath = null;
+		try {
+			resolvedClasspath = project.getRawClasspath();
+		} catch (JavaModelException e) {
+			return new ArrayList<String>();
+		}
+		List<String> pathsOfLibraries = new ArrayList<String>();
+		for (IClasspathEntry iClasspathEntry : resolvedClasspath) {
+			if (iClasspathEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+				pathsOfLibraries.add(iClasspathEntry.getPath().toPortableString());
+			}
+		}
+		return pathsOfLibraries;
 	}
 }
