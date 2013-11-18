@@ -94,7 +94,7 @@ class StartPluginUIJob extends UIJob {
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
-//		initializeFileSender();
+		initializeFileSender();
 		
 		return Status.OK_STATUS;
 	}
