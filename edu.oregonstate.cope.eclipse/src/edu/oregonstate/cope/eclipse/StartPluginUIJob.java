@@ -3,6 +3,7 @@ package edu.oregonstate.cope.eclipse;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -24,7 +25,6 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -204,9 +204,8 @@ class StartPluginUIJob extends UIJob {
 	public void addLibsToZipFile(List<String> pathOfLibraries, String zipFilePath) {
 		try {
 			String libFolder = "libs/";
-			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath, true));
-			ZipEntry libFolderZipEntry = new ZipEntry(libFolder);
-			zipOutputStream.putNextEntry(libFolderZipEntry);
+			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath+"-libs", true));
+			copyExistingEntries(zipFilePath, zipOutputStream);
 			for (String library : pathOfLibraries) {
 				ZipEntry libraryZipEntry = new ZipEntry(libFolder + Paths.get(library).getFileName());
 				zipOutputStream.putNextEntry(libraryZipEntry);
@@ -214,9 +213,34 @@ class StartPluginUIJob extends UIJob {
 				zipOutputStream.write(libraryContents);
 			}
 			zipOutputStream.close();
+			new File(zipFilePath).delete();
+			new File(zipFilePath+"-libs").renameTo(new File(zipFilePath));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 		}
 	}
+
+	private void copyExistingEntries(String zipFilePath, ZipOutputStream zipOutputStream) {
+		try {
+			ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFilePath));
+			while(zipInputStream.available() == 1) {
+				ZipEntry entry = zipInputStream.getNextEntry();
+				if (entry == null)
+					continue;
+				zipOutputStream.putNextEntry(new ZipEntry(entry.getName()));
+				long entrySize = entry.getSize();
+				if (entrySize < 0)
+					continue;
+				byte[] contents = new byte[(int) entrySize];
+				int count = 0;
+				do {
+					count = zipInputStream.read(contents, count, (int) entrySize);
+				} while (count < entrySize);
+				zipOutputStream.write(contents);
+			}
+		} catch (IOException e) {
+		}
+	}
+
 }
