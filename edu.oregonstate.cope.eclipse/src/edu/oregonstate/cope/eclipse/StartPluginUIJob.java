@@ -3,14 +3,20 @@ package edu.oregonstate.cope.eclipse;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IProject;
@@ -192,5 +198,25 @@ class StartPluginUIJob extends UIJob {
 			}
 		}
 		return pathsOfLibraries;
+	}
+	
+	@SuppressWarnings("resource")
+	public void addLibsToZipFile(List<String> pathOfLibraries, String zipFilePath) {
+		try {
+			String libFolder = "libs/";
+			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath, true));
+			ZipEntry libFolderZipEntry = new ZipEntry(libFolder);
+			zipOutputStream.putNextEntry(libFolderZipEntry);
+			for (String library : pathOfLibraries) {
+				ZipEntry libraryZipEntry = new ZipEntry(libFolder + Paths.get(library).getFileName());
+				zipOutputStream.putNextEntry(libraryZipEntry);
+				byte[] libraryContents = Files.readAllBytes(Paths.get(library));
+				zipOutputStream.write(libraryContents);
+			}
+			zipOutputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+		}
 	}
 }
