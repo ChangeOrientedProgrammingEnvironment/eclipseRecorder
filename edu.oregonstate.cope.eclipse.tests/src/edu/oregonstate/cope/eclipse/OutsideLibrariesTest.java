@@ -88,7 +88,7 @@ public class OutsideLibrariesTest {
 		
 		ArrayList<String> entriesNames = getEntriesInZipFile(zipFilePath);
 		System.out.println(entriesNames);
-		assertTrue(entriesNames.contains(initialEntries));
+		assertTrue(entriesNames.containsAll(initialEntries));
 		assertTrue(entriesNames.contains("libs/json-simple-1.1.1.jar"));
 	}
 
