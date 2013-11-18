@@ -21,6 +21,7 @@ import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -29,12 +30,12 @@ public class OutsideLibrariesTest {
 
 	@Rule
 	public TestName name = new TestName();
-	private IJavaProject javaProject;
+	private static IJavaProject javaProject;
 
-	@Before
-	public void setUp() throws Exception {
-		ImportOperation importOperation = new ImportOperation(new Path(name.getMethodName()), 
-				new File(Paths.get("projects/" + name.getMethodName()).toAbsolutePath().toString()), 
+	@BeforeClass
+	public static void setUp() throws Exception {
+		ImportOperation importOperation = new ImportOperation(new Path("librariesTest"), 
+				new File(Paths.get("projects/" + "librariesTest").toAbsolutePath().toString()), 
 				FileSystemStructureProvider.INSTANCE, 
 				new IOverwriteQuery() {
 
