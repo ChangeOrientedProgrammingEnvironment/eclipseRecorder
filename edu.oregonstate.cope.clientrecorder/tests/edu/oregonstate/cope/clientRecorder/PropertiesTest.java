@@ -9,15 +9,15 @@ import org.junit.Test;
 
 import edu.oregonstate.cope.tests.util.StubFileProvider;
 
-public class RecorderPropertiesTest {
+public class PropertiesTest {
 
-	private RecorderProperties properties;
+	private Properties properties;
 	private StubFileProvider fileProvider;
 
 	@Before
 	public void setup() {
 		fileProvider = new StubFileProvider();
-		properties = new RecorderProperties(fileProvider);
+		properties = new Properties(fileProvider);
 	}
 
 	@Test
@@ -74,6 +74,6 @@ public class RecorderPropertiesTest {
 
 	private void testForKey(String key, String value) {
 		assertEquals(value, properties.getProperty(key));
-		assertEquals(value, new RecorderProperties(fileProvider).getProperty(key));
+		assertEquals(value, new Properties(fileProvider).getProperty(key));
 	}
 }

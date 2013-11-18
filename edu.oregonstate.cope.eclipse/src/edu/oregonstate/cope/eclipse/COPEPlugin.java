@@ -6,10 +6,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
-import edu.oregonstate.cope.clientRecorder.ChangePersister;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
-import edu.oregonstate.cope.clientRecorder.RecorderProperties;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -77,8 +76,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return recorderFacade.getClientRecorder();
 	}
 	
-	public RecorderProperties getRecorderProperties(){
-		return recorderFacade.getRecorderProperties();
+	public Properties getProperties(){
+		return recorderFacade.getProperties();
 	}
 
 	public void initializeRecorder(String rootDirectory, String workspaceID, String IDE) {

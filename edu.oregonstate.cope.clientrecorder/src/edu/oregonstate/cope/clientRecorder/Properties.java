@@ -22,15 +22,13 @@ import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
  * {@literal<value> ::= any character but \n}<br>
  * 
  * <br>
- * 
- * Filename of the properties file: "config".
  */
-public class RecorderProperties {
+public class Properties {
 
 	private FileProvider fileProvider;
 	private HashMap<String, String> properties = new HashMap<>();
 
-	public RecorderProperties(FileProvider fileProvider) {
+	public Properties(FileProvider fileProvider) {
 		this.fileProvider = fileProvider;
 		initFromProvider(fileProvider);
 	}
