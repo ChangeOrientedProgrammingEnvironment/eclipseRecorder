@@ -114,11 +114,11 @@ class StartPluginUIJob extends UIJob {
 		}
 	}
 
-	private void getInitialSnapshot() {
+	protected String getInitialSnapshot() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject[] projects = root.getProjects();
 		if (projects.length == 0)
-			return; //don't take snapshot of empty workspace
+			return null; //don't take snapshot of empty workspace
 		String zipFile = COPEPlugin.getLocalStorage().getAbsolutePath() + "/" + System.currentTimeMillis() + ".zip";
 		ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(root, zipFile);
 		archiveFileExportOperation.setUseCompression(true);
@@ -128,7 +128,9 @@ class StartPluginUIJob extends UIJob {
 			archiveFileExportOperation.run(new NullProgressMonitor());
 		} catch (InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();
+			return null;
 		}
+		return zipFile;
 	}
 
 	private String getWorkspaceID() {
