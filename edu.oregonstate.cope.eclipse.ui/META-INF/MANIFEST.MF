@@ -5,6 +5,10 @@ Bundle-SymbolicName: edu.oregonstate.cope.eclipse.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: edu.oregonstate.cope.eclipse.ui.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.equinox.p2.engine
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Import-Package: edu.oregonstate.cope.clientRecorder.fileOps
+Export-Package: edu.oregonstate.cope.eclipse.ui,
+ edu.oregonstate.cope.eclipse.ui.handlers
