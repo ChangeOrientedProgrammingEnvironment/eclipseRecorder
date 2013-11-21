@@ -11,9 +11,10 @@
             <command
                   commandId="edu.oregonstate.cope.eclipse.branding.command"
                   icon="icons/osu-logo-png.png"
-                  id="contibutions.trimicom"
+                  id="contibutions.trimicon"
                   label="COPE Recorder"
-                  style="push">
+                  style="push"
+                  tooltip="COPE Recorder">
             </command>
          </toolbar>
       </menuContribution>
