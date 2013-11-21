@@ -19,10 +19,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ltk.internal.core.refactoring.history.RefactoringHistoryService;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -34,6 +36,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.quartz.SchedulerException;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
 import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
@@ -58,16 +61,36 @@ class StartPluginUIJob extends UIJob {
 
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
+		COPEPlugin.getDefault().initializeRecorder(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getDefault().getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
+		Uninstaller uninstaller = COPEPlugin.getDefault().getUninstaller();
+
+		if (uninstaller.isUninstalled())
+			return Status.OK_STATUS;
+
+		if (uninstaller.shouldUninstall())
+			performUninstall(uninstaller);
+		else
+			performStartup(monitor);
+		
+		return Status.OK_STATUS;
+	}
+	
+	private void performUninstall(Uninstaller uninstaller) {
+		uninstaller.setUninstall();
+		MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Recording shutting down", "Thank you for your participation. The recorder has shut down permanently. You may delete it if you wish to do so.");
+	}
+
+	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
+		
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
 			getInitialSnapshot();
 		}
-		
+
 		monitor.worked(1);
 
-		this.copePlugin.initializeRecorder(COPEPlugin.getLocalStorage().getAbsolutePath(), copePlugin.getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
-
+		
 		registerDocumentListenersForOpenEditors();
 		FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -81,8 +104,6 @@ class StartPluginUIJob extends UIJob {
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
 		initializeFileSender();
-		
-		return Status.OK_STATUS;
 	}
 
 	protected boolean isWorkspaceKnown() {

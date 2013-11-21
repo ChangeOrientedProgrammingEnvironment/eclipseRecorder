@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
@@ -12,6 +14,7 @@ import org.osgi.framework.BundleContext;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.clientRecorder.Uninstaller;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -74,9 +77,13 @@ public class COPEPlugin extends AbstractUIPlugin {
 	public ClientRecorder getClientRecorder() {
 		return recorderFacade.getClientRecorder();
 	}
-	
-	public Properties getProperties(){
+
+	public Properties getProperties() {
 		return recorderFacade.getProperties();
+	}
+
+	Uninstaller getUninstaller() {
+		return recorderFacade.getUninstaller();
 	}
 
 	public void initializeRecorder(String rootDirectory, String workspaceID, String IDE) {
