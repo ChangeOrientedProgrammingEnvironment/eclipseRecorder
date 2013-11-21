@@ -1,11 +1,9 @@
 package edu.oregonstate.cope.eclipse;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -33,10 +31,12 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ltk.internal.core.refactoring.history.RefactoringHistoryService;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -48,6 +48,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.quartz.SchedulerException;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
 import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
@@ -62,7 +63,7 @@ class StartPluginUIJob extends UIJob {
 	/**
 	 * 
 	 */
-	private final COPEPlugin copePlugin;
+	final COPEPlugin copePlugin;
 	private File workspaceIdFile;
 
 	StartPluginUIJob(COPEPlugin copePlugin, String name) {
@@ -72,16 +73,36 @@ class StartPluginUIJob extends UIJob {
 
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
+		COPEPlugin.getDefault().initializeRecorder(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getDefault().getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
+		Uninstaller uninstaller = COPEPlugin.getDefault().getUninstaller();
+
+		if (uninstaller.isUninstalled())
+			return Status.OK_STATUS;
+
+		if (uninstaller.shouldUninstall())
+			performUninstall(uninstaller);
+		else
+			performStartup(monitor);
+		
+		return Status.OK_STATUS;
+	}
+	
+	private void performUninstall(Uninstaller uninstaller) {
+		uninstaller.setUninstall();
+		MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Recording shutting down", "Thank you for your participation. The recorder has shut down permanently. You may delete it if you wish to do so.");
+	}
+
+	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
+		
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
 			getInitialSnapshot();
 		}
-		
+
 		monitor.worked(1);
 
-		this.copePlugin.initializeRecorder(COPEPlugin.getLocalStorage().getAbsolutePath(), getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
-
+		
 		registerDocumentListenersForOpenEditors();
 		FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -95,18 +116,11 @@ class StartPluginUIJob extends UIJob {
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
 		initializeFileSender();
-		
-		return Status.OK_STATUS;
 	}
 
 	protected boolean isWorkspaceKnown() {
-		workspaceIdFile = getWorkspaceIdFile();
+		workspaceIdFile = copePlugin.getWorkspaceIdFile();
 		return workspaceIdFile.exists();
-	}
-
-	protected File getWorkspaceIdFile() {
-		File pluginStoragePath = COPEPlugin.getLocalStorage();
-		return new File(pluginStoragePath.getAbsolutePath() + "/workspace_id");
 	}
 
 	protected void getToKnowWorkspace() {
@@ -137,19 +151,6 @@ class StartPluginUIJob extends UIJob {
 			return null;
 		}
 		return zipFile;
-	}
-
-	private String getWorkspaceID() {
-		File workspaceIdFile = getWorkspaceIdFile();
-		String workspaceID = "";
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new FileReader(workspaceIdFile));
-			workspaceID = reader.readLine();
-			reader.close();
-		} catch (IOException e) {
-		}
-		return workspaceID;
 	}
 
 	private void registerDocumentListenersForOpenEditors() {

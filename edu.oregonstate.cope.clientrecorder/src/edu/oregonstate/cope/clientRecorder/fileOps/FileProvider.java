@@ -1,6 +1,7 @@
 package edu.oregonstate.cope.clientRecorder.fileOps;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -83,7 +84,7 @@ public abstract class FileProvider {
 			return new ArrayList<String>();
 
 		try {
-			return Files.readAllLines(getCurrentFilePath(), null);
+			return Files.readAllLines(getCurrentFilePath(), Charset.defaultCharset());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
