@@ -1,7 +1,12 @@
 package edu.oregonstate.cope.eclipse;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
@@ -9,6 +14,7 @@ import org.osgi.framework.BundleContext;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.clientRecorder.Uninstaller;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -68,21 +74,39 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public String getWorkspaceID() {
-		return workspaceID;
-	}
-
 	public ClientRecorder getClientRecorder() {
 		return recorderFacade.getClientRecorder();
 	}
-	
-	public Properties getProperties(){
+
+	public Properties getProperties() {
 		return recorderFacade.getProperties();
+	}
+
+	Uninstaller getUninstaller() {
+		return recorderFacade.getUninstaller();
 	}
 
 	public void initializeRecorder(String rootDirectory, String workspaceID, String IDE) {
 		this.workspaceID = workspaceID;
 		recorderFacade = new RecorderFacade().initialize(rootDirectory, IDE);
+	}
+
+	protected File getWorkspaceIdFile() {
+		File pluginStoragePath = COPEPlugin.getLocalStorage();
+		return new File(pluginStoragePath.getAbsolutePath() + "/workspace_id");
+	}
+
+	public String getWorkspaceID() {
+		File workspaceIdFile = getWorkspaceIdFile();
+		String workspaceID = "";
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(workspaceIdFile));
+			workspaceID = reader.readLine();
+			reader.close();
+		} catch (IOException e) {
+		}
+		return workspaceID;
 	}
 
 	public static File getLocalStorage() {
