@@ -1,9 +1,11 @@
 package edu.oregonstate.cope.clientRecorder;
 
-import edu.oregonstate.cope.clientRecorder.fileOps.ConfigFileProvider;
 import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
+import edu.oregonstate.cope.clientRecorder.fileOps.SimpleFileProvider;
 
 public class RecorderFacade {
+	private static final String CONFIG = "config";
+	
 	private ClientRecorder clientRecorder;
 	private Properties properties;
 	private Uninstaller uninstaller;
@@ -27,7 +29,7 @@ public class RecorderFacade {
 	}
 
 	private void initProperties(String rootDirectory) {
-		ConfigFileProvider configFileProvider = new ConfigFileProvider();
+		SimpleFileProvider configFileProvider = new SimpleFileProvider(CONFIG);
 		configFileProvider.setRootDirectory(rootDirectory);
 		properties = new Properties(configFileProvider);
 	}
