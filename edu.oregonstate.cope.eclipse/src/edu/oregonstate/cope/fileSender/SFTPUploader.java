@@ -1,6 +1,9 @@
 package edu.oregonstate.cope.fileSender;
 
 import java.io.*;
+import java.net.UnknownHostException;
+
+import org.slf4j.LoggerFactory;
 
 import com.jcraft.jsch.*;
 
@@ -13,41 +16,36 @@ public class SFTPUploader {
 	private String username = "";
 	private String password = "";
 	
-	private void initializeSession(String host, String username, String password) {
+	private void initializeSession(String host, String username, String password) throws UnknownHostException, JSchException {
 		this.host = host;
 		this.username = username;
 		this.password = password;
 		
-		try {
-			JSch jsch = new JSch();
-			this.session = jsch.getSession(this.username, this.host, 22);
-			this.session.setPassword(this.password);
-			java.util.Properties config = new java.util.Properties();
-			config.put("StrictHostKeyChecking", "no");
-			this.session.setConfig(config);
-			this.session.setServerAliveInterval(70000);
-			this.session.connect();
-			Channel channel = this.session.openChannel("sftp");
-			channel.connect();
-			this.channelSftp = (ChannelSftp) channel;
-			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			this.channelSftp.exit();
-			this.channelSftp.disconnect();
-			this.session.disconnect();
-		}
+		JSch jsch = new JSch();
+		this.session = jsch.getSession(this.username, this.host, 22);
+		this.session.setPassword(this.password);
+		java.util.Properties config = new java.util.Properties();
+		config.put("StrictHostKeyChecking", "no");
+		this.session.setConfig(config);
+		this.session.setServerAliveInterval(70000);
+		this.session.connect();
+		Channel channel = this.session.openChannel("sftp");
+		channel.connect();
+		this.channelSftp = (ChannelSftp) channel;
+	
 	}
 	
-	public SFTPUploader(String host, String username, String password) throws Exception{
+	public SFTPUploader(String host, String username, String password) throws UnknownHostException, JSchException {
 		this.initializeSession(host, username, password);
 	}
 	
 	public void upload(String localPath, String remotePath) throws FileNotFoundException, SftpException, JSchException {
-		this.uploadPathToFTP(localPath, remotePath);
+		if(this.channelSftp != null) {
+			this.uploadPathToFTP(localPath, remotePath);			
+		}
 	}
 	
-	private void createRemoteDir(String path) throws SftpException {
+	public void createRemoteDir(String path) throws SftpException {
 		String[] folders = path.split( "/" );
 		for ( String folder : folders ) {
 		    if ( folder.length() > 0 ) {
@@ -64,16 +62,15 @@ public class SFTPUploader {
 	
 	private void uploadPathToFTP(String localPath, String remotePath) throws FileNotFoundException, SftpException, JSchException {
 		File[] files = new File(localPath).listFiles();
-		try {
-			this.channelSftp.cd( remotePath );
-		} catch ( SftpException e ) {
-			this.createRemoteDir(remotePath);
-		}
+
 		for(File file : files) {
 			if(file.isFile()) {
 				this.channelSftp.put(new FileInputStream(file), file.getName());
 			} else {	
+				this.channelSftp.mkdir(file.getName());
+				this.channelSftp.cd(file.getName());
 				this.uploadPathToFTP(localPath + '/' + file.getName(),  file.getName());
+				this.channelSftp.cd("..");
 			}
 		}
 	}
