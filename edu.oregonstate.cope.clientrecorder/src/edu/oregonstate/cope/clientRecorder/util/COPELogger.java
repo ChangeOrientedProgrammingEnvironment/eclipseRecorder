@@ -53,8 +53,8 @@ public class COPELogger {
 		getLogger(obj).info(message);
 	}
 
-	protected org.slf4j.Logger getLogger(Object obj) {
-		org.slf4j.Logger logger = LoggerFactory.getLogger(obj.getClass());
+	protected Logger getLogger(Object obj) {
+		Logger logger = (Logger)LoggerFactory.getLogger(obj.getClass());
 		return logger;
 	}
 

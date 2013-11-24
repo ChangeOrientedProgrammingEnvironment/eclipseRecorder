@@ -63,6 +63,7 @@ public class TestLogger {
 
 	@Test
 	public void testLogger() throws Exception {
+		copeLogger.logEverything();
 		copeLogger.info(this, "test");
 		copeLogger.info(this, "test");
 		copeLogger.info(this, "test");
