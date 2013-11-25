@@ -54,7 +54,50 @@ public class Page1 extends WizardPage {
       Composite composite = new Composite(sc, SWT.NONE);
       composite.setLayout(new RowLayout(SWT.VERTICAL));
 
-      Composite cl1 =  new Composite(composite,SWT.NONE);
+      addSurvey(composite);
+	    
+      sc.setContent(composite);
+      sc.setExpandHorizontal(true);
+      sc.setExpandVertical(true);
+      sc.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+      //return parent; 
+      
+      
+	  //    container = new Composite(parent, SWT.NONE);
+//    GridLayout layout = new GridLayout();
+//    container.setLayout(layout);
+//    layout.numColumns = 2;
+//    Label label1 = new Label(container, SWT.NONE);
+//    label1.setText("Put here a value");
+//
+//    text1 = new Text(container, SWT.BORDER | SWT.SINGLE);
+//    text1.setText("");
+//    text1.addKeyListener(new KeyListener() {
+//
+//      @Override
+//      public void keyPressed(KeyEvent e) {
+//      }
+//
+//      @Override
+//      public void keyReleased(KeyEvent e) {
+//        if (!text1.getText().isEmpty()) {
+//          setPageComplete(true);
+//
+//        }
+//      }
+//
+//    });
+//    GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+//    text1.setLayoutData(gd);
+    // Required to avoid an error in the system
+    setControl(content);
+    setPageComplete(false);
+
+  }
+
+private void addSurvey(Composite composite) {
+	Composite cl1 =  new Composite(composite,SWT.NONE);
       cl1.setLayout(new RowLayout(SWT.VERTICAL));
 	    Label l1 = new Label(cl1, SWT.BORDER);
 	    Color c1 = new Color(null, 50, 50, 200);
@@ -224,48 +267,12 @@ public class Page1 extends WizardPage {
 	    Composite cl2email =  new Composite(cl2,SWT.NONE);
 	    cl2email.setLayout(new GridLayout());
 	    email = new Text (cl2email, SWT.SINGLE| SWT.BORDER | SWT.FILL);
-		
 	    
-	    
-      sc.setContent(composite);
-      sc.setExpandHorizontal(true);
-      sc.setExpandVertical(true);
-      sc.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-      //return parent; 
-      
-      
-	  //    container = new Composite(parent, SWT.NONE);
-//    GridLayout layout = new GridLayout();
-//    container.setLayout(layout);
-//    layout.numColumns = 2;
-//    Label label1 = new Label(container, SWT.NONE);
-//    label1.setText("Put here a value");
-//
-//    text1 = new Text(container, SWT.BORDER | SWT.SINGLE);
-//    text1.setText("");
-//    text1.addKeyListener(new KeyListener() {
-//
-//      @Override
-//      public void keyPressed(KeyEvent e) {
-//      }
-//
-//      @Override
-//      public void keyReleased(KeyEvent e) {
-//        if (!text1.getText().isEmpty()) {
-//          setPageComplete(true);
-//
-//        }
-//      }
-//
-//    });
-//    GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-//    text1.setLayoutData(gd);
-    // Required to avoid an error in the system
-    setControl(content);
-    setPageComplete(false);
-
-  }
+	    GridData data =  new GridData();
+	    data.horizontalAlignment = SWT.FILL;
+	    data.grabExcessHorizontalSpace = true;
+	    email.setLayoutData(data);
+}
 
   public String getText1() {
     return text1.getText();
