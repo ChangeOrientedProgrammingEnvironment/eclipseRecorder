@@ -166,18 +166,24 @@ class StartPluginUIJob extends UIJob {
 			if (document == null)
 				continue;
 			document.addDocumentListener(new DocumentListener());
-			IEditorInput editorInput;
-			try {
-				editorInput = editorReference.getEditorInput();
-				if (editorInput instanceof FileEditorInput) {
-					IFile file = ((FileEditorInput)editorInput).getFile();
-					IProject project = file.getProject();
-					if (!snapshotManager.isProjectKnown(project))
-						snapshotManager.takeSnapshot(project);
-				}
-			} catch (PartInitException e) {
-			}
+			IProject project = getProjectFromEditor(editorReference);
+			if (!snapshotManager.isProjectKnown(project))
+				snapshotManager.takeSnapshot(project);
 		}
+	}
+
+	private IProject getProjectFromEditor(IEditorReference editorReference) {
+		IEditorInput editorInput;
+		IProject project = null;
+		try {
+			editorInput = editorReference.getEditorInput();
+			if (editorInput instanceof FileEditorInput) {
+				IFile file = ((FileEditorInput)editorInput).getFile();
+				project = file.getProject();
+			}
+		} catch (PartInitException e) {
+		}
+		return project;
 	}
 
 	private IDocument getDocumentForEditor(IEditorReference editorReference) {
