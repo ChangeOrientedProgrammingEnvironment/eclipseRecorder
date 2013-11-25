@@ -18,13 +18,14 @@ import org.junit.Test;
 
 public class TestLogger {
 
+	private static final String LOG_FILE_NAME = "log";
 	private static final Path PARENT_DIR = Paths.get("testLogger").toAbsolutePath();
 	private COPELogger copeLogger;
 
 	@Before
 	public void setUp() {
 		copeLogger = new COPELogger();
-		copeLogger.enableFileLogging(PARENT_DIR.toAbsolutePath().toString());
+		copeLogger.enableFileLogging(PARENT_DIR.toAbsolutePath().toString(), LOG_FILE_NAME);
 		copeLogger.disableConsoleLogging();
 	}
 
@@ -63,7 +64,7 @@ public class TestLogger {
 	}
 	
 	private int numberOfLoggedLines() throws IOException {
-		return Files.readAllLines(PARENT_DIR.resolve("log"), Charset.defaultCharset()).size();
+		return Files.readAllLines(PARENT_DIR.resolve(LOG_FILE_NAME), Charset.defaultCharset()).size();
 	}
 
 	@Test

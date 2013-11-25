@@ -15,8 +15,8 @@ public class COPELogger {
 
 	private static final String FILE_APPENDER = "fileAppender";
 
-	public void enableFileLogging(String parentDir) {
-		setLoggingFile(parentDir + File.separator + "log");
+	public void enableFileLogging(String parentDir, String logFileName) {
+		setLoggingFile(parentDir + File.separator + logFileName);
 	}
 
 	public void disableConsoleLogging() {
