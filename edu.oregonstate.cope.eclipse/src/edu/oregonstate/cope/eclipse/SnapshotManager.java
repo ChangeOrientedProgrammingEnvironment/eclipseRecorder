@@ -97,7 +97,6 @@ public class SnapshotManager {
 		return pathsOfLibraries;
 	}
 	
-	@SuppressWarnings("resource")
 	public void addLibsToZipFile(List<String> pathOfLibraries, String zipFilePath) {
 		try {
 			String libFolder = "libs/";
@@ -136,6 +135,7 @@ public class SnapshotManager {
 				} while (count < entrySize);
 				zipOutputStream.write(contents);
 			}
+			zipInputStream.close();
 		} catch (IOException e) {
 		}
 	}
