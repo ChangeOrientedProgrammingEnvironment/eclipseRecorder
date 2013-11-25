@@ -6,5 +6,6 @@ Bundle-Version: 0.3.1.qualifier
 Bundle-ClassPath: clientrecorder.jar,
  thirdParty/json-simple-1.1.1.jar
 Export-Package: edu.oregonstate.cope.clientRecorder,
+ edu.oregonstate.cope.clientRecorder.fileOps,
  org.json.simple,
  org.json.simple.parser

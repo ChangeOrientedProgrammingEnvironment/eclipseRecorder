@@ -1,6 +1,5 @@
 package edu.oregonstate.cope.eclipse;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,7 +58,6 @@ import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
 import edu.oregonstate.cope.eclipse.ui.SurveyManager;
-import edu.oregonstate.cope.eclipse.ui.handlers.DemoSurveyDialog;
 import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
@@ -128,8 +126,6 @@ class StartPluginUIJob extends UIJob {
 
 		SurveyManager sm = new SurveyManager();
 		sm.checkAndRunSurvey(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
-		
-		return Status.OK_STATUS;
 	}
 
 	protected boolean isWorkspaceKnown() {
