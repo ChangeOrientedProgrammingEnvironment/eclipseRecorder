@@ -32,6 +32,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	private RecorderFacade recorderFacade;
 
+	private SnapshotManager snapshotManager;
+
 	/**
 	 * The constructor
 	 */
@@ -51,6 +53,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 		UIJob uiJob = new StartPluginUIJob(this, "Registering listeners");
 		uiJob.schedule();
+		snapshotManager = new SnapshotManager();
 	}
 
 	/*
@@ -111,5 +114,9 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	public static File getLocalStorage() {
 		return COPEPlugin.plugin.getStateLocation().toFile();
+	}
+	
+	public SnapshotManager getSnapshotManager() {
+		return snapshotManager;
 	}
 }
