@@ -1,7 +1,6 @@
 package edu.oregonstate.cope.clientRecorder.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -49,14 +48,20 @@ public class TestLogger {
 
 	@Test
 	public void testLoggerWithError() throws Exception {
+		copeLogger.logEverything();
+		
+		copeLogger.info(this, "test");
+		copeLogger.info(this, "test");
+		copeLogger.info(this, "test");
+		
+		assertEquals(3, numberOfLoggedLines());
+
 		copeLogger.error(this, "oh no", new NullPointerException());
-		copeLogger.info(this, "test");
-		copeLogger.info(this, "test");
-		copeLogger.info(this, "test");
-
+		
 		assertTrue(numberOfLoggedLines() > 4);
-	}
 
+	}
+	
 	private int numberOfLoggedLines() throws IOException {
 		return Files.readAllLines(PARENT_DIR.resolve("log"), Charset.defaultCharset()).size();
 	}
