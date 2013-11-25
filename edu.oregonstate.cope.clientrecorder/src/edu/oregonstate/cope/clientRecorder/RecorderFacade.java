@@ -2,21 +2,32 @@ package edu.oregonstate.cope.clientRecorder;
 
 import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
 import edu.oregonstate.cope.clientRecorder.fileOps.SimpleFileProvider;
+import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 
 public class RecorderFacade {
-	private static final String CONFIG = "config";
+	private static final String LOG_FILE_NAME = "log";
+	private static final String CONFIG_FILE_NAME = "config";
 	
 	private ClientRecorder clientRecorder;
 	private Properties properties;
 	private Uninstaller uninstaller;
+	private COPELogger copeLogger;
 
 	public RecorderFacade initialize(String rootDirectory, String IDE) {
+		initLogger(rootDirectory);
+		
 		initPersister(rootDirectory);
 		initProperties(rootDirectory);
 		initUninstaller();
 		initClientRecorder(IDE);
 
 		return this;
+	}
+
+	private void initLogger(String rootDirectory) {
+		copeLogger = new COPELogger();
+		copeLogger.enableFileLogging(rootDirectory, LOG_FILE_NAME);
+		copeLogger.logEverything();
 	}
 
 	private void initClientRecorder(String IDE) {
@@ -29,7 +40,7 @@ public class RecorderFacade {
 	}
 
 	private void initProperties(String rootDirectory) {
-		SimpleFileProvider configFileProvider = new SimpleFileProvider(CONFIG);
+		SimpleFileProvider configFileProvider = new SimpleFileProvider(CONFIG_FILE_NAME);
 		configFileProvider.setRootDirectory(rootDirectory);
 		properties = new Properties(configFileProvider);
 	}
@@ -50,5 +61,9 @@ public class RecorderFacade {
 
 	public Uninstaller getUninstaller() {
 		return uninstaller;
+	}
+	
+	public COPELogger getLogger(){
+		return copeLogger;
 	}
 }
