@@ -118,7 +118,7 @@ class StartPluginUIJob extends UIJob {
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
-//		initializeFileSender();
+		initializeFileSender();
 	}
 
 	protected boolean isWorkspaceKnown() {
