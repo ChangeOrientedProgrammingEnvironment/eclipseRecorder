@@ -1,10 +1,11 @@
 package edu.oregonstate.cope.eclipse;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import org.junit.Before;
@@ -31,6 +32,13 @@ public class SnapshotManagerTest {
 	public void testIsProjectKnown() {
 		assertTrue(snapshotManager.isProjectKnown("known1"));
 		assertTrue(snapshotManager.isProjectKnown("known2"));
+	}
+	
+	@Test
+	public void testKnowProject() throws Exception {
+		snapshotManager.knowProject("known3");
+		assertTrue(snapshotManager.isProjectKnown("known3"));
+		assertEquals("known1\nknown2\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getLocalStorage().getAbsolutePath(), "known-projects"))));
 	}
 	
 }
