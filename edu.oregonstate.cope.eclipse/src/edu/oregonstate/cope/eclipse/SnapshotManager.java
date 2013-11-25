@@ -13,7 +13,7 @@ public class SnapshotManager {
 	private String knownProjectsFileName = "known-projects";
 	private List<String> knownProjects;
 
-	public SnapshotManager() {
+	protected SnapshotManager() {
 		File knownProjectsFile = new File(COPEPlugin.getLocalStorage(), knownProjectsFileName);
 		try {
 			knownProjectsFile.createNewFile();
@@ -26,7 +26,7 @@ public class SnapshotManager {
 		return knownProjects.contains(name);
 	}
 
-	public void knowProject(String string) {
+	 protected void knowProject(String string) {
 		knownProjects.add(string);
 		try {
 			Files.write(Paths.get(COPEPlugin.getLocalStorage().getAbsolutePath(), knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
