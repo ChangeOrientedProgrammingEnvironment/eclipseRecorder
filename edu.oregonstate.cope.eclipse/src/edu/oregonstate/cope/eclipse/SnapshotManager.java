@@ -78,6 +78,7 @@ public class SnapshotManager {
 			List<String> nonWorkspaceLibraries = getNonWorkspaceLibraries(JavaCore.create(project));
 			addLibsToZipFile(nonWorkspaceLibraries, zipFile);
 		}
+		COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
 		return zipFile;
 	}
 
