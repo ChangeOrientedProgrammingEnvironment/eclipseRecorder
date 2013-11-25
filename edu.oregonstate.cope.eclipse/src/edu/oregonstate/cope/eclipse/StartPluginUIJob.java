@@ -48,6 +48,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.quartz.SchedulerException;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.clientRecorder.RecorderFacade;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
@@ -56,6 +57,7 @@ import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
+import edu.oregonstate.cope.fileSender.FTPConnectionProperties;
 import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
@@ -147,7 +149,7 @@ class StartPluginUIJob extends UIJob {
 		try {
 			archiveFileExportOperation.run(new NullProgressMonitor());
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
 			return null;
 		}
 		return zipFile;
@@ -179,9 +181,9 @@ class StartPluginUIJob extends UIJob {
 		try {
 			new FileSender();
 		} catch (ParseException e) {
-			e.printStackTrace();
+			COPEPlugin.getDefault().getLogger().error(FTPConnectionProperties.class, e.getMessage(), e);
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			COPEPlugin.getDefault().getLogger().error(FTPConnectionProperties.class, e.getMessage(), e);
 		}
 	}
 	
@@ -217,7 +219,7 @@ class StartPluginUIJob extends UIJob {
 			new File(zipFilePath).delete();
 			new File(zipFilePath+"-libs").renameTo(new File(zipFilePath));
 		} catch (IOException e) {
-			e.printStackTrace();
+			COPEPlugin.getDefault().getLogger().error(FTPConnectionProperties.class, e.getMessage(), e);
 		} finally {
 		}
 	}

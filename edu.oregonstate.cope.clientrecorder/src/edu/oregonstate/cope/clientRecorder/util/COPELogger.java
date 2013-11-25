@@ -91,4 +91,8 @@ public class COPELogger {
 		return logger;
 	}
 
+	public void warning(Object obj, String msg) {
+		getLogger(obj).warn(msg);
+	}
+
 }

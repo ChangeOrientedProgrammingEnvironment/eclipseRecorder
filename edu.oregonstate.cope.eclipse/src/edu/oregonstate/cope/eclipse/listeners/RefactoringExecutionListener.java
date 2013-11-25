@@ -6,6 +6,8 @@ import org.eclipse.ltk.core.refactoring.RefactoringDescriptorProxy;
 import org.eclipse.ltk.core.refactoring.history.IRefactoringExecutionListener;
 import org.eclipse.ltk.core.refactoring.history.RefactoringExecutionEvent;
 
+import edu.oregonstate.cope.eclipse.COPEPlugin;
+
 /**
  * I listen for refactoring executions.
  * 
@@ -23,12 +25,14 @@ public class RefactoringExecutionListener implements
 		if (event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_PERFORM) {
 			isRefactoringInProgress = true;
 			refactoringName = getRefactoringID(event);
-			System.out.println(getRefactoringID(event) + " refactoring started");
+			
+			COPEPlugin.getDefault().getLogger().info(this, getRefactoringID(event) + " refactoring started");
 		}
 		if (event.getEventType() == RefactoringExecutionEvent.PERFORMED) {
 			isRefactoringInProgress = false;
 			refactoringName = "";
-			System.out.println(getRefactoringID(event) + " refactoring done");
+			
+			COPEPlugin.getDefault().getLogger().info(this, getRefactoringID(event) + " refactoring done");
 		}
 	}
 

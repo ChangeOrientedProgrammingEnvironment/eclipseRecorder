@@ -7,6 +7,7 @@ import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 public class RecorderFacade {
 	private static final String LOG_FILE_NAME = "log";
 	private static final String CONFIG_FILE_NAME = "config";
+	private static RecorderFacade _instance;
 	
 	private ClientRecorder clientRecorder;
 	private Properties properties;
@@ -14,6 +15,9 @@ public class RecorderFacade {
 	private COPELogger copeLogger;
 
 	public RecorderFacade initialize(String rootDirectory, String IDE) {
+		//TODO this is horrible. Fix it.
+		_instance = this;
+
 		initLogger(rootDirectory);
 		
 		initPersister(rootDirectory);
@@ -65,5 +69,10 @@ public class RecorderFacade {
 	
 	public COPELogger getLogger(){
 		return copeLogger;
+	}
+	
+	//TODO this is ugly. Needs to be fixed. Maybe turn this class into a configurable singleton?
+	public static RecorderFacade instance(){
+		return _instance;
 	}
 }

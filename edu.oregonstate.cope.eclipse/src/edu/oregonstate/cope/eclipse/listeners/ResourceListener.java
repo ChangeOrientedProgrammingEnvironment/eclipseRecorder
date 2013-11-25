@@ -20,7 +20,8 @@ public class ResourceListener implements IResourceChangeListener {
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		if (isSavedAction() || isRefactoringInProgress())
-			System.out.println("This is a save action, so I will ignore it");
+		
+			COPEPlugin.getDefault().getLogger().info(this, "This is a save action, so I will ignore it");
 		else
 			recordRefresh(event.getDelta());
 	}
