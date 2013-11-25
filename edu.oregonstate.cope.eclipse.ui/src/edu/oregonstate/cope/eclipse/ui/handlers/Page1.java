@@ -52,7 +52,7 @@ public class Page1 extends WizardPage {
               | SWT.V_SCROLL | SWT.BORDER);
 
       Composite composite = new Composite(sc, SWT.NONE);
-      composite.setLayout(new RowLayout(SWT.VERTICAL));
+      composite.setLayout(new GridLayout());
 
       addSurvey(composite);
 	    
@@ -264,9 +264,7 @@ private void addSurvey(Composite composite) {
 	    		+ " so you can see how your practices compare to the rest of the anonymous participants.\n "
 	    		+ "We know that spam is annoying, and we promise not to give out your email to anyone.");
 	    
-	    Composite cl2email =  new Composite(cl2,SWT.NONE);
-	    cl2email.setLayout(new GridLayout());
-	    email = new Text (cl2email, SWT.SINGLE| SWT.BORDER | SWT.FILL);
+	    email = new Text (cl2, SWT.SINGLE| SWT.BORDER | SWT.FILL);
 	    
 	    GridData data =  new GridData();
 	    data.horizontalAlignment = SWT.FILL;
