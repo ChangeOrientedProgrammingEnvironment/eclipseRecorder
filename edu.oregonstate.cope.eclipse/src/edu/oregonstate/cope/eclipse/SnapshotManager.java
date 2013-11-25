@@ -2,6 +2,7 @@ package edu.oregonstate.cope.eclipse;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class SnapshotManager {
 		File knownProjectsFile = new File(COPEPlugin.getLocalStorage(), knownProjectsFileName);
 		try {
 			knownProjectsFile.createNewFile();
-			knownProjects = Files.readAllLines(knownProjectsFile.toPath(), null);
+			knownProjects = Files.readAllLines(knownProjectsFile.toPath(), Charset.defaultCharset());
 		} catch (IOException e) {
 		}
 	}
