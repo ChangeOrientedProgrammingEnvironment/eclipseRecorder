@@ -9,6 +9,9 @@ public class SurveyWizard extends Wizard {
 
   protected Page1 one;
   protected Page2 two;
+  
+  public String email = "test";
+  public String surveyAnswers = "q1:1";
 
   public SurveyWizard() {
     super();
@@ -26,9 +29,8 @@ public class SurveyWizard extends Wizard {
   @Override
   public boolean performFinish() {
     // Print the result to the console
-    System.out.println(one.getText1());
-    System.out.println(two.getText1());
-
+	  surveyAnswers = one.SurveyResults;
+	  email = one.emailAddress;
     return true;
   }
 }

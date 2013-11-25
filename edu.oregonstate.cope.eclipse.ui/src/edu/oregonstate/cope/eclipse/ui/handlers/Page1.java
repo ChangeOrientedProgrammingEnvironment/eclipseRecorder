@@ -4,18 +4,32 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
+//import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
+import org.eclipse.swt.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.layout.*;
+
+
 public class Page1 extends WizardPage {
+	
+public String SurveyResults;
+public String emailAddress;
+	
+	
   private Text text1;
   private Composite content;
   
@@ -28,24 +42,23 @@ public class Page1 extends WizardPage {
 	private Button[] q7Arr = new Button[3]; 
 	private Button[] q8Arr = new Button[6]; 
 	private Text email; 
+	
+	private int[] Selections = new int[8];
 
   public Page1() {
-    super("First Page");
-    setTitle("First Page");
-    setDescription("Fake Wizard. First page");
+    super("Demographic Survey");
+    setTitle("Demographic Survey");
+    setDescription("Thank you for taking a quick moment to answer a few demographic questions!");
   }
 
   @Override
   public void createControl(Composite parent) {
 
+	  for(int i = 0; i < 8; i++){
+		  Selections[i] = -1;
+	  }
+	  
 	  content = new Composite(parent, SWT.NONE);
-//    GridLayout layout = new GridLayout();
-//    container.setLayout(layout);
-//    layout.numColumns = 2;
-//    Label label1 = new Label(container, SWT.NONE);
-//    label1.setText("Put here a value");
-
-	//	Composite content = (Composite) super.createDialogArea(parent);
       content.setLayout(new FillLayout(SWT.VERTICAL));
 
       ScrolledComposite sc = new ScrolledComposite(content, SWT.H_SCROLL
@@ -60,36 +73,6 @@ public class Page1 extends WizardPage {
       sc.setExpandHorizontal(true);
       sc.setExpandVertical(true);
       sc.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-      //return parent; 
-      
-      
-	  //    container = new Composite(parent, SWT.NONE);
-//    GridLayout layout = new GridLayout();
-//    container.setLayout(layout);
-//    layout.numColumns = 2;
-//    Label label1 = new Label(container, SWT.NONE);
-//    label1.setText("Put here a value");
-//
-//    text1 = new Text(container, SWT.BORDER | SWT.SINGLE);
-//    text1.setText("");
-//    text1.addKeyListener(new KeyListener() {
-//
-//      @Override
-//      public void keyPressed(KeyEvent e) {
-//      }
-//
-//      @Override
-//      public void keyReleased(KeyEvent e) {
-//        if (!text1.getText().isEmpty()) {
-//          setPageComplete(true);
-//
-//        }
-//      }
-//
-//    });
-//    GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-//    text1.setLayoutData(gd);
     // Required to avoid an error in the system
     setControl(content);
     setPageComplete(false);
@@ -100,29 +83,24 @@ private void addSurvey(Composite composite) {
 	Composite cl1 =  new Composite(composite,SWT.NONE);
       cl1.setLayout(new RowLayout(SWT.VERTICAL));
 	    Label l1 = new Label(cl1, SWT.BORDER);
-	    Color c1 = new Color(null, 50, 50, 200);
-	    cl1.setBackground(c1);
 	    cl1.setSize(300,10);
 	    l1.setSize(300,10);
-	    //l1.setLocation(100, 50);
 	    Font font_bold = new Font(null, "Helvetica", 14, SWT.BOLD);
 	    l1.setFont(font_bold);
 	    l1.setText("Thanks you for participating in the study titled: Understanding TDD Practices.");
-	    l1.setBackground(new Color(null, 155, 155, 0));
+
 	    
 	    Font font = new Font(null, "Helvetica", 12, SWT.NORMAL);
 	    Label l2 = new Label(cl1, SWT.BORDER);
 	    l2.setSize(300,30);
-	    //l2.setLocation(100, 50);
 	    l2.setFont(font);
 	    l2.setText("Please answer just a few demographic questions before you begin using the plugin");
 	    Font font_bold_small = new Font(null, "Helvetica", 12, SWT.BOLD);
-	    l2.setBackground(new Color(null, 0, 155, 0));
-      
 
+	    
 	    //Q1
 	    Composite q1 = new Composite(composite,SWT.NONE);
-      q1.setLayout(new FillLayout(SWT.VERTICAL));
+	    q1.setLayout(new FillLayout(SWT.VERTICAL));
 	    Label l3 = new Label(q1, SWT.BORDER);
 	    l3.setFont(font_bold_small);
 	    l3.setText("What is the extent of your programming experience?");
@@ -138,6 +116,52 @@ private void addSurvey(Composite composite) {
 	    q1Arr[4].setText("15 - 20 years");
 	    q1Arr[5] = new Button(q1,SWT.RADIO);
 	    q1Arr[5].setText("More than 20 years");
+	    
+	    
+	    q1Arr[0].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[0]=0;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q1Arr[1].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[0]=1;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q1Arr[2].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[0]=2;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q1Arr[3].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[0]=3;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q1Arr[4].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[0]=4;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q1Arr[5].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[0]=5;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    
+	    
 	    
 	    //Q2
 	    Composite q2 = new Composite(composite,SWT.NONE);
@@ -158,6 +182,49 @@ private void addSurvey(Composite composite) {
 	    q2Arr[5] = new Button(q2,SWT.RADIO);
 	    q2Arr[5].setText("More than 20 years");
 	    
+	    q2Arr[0].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[1]=0;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q2Arr[1].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[1]=1;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q2Arr[2].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[1]=2;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q2Arr[3].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[1]=3;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q2Arr[4].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[1]=4;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q2Arr[5].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[1]=5;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    
 	    
 	    //Q3
 	    Composite q3 = new Composite(composite,SWT.NONE);
@@ -174,6 +241,37 @@ private void addSurvey(Composite composite) {
 	    q3Arr[3] = new Button(q3,SWT.RADIO);
 	    q3Arr[3].setText("10 - 15 years");
 
+	    q3Arr[0].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[2]=0;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q3Arr[1].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[2]=1;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q3Arr[2].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[2]=2;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q3Arr[3].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[2]=3;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    
+	    
+	    
 	    //Q4
 	    Composite q4 = new Composite(composite,SWT.NONE);
       q4.setLayout(new GridLayout());   
@@ -191,6 +289,43 @@ private void addSurvey(Composite composite) {
 	    q4Arr[4] = new Button(q4,SWT.RADIO);
 	    q4Arr[4].setText("Other: ");
 	    
+	    q4Arr[0].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[3]=0;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q4Arr[1].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[3]=1;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q4Arr[2].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[3]=2;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q4Arr[3].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[3]=3;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q4Arr[4].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[3]=4;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	   
+	    
 	    //Q5
 	    Composite q5 = new Composite(composite,SWT.NONE);
       q5.setLayout(new GridLayout());
@@ -205,6 +340,36 @@ private void addSurvey(Composite composite) {
 	    q5Arr[2].setText("5 - 10 years");
 	    q5Arr[3] = new Button(q5,SWT.RADIO);
 	    q5Arr[3].setText("10 - 15 years");
+	    
+	    q5Arr[0].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[4]=0;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q5Arr[1].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[4]=1;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q5Arr[2].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[4]=2;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q5Arr[3].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[4]=3;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    
 	    
 	    //Q6
 	    Composite q6 = new Composite(composite,SWT.NONE);
@@ -223,6 +388,44 @@ private void addSurvey(Composite composite) {
 	    q6Arr[4] = new Button(q6,SWT.RADIO);
 	    q6Arr[4].setText("Never");
 	    
+	    q6Arr[0].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[5]=0;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q6Arr[1].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[5]=1;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q6Arr[2].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[5]=2;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q6Arr[3].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[5]=3;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q6Arr[4].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[5]=4;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	     
+	    
+	    
 	    //Q7
 	    Composite q7 = new Composite(composite,SWT.NONE);
       q7.setLayout(new GridLayout());
@@ -236,6 +439,28 @@ private void addSurvey(Composite composite) {
 	    q7Arr[2] = new Button(q7,SWT.RADIO);
 	    q7Arr[2].setText("Decline to State");
 	    
+	    q7Arr[0].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[6]=0;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q7Arr[1].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[6]=1;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q7Arr[2].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[6]=2;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	     
 	    //Q8
 	    Composite q8 = new Composite(composite,SWT.NONE);
       q8.setLayout(new GridLayout());   
@@ -255,6 +480,49 @@ private void addSurvey(Composite composite) {
 	    q8Arr[5] = new Button(q8,SWT.RADIO);
 	    q8Arr[5].setText("50 or older");
 
+	    q8Arr[0].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[7]=0;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q8Arr[1].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[7]=1;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q8Arr[2].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[7]=2;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q8Arr[3].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[7]=3;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q8Arr[4].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[7]=4;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    q8Arr[5].addSelectionListener(new SelectionListener() {
+	    	@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		Selections[7]=5;
+	    		checkForCompletion();
+				}
+			@Override public void widgetDefaultSelected(SelectionEvent e) {}});
+	    
 	    Composite cl2 =  new Composite(composite,SWT.NONE);
       cl2.setLayout(new GridLayout());
 	    Label l4 = new Label(cl2, SWT.BORDER);
@@ -264,16 +532,62 @@ private void addSurvey(Composite composite) {
 	    		+ " so you can see how your practices compare to the rest of the anonymous participants.\n "
 	    		+ "We know that spam is annoying, and we promise not to give out your email to anyone.");
 	    
-	    email = new Text (cl2, SWT.SINGLE| SWT.BORDER | SWT.FILL);
+
+	    Composite cl2email =  new Composite(cl2,SWT.NONE);
+	    cl2email.setLayout(new GridLayout());
 	    
-	    GridData data =  new GridData();
-	    data.horizontalAlignment = SWT.FILL;
-	    data.grabExcessHorizontalSpace = true;
-	    email.setLayoutData(data);
-}
+	   Label emailCaption = new Label(cl2email,SWT.NONE) ;
+	   emailCaption.setText("Email:");
+	    email = new Text (cl2, SWT.SINGLE| SWT.BORDER | SWT.FILL);
+	    GridData emailData =  new GridData();
+	    emailData.horizontalAlignment = SWT.FILL;
+	    emailData.grabExcessHorizontalSpace = true;
+	    email.setLayoutData(emailData);
+	    email.addKeyListener(new KeyListener() {
+	        @Override
+	        public void keyPressed(KeyEvent e) {
+	          // TODO Auto-generated method stub
+	        }
+
+	        @Override
+	        public void keyReleased(KeyEvent e) {
+	          if (!email.getText().isEmpty()) {
+	            //setPageComplete(true);
+	        	  emailAddress = email.getText();
+	          }
+	        }
+	      });
+
+
+    // Required to avoid an error in the system
+    setControl(content);
+    setPageComplete(false);
+
+  }
+
 
   public String getText1() {
     return text1.getText();
   }
+  
+  protected void checkForCompletion(){
+	  boolean isDone = true;
+	  for(int i = 0; i < 8; i++){
+		  if(Selections[i] == -1){
+			  isDone = false;
+		  }
+	  }
+	  if(isDone){
+		  SurveyResults = "";
+		  for(int i = 0; i < 8; i++){
+			 SurveyResults += "Q"+i+ ":"+ Selections[i] + ",";			  
+		  }
+		  
+		  emailAddress = email.getText();
+		  System.out.println("DONE");
+		  setPageComplete(true);
+	  }
+  }
+
 }
  

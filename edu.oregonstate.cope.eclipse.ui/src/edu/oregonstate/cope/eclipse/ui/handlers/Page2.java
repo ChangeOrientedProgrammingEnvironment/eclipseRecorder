@@ -16,9 +16,9 @@ public class Page2 extends WizardPage {
   private Composite container;
 
   public Page2() {
-    super("Second Page");
-    setTitle("Second Page");
-    setDescription("Now this is the second page");
+    super("Thanks for Installing Plugin");
+    setTitle("Plugin Info");
+    setDescription("Thanks!");
     setControl(text1);
   }
 
@@ -29,35 +29,11 @@ public class Page2 extends WizardPage {
     container.setLayout(layout);
     layout.numColumns = 2;
     Label label1 = new Label(container, SWT.NONE);
-    label1.setText("Say hello to Fred");
+    label1.setText("This is where we will talk about the plugin and how to turn it off.");
 
-    text1 = new Text(container, SWT.BORDER | SWT.SINGLE);
-    text1.setText("");
-    text1.addKeyListener(new KeyListener() {
-
-      @Override
-      public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
-
-      }
-
-      @Override
-      public void keyReleased(KeyEvent e) {
-        if (!text1.getText().isEmpty()) {
-          setPageComplete(true);
-        }
-      }
-
-    });
-    GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-    text1.setLayoutData(gd);
-    Label labelCheck = new Label(container, SWT.NONE);
-    labelCheck.setText("This is a check");
-    Button check = new Button(container, SWT.CHECK);
-    check.setSelection(true);
     // Required to avoid an error in the system
     setControl(container);
-    setPageComplete(false);
+    setPageComplete(true);
   }
 
   public String getText1() {

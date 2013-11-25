@@ -25,7 +25,9 @@ public class SurveyManager {
 		boolean workspaceFileExists = false;
 		boolean bundleFileExists = false;
 		Path workspaceSurveyPath = Paths.get(WorkspaceDir,"survey.txt");
+		Path workspaceEmailPath = Paths.get(WorkspaceDir,"email.txt");
 		Path bundleSurveyPath = Paths.get(BundleDir,"survey.txt") ;
+		Path bundleEmailPath = Paths.get(BundleDir,"email.txt") ;
 		
 		
 		if(Files.exists(workspaceSurveyPath)){
@@ -39,9 +41,6 @@ public class SurveyManager {
 		if(workspaceFileExists && bundleFileExists){
 			System.out.println("BOTH FILES EXIST");
 		}else if(!workspaceFileExists && bundleFileExists){
-			
-			//String sampleSurvey = "Question Number: 0 answer:-1 Question Number: 1 answer:-1";
-			List<String> lines = null;
 			try {
 				 Files.copy(bundleSurveyPath, workspaceSurveyPath);
 				 System.out.println("ONLY BUNDLE EXISTS");
@@ -51,26 +50,30 @@ public class SurveyManager {
 			}
 			
 		}else if(workspaceFileExists && !bundleFileExists){
-			System.out.println("ONLY WORKSPACE EXISTS");
-			String sampleSurvey = SAMPLE_SURVEY;
-			writeContentsToFile(bundleSurveyPath,sampleSurvey);
+			try {
+				 Files.copy(workspaceSurveyPath,bundleSurveyPath);
+				 System.out.println("ONLY BUNDLE EXISTS");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else if(!workspaceFileExists && !bundleFileExists){
 			System.out.println("NO FILE EXISTS, GIVE SURVEY");
+			SurveyWizard sw = new SurveyWizard();
+			WizardDialog wizardDialog = new WizardDialog(parent.getShell(), sw);
+			if (wizardDialog.open() == Window.OK) {
+				System.out.println("Ok pressed");
+				writeContentsToFile(workspaceSurveyPath,sw.surveyAnswers);
+				writeContentsToFile(bundleSurveyPath,sw.surveyAnswers);
+				writeContentsToFile(workspaceEmailPath,sw.email);
+				writeContentsToFile(bundleEmailPath,sw.email);
+			} else {
+				System.out.println("Cancel pressed");
+			}
 			
-//			DemoSurveyDialog dsd = new DemoSurveyDialog(parent);
-//			dsd.open();
-			
-			String sampleSurvey = SAMPLE_SURVEY;
-			writeContentsToFile(workspaceSurveyPath,sampleSurvey);
-			writeContentsToFile(bundleSurveyPath,sampleSurvey);
 		}
 		
-		WizardDialog wizardDialog = new WizardDialog(parent.getShell(), new SurveyWizard());
-		if (wizardDialog.open() == Window.OK) {
-			System.out.println("Ok pressed");
-		} else {
-			System.out.println("Cancel pressed");
-		}
+		
 	}
 	
 	protected void writeContentsToFile(Path filePath, String currFileContents) {

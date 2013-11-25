@@ -117,12 +117,6 @@ class StartPluginUIJob extends UIJob {
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
 		initializeFileSender();
-		
-		
-//		DemoSurveyDialog dsd = new DemoSurveyDialog(UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
-//		dsd.open();
-//		
-//		System.out.println(COPEPlugin.getBundleStorage().getAbsolutePath());
 
 		SurveyManager sm = new SurveyManager();
 		sm.checkAndRunSurvey(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
