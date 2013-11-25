@@ -37,6 +37,7 @@ public class OutsideLibrariesTest {
 	@Rule
 	public TestName name = new TestName();
 	private static IJavaProject javaProject;
+	private static SnapshotManager snapshotManager = new SnapshotManager();
 
 	@BeforeClass
 	public static void setUp() throws Exception {
@@ -68,23 +69,21 @@ public class OutsideLibrariesTest {
 
 	@Test
 	public void testGetNonWorkspaceLibrary() throws Exception {
-		StartPluginUIJob job = new StartPluginUIJob(COPEPlugin.getDefault(), "");
-		List<String> nonWorkspaceLibraries = job.getNonWorkspaceLibraries(javaProject);
+		List<String> nonWorkspaceLibraries = snapshotManager.getNonWorkspaceLibraries(javaProject);
 		assertEquals(1, nonWorkspaceLibraries.size());
 		assertEquals("/Users/caius/osu/COPE/clientRecorder/edu.oregonstate.cope.eclipse.tests/projects/json-simple-1.1.1.jar",nonWorkspaceLibraries.get(0));
 	}
 	
 	@Test
 	public void testAddLibraryToZip() throws Exception {
-		StartPluginUIJob job = new StartPluginUIJob(COPEPlugin.getDefault(), "");
-		String zipFilePath = job.getInitialSnapshot();
+		String zipFilePath = snapshotManager.takeSnapshot(javaProject.getProject());
 		assertNotNull(zipFilePath);
 		
 		ArrayList<String> initialEntries = getEntriesInZipFile(zipFilePath);
 		System.out.println(initialEntries);
 		
-		List<String> libraries = job.getNonWorkspaceLibraries(javaProject);
-		job.addLibsToZipFile(libraries, zipFilePath);
+		List<String> libraries = snapshotManager.getNonWorkspaceLibraries(javaProject);
+		snapshotManager.addLibsToZipFile(libraries, zipFilePath);
 		
 		ArrayList<String> entriesNames = getEntriesInZipFile(zipFilePath);
 		System.out.println(entriesNames);

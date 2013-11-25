@@ -18,6 +18,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
@@ -37,12 +38,15 @@ import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ltk.internal.core.refactoring.history.RefactoringHistoryService;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.progress.UIJob;
 import org.quartz.SchedulerException;
@@ -97,7 +101,7 @@ class StartPluginUIJob extends UIJob {
 		
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
-			getInitialSnapshot();
+//			getInitialSnapshot();
 		}
 
 		monitor.worked(1);
@@ -115,7 +119,7 @@ class StartPluginUIJob extends UIJob {
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
-		initializeFileSender();
+//		initializeFileSender();
 	}
 
 	protected boolean isWorkspaceKnown() {
@@ -154,6 +158,7 @@ class StartPluginUIJob extends UIJob {
 	}
 
 	private void registerDocumentListenersForOpenEditors() {
+		SnapshotManager snapshotManager = COPEPlugin.getDefault().getSnapshotManager();
 		IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IEditorReference[] editorReferences = activeWindow.getActivePage().getEditorReferences();
 		for (IEditorReference editorReference : editorReferences) {
@@ -161,6 +166,17 @@ class StartPluginUIJob extends UIJob {
 			if (document == null)
 				continue;
 			document.addDocumentListener(new DocumentListener());
+			IEditorInput editorInput;
+			try {
+				editorInput = editorReference.getEditorInput();
+				if (editorInput instanceof FileEditorInput) {
+					IFile file = ((FileEditorInput)editorInput).getFile();
+					IProject project = file.getProject();
+					if (!snapshotManager.isProjectKnown(project))
+						snapshotManager.takeSnapshot(project);
+				}
+			} catch (PartInitException e) {
+			}
 		}
 	}
 
@@ -184,64 +200,4 @@ class StartPluginUIJob extends UIJob {
 			e.printStackTrace();
 		}
 	}
-	
-	public List<String> getNonWorkspaceLibraries(IJavaProject project) {
-		IClasspathEntry[] resolvedClasspath = null;
-		try {
-			resolvedClasspath = project.getRawClasspath();
-		} catch (JavaModelException e) {
-			return new ArrayList<String>();
-		}
-		List<String> pathsOfLibraries = new ArrayList<String>();
-		for (IClasspathEntry iClasspathEntry : resolvedClasspath) {
-			if (iClasspathEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-				pathsOfLibraries.add(iClasspathEntry.getPath().toPortableString());
-			}
-		}
-		return pathsOfLibraries;
-	}
-	
-	@SuppressWarnings("resource")
-	public void addLibsToZipFile(List<String> pathOfLibraries, String zipFilePath) {
-		try {
-			String libFolder = "libs/";
-			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath+"-libs", true));
-			copyExistingEntries(zipFilePath, zipOutputStream);
-			for (String library : pathOfLibraries) {
-				ZipEntry libraryZipEntry = new ZipEntry(libFolder + Paths.get(library).getFileName());
-				zipOutputStream.putNextEntry(libraryZipEntry);
-				byte[] libraryContents = Files.readAllBytes(Paths.get(library));
-				zipOutputStream.write(libraryContents);
-			}
-			zipOutputStream.close();
-			new File(zipFilePath).delete();
-			new File(zipFilePath+"-libs").renameTo(new File(zipFilePath));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-		}
-	}
-
-	private void copyExistingEntries(String zipFilePath, ZipOutputStream zipOutputStream) {
-		try {
-			ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFilePath));
-			while(zipInputStream.available() == 1) {
-				ZipEntry entry = zipInputStream.getNextEntry();
-				if (entry == null)
-					continue;
-				zipOutputStream.putNextEntry(new ZipEntry(entry.getName()));
-				long entrySize = entry.getSize();
-				if (entrySize < 0)
-					continue;
-				byte[] contents = new byte[(int) entrySize];
-				int count = 0;
-				do {
-					count = zipInputStream.read(contents, count, (int) entrySize);
-				} while (count < entrySize);
-				zipOutputStream.write(contents);
-			}
-		} catch (IOException e) {
-		}
-	}
-
 }
