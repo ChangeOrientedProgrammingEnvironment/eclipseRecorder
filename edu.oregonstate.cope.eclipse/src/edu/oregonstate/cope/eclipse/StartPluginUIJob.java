@@ -101,7 +101,6 @@ class StartPluginUIJob extends UIJob {
 		
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
-//			getInitialSnapshot();
 		}
 
 		monitor.worked(1);
@@ -136,25 +135,6 @@ class StartPluginUIJob extends UIJob {
 			writer.close();
 		} catch (IOException e) {
 		}
-	}
-
-	protected String getInitialSnapshot() {
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject[] projects = root.getProjects();
-		if (projects.length == 0)
-			return null; //don't take snapshot of empty workspace
-		String zipFile = COPEPlugin.getLocalStorage().getAbsolutePath() + "/" + System.currentTimeMillis() + ".zip";
-		ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(root, zipFile);
-		archiveFileExportOperation.setUseCompression(true);
-		archiveFileExportOperation.setUseTarFormat(false);
-		archiveFileExportOperation.setCreateLeadupStructure(true);
-		try {
-			archiveFileExportOperation.run(new NullProgressMonitor());
-		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return zipFile;
 	}
 
 	private void registerDocumentListenersForOpenEditors() {
