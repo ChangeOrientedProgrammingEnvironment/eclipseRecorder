@@ -159,4 +159,10 @@ public class SnapshotManager {
 		} catch (IOException e) {
 		}
 	}
+	
+	protected void takeSnapshotOfKnownProjects() {
+		for (String project : knownProjects) {
+			takeSnapshot(project);
+		}
+	}
 }
