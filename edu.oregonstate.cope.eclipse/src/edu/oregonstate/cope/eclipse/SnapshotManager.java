@@ -96,8 +96,8 @@ public class SnapshotManager {
 		}
 	}
 
-	private void takeSnapshot(String requiredProjectName) {
-		IProject requiredProject = ResourcesPlugin.getWorkspace().getRoot().getProject(requiredProjectName);
+	private void takeSnapshot(String projectName) {
+		IProject requiredProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		takeSnapshot(requiredProject);
 	}
 
