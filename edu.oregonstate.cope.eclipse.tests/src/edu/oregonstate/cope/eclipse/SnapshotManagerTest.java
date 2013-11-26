@@ -51,6 +51,17 @@ public class SnapshotManagerTest {
 		assertEquals("known1\nknown2\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getLocalStorage().getAbsolutePath(), "known-projects"))));
 	}
 	
+	@Test
+	public void testTouchProjectInSession() {
+		snapshotManager.isProjectKnown("known1");
+		snapshotManager.takeSnapshotOfKnownProjects();
+		File fileDir = COPEPlugin.getLocalStorage();
+		assertTrue(fileDir.isDirectory());
+		File[] listFiles = listZipFilesInDir(fileDir);
+		assertEquals(1,listFiles.length);
+		assertTrue(listFiles[0].getName().matches("known1-[0-9]*\\.zip"));
+	}
+
 	private File[] listZipFilesInDir(File fileDir) {
 		File[] listFiles = fileDir.listFiles(new FilenameFilter() {
 			
