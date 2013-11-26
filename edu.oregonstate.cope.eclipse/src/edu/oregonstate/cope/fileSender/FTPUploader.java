@@ -16,6 +16,8 @@ public class FTPUploader {
 	
 	public FTPUploader(String host, String user, String pwd) throws Exception{
 		ftp = new FTPClient();
+		
+		//TODO is this for logging?
 		ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
 		int reply;
 		ftp.connect(host);

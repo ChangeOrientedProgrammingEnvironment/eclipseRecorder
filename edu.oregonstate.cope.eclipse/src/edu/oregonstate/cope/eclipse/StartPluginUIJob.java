@@ -118,6 +118,7 @@ class StartPluginUIJob extends UIJob {
 			writer.write(workspaceID);
 			writer.close();
 		} catch (IOException e) {
+			copePlugin.getLogger().error(this, e.getMessage(), e);
 		}
 	}
 
@@ -146,6 +147,7 @@ class StartPluginUIJob extends UIJob {
 				project = file.getProject();
 			}
 		} catch (PartInitException e) {
+			copePlugin.getLogger().error(this, e.getMessage(), e);
 		}
 		return project;
 	}
@@ -165,9 +167,9 @@ class StartPluginUIJob extends UIJob {
 		try {
 			new FileSender();
 		} catch (ParseException e) {
-			e.printStackTrace();
+			copePlugin.getLogger().error(this, e.getMessage(), e);
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			copePlugin.getLogger().error(this, e.getMessage(), e);
 		}
 	}
 }
