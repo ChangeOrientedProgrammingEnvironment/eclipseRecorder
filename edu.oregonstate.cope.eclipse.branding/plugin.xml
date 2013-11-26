@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.trim.status">
+         <toolbar
+               id="edu.oregonstate.cope.eclipse.branding.toolbar">
+            <command
+                  commandId="edu.oregonstate.cope.eclipse.branding.command"
+                  icon="icons/osu-logo-png.png"
+                  id="contibutions.trimicon"
+                  label="COPE Recorder"
+                  style="push"
+                  tooltip="COPE Recorder">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+
+</plugin>

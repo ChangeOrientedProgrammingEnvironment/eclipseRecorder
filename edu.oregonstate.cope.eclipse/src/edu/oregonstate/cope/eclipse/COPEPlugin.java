@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
@@ -33,6 +31,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	private RecorderFacade recorderFacade;
 
+	private SnapshotManager snapshotManager;
+
 	/**
 	 * The constructor
 	 */
@@ -52,6 +52,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 		UIJob uiJob = new StartPluginUIJob(this, "Registering listeners");
 		uiJob.schedule();
+		snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
 	}
 
 	/*
@@ -116,5 +117,9 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	public COPELogger getLogger() {
 		return recorderFacade.getLogger();
+	}
+
+	public SnapshotManager getSnapshotManager() {
+		return snapshotManager;
 	}
 }
