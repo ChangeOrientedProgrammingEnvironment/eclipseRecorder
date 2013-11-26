@@ -33,6 +33,7 @@ public class RecorderFacade {
 		copeLogger.enableFileLogging(rootDirectory, LOG_FILE_NAME);
 		//copeLogger.logOnlyErrors();
 		copeLogger.logEverything();
+		
 	}
 
 	private void initClientRecorder(String IDE) {
