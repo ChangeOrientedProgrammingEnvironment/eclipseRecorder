@@ -1,4 +1,4 @@
-package edu.oregonstate.cope.eclipse.ui;
+package edu.oregonstate.cope.eclipse.ui.handlers;
 
 import java.util.ArrayList;
 import java.util.Arrays;

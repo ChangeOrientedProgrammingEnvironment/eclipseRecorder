@@ -7,7 +7,7 @@ import org.eclipse.jface.wizard.Wizard;
 
 public class SurveyWizard extends Wizard {
 
-  protected Page1 one;
+  protected SurveyPage surveyPage;
   protected Page2 two;
   
   public String email = "test";
@@ -20,17 +20,17 @@ public class SurveyWizard extends Wizard {
 
   @Override
   public void addPages() {
-    one = new Page1();
+    surveyPage = new SurveyPage();
     two = new Page2();
-    addPage(one);
+    addPage(surveyPage);
     addPage(two);
   }
 
   @Override
   public boolean performFinish() {
     // Print the result to the console
-	  surveyAnswers = one.SurveyResults;
-	  email = one.emailAddress;
+//	  surveyAnswers = surveyPage.SurveyResults;
+//	  email = surveyPage.emailAddress;
     return true;
   }
 }
