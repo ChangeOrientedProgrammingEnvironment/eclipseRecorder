@@ -8,6 +8,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import edu.oregonstate.cope.eclipse.ui.handlers.DemoSurveyDialog;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 
