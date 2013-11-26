@@ -30,6 +30,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.internal.UIPlugin;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.progress.UIJob;
@@ -44,6 +45,7 @@ import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
+import edu.oregonstate.cope.eclipse.ui.SurveyManager;
 import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
@@ -101,6 +103,9 @@ class StartPluginUIJob extends UIJob {
 		refactoringHistoryService.addExecutionListener(new RefactoringExecutionListener());
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
+		
+		SurveyManager sm = new SurveyManager();
+		sm.checkAndRunSurvey(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
 
 		initializeFileSender();
 	}

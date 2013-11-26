@@ -3,6 +3,8 @@ package edu.oregonstate.cope.eclipse;
 
 import static org.junit.Assert.*;
 
+import org.junit.Test;
+
 public class GetWorkspaceIDTest {
 	
 	//@Test

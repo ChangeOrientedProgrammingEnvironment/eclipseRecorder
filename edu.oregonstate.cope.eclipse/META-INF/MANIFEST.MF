@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.debug.core;bundle-version="3.8.0",
  edu.oregonstate.cope.clientrecorder;bundle-version="0.0.1",
  org.eclipse.ui.editors;bundle-version="3.8.100",
- org.eclipse.jdt.core;bundle-version="3.9.0"
+ org.eclipse.jdt.core;bundle-version="3.9.0",
+ edu.oregonstate.cope.eclipse.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

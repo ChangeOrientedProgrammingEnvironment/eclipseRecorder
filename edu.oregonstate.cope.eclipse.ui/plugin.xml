@@ -15,13 +15,6 @@
       </command>
    </extension>
    <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            commandId="edu.oregonstate.cope.eclipse.ui.commands.sampleCommand"
-            class="edu.oregonstate.cope.eclipse.ui.handlers.SampleHandler">
-      </handler>
-   </extension>
-   <extension
          point="org.eclipse.ui.bindings">
       <key
             commandId="edu.oregonstate.cope.eclipse.ui.commands.sampleCommand"
