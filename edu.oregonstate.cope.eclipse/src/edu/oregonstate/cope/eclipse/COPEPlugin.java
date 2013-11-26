@@ -91,7 +91,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	public void initializeRecorder(String rootDirectory, String workspaceID, String IDE) {
 		this.workspaceID = workspaceID;
-		recorderFacade = new RecorderFacade().initialize(rootDirectory, IDE);
+		recorderFacade = RecorderFacade.instance().initialize(rootDirectory, IDE);
 	}
 
 	protected File getWorkspaceIdFile() {
