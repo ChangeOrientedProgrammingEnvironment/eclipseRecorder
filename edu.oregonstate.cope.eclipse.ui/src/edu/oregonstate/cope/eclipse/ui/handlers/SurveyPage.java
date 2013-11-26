@@ -18,6 +18,12 @@ import org.eclipse.swt.widgets.Text;
 
 public class SurveyPage extends WizardPage {
 
+	/**
+	 * This contains the button for all the questions. Since it is an array list, the order is preserved.
+	 * So the first questions is at index 0, second at 1 and so on. The buttons are Radio Buttons, so only one
+	 * will be selected at one time. Again, the order of the buttons corresponds to the order of the answers
+	 * in the initial list.
+	 */
 	private List<List<Button>> allButtons;
 	private Text emailInput;
 
