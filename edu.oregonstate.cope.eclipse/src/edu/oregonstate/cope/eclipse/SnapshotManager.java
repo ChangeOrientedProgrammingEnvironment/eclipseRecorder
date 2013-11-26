@@ -28,9 +28,11 @@ public class SnapshotManager {
 
 	private String knownProjectsFileName = "known-projects";
 	private List<String> knownProjects;
+	private String parentDirectory;
 
-	protected SnapshotManager() {
-		File knownProjectsFile = new File(COPEPlugin.getLocalStorage(), knownProjectsFileName);
+	protected SnapshotManager(String parentDirectory) {
+		this.parentDirectory = parentDirectory;
+		File knownProjectsFile = new File(parentDirectory, knownProjectsFileName);
 		try {
 			knownProjectsFile.createNewFile();
 			knownProjects = Files.readAllLines(knownProjectsFile.toPath(), Charset.defaultCharset());
@@ -49,7 +51,7 @@ public class SnapshotManager {
 	protected void knowProject(String string) {
 		knownProjects.add(string);
 		try {
-			Files.write(Paths.get(COPEPlugin.getLocalStorage().getAbsolutePath(), knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
+			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
 		} catch (IOException e) {
 		}
 	}
@@ -62,7 +64,7 @@ public class SnapshotManager {
 	public String takeSnapshot(IProject project) {
 		if (!isProjectKnown(project))
 			knowProject(project);
-		String zipFile = COPEPlugin.getLocalStorage().getAbsolutePath() + "/" + project.getName() + "-" + System.currentTimeMillis() + ".zip";
+		String zipFile = parentDirectory + "/" + project.getName() + "-" + System.currentTimeMillis() + ".zip";
 		ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(project, zipFile);
 		archiveFileExportOperation.setUseCompression(true);
 		archiveFileExportOperation.setUseTarFormat(false);

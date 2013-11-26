@@ -20,7 +20,7 @@ public class SnapshotManagerTest {
 		File file = new File(COPEPlugin.getLocalStorage(), "known-projects");
 		file.createNewFile();
 		Files.write(file.toPath(), "known1\nknown2\n".getBytes(), StandardOpenOption.WRITE);
-		snapshotManager = new SnapshotManager();
+		snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
 	}
 
 	@Test

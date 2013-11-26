@@ -32,7 +32,7 @@ public class OutsideLibrariesTest {
 	@Rule
 	public TestName name = new TestName();
 	private static IJavaProject javaProject;
-	private static SnapshotManager snapshotManager = new SnapshotManager();
+	private static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
 
 	@BeforeClass
 	public static void setUp() throws Exception {
