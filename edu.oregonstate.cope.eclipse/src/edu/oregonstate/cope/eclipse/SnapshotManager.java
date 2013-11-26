@@ -109,9 +109,9 @@ public class SnapshotManager {
 		}
 	}
 
-	private void takeSnapshot(String projectName) {
+	private String takeSnapshot(String projectName) {
 		IProject requiredProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-		takeSnapshot(requiredProject);
+		return takeSnapshot(requiredProject);
 	}
 
 	public List<String> getNonWorkspaceLibraries(IJavaProject project) {
