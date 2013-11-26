@@ -31,6 +31,7 @@ public class SnapshotManager {
 
 	private String knownProjectsFileName = "known-projects";
 	private List<String> knownProjects;
+	private List<String> sessionTouchedProjects;
 	private String parentDirectory;
 
 	protected SnapshotManager(String parentDirectory) {
@@ -42,14 +43,22 @@ public class SnapshotManager {
 		} catch (IOException e) {
 			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
 		}
+		
+		sessionTouchedProjects = new ArrayList<String>();
 	}
 
 	public boolean isProjectKnown(String name) {
+		makeProjectAsTouched(name);
 		return knownProjects.contains(name);
 	}
 	
 	public boolean isProjectKnown(IProject project) {
 		return isProjectKnown(project.getName());
+	}
+	
+	private void makeProjectAsTouched(String projectName) {
+		if (!sessionTouchedProjects.contains(projectName))
+			sessionTouchedProjects.add(projectName);
 	}
 
 	protected void knowProject(String string) {
@@ -167,7 +176,7 @@ public class SnapshotManager {
 	}
 	
 	protected void takeSnapshotOfKnownProjects() {
-		for (String project : knownProjects) {
+		for (String project : sessionTouchedProjects) {
 			takeSnapshot(project);
 		}
 	}
