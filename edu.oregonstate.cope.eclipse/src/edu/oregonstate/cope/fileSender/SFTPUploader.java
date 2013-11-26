@@ -72,8 +72,7 @@ public class SFTPUploader {
 			if(file.isFile()) {
 				this.channelSftp.put(new FileInputStream(file), file.getName());
 			} else {	
-				this.channelSftp.mkdir(file.getName());
-				this.channelSftp.cd(file.getName());
+				this.createRemoteDir(file.getName());
 				this.uploadPathToFTP(localPath + '/' + file.getName(),  file.getName());
 				this.channelSftp.cd("..");
 			}

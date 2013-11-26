@@ -11,5 +11,9 @@ Bundle-ClassPath: clientrecorder.jar,
 Export-Package: edu.oregonstate.cope.clientRecorder,
  edu.oregonstate.cope.clientRecorder.util,
  org.json.simple,
- org.json.simple.parser
+ org.json.simple.parser,
+ org.slf4j,
+ org.slf4j.helpers,
+ org.slf4j.impl,
+ org.slf4j.spi
 Require-Bundle: org.junit;bundle-version="4.11.0"
