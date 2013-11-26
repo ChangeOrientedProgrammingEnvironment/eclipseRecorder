@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -30,6 +31,7 @@ public class SnapshotManager {
 
 	private String knownProjectsFileName = "known-projects";
 	private List<String> knownProjects;
+	private List<String> sessionTouchedProjects;
 	private String parentDirectory;
 
 	protected SnapshotManager(String parentDirectory) {
@@ -41,23 +43,31 @@ public class SnapshotManager {
 		} catch (IOException e) {
 			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
 		}
+		
+		sessionTouchedProjects = new ArrayList<String>();
 	}
 
 	public boolean isProjectKnown(String name) {
+		makeProjectAsTouched(name);
 		return knownProjects.contains(name);
 	}
 	
 	public boolean isProjectKnown(IProject project) {
 		return isProjectKnown(project.getName());
 	}
+	
+	private void makeProjectAsTouched(String projectName) {
+		if (!sessionTouchedProjects.contains(projectName))
+			sessionTouchedProjects.add(projectName);
+	}
 
 	protected void knowProject(String string) {
 		knownProjects.add(string);
-//		try {
-////			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
-//		} catch (IOException e) {
-//			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
-//		}
+		try {
+			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
+		} catch (IOException e) {
+			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
+		}
 	}
 	
 	private void knowProject(IProject project) {
@@ -69,6 +79,24 @@ public class SnapshotManager {
 		if (!isProjectKnown(project))
 			knowProject(project);
 		String zipFile = parentDirectory + "/" + project.getName() + "-" + System.currentTimeMillis() + ".zip";
+		archiveProjectToFile(project, zipFile);
+		COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
+		if (JavaProject.hasJavaNature(project)) {
+			IJavaProject javaProject = addExternalLibrariesToZipFile(project, zipFile);
+			snapshotRequiredProjects(javaProject);
+		}
+		return zipFile;
+	}
+
+	private IJavaProject addExternalLibrariesToZipFile(IProject project, String zipFile) {
+		IJavaProject javaProject = JavaCore.create(project);
+		List<String> nonWorkspaceLibraries = getNonWorkspaceLibraries(javaProject);
+		addLibsToZipFile(nonWorkspaceLibraries, zipFile);
+		return javaProject;
+	}
+
+	@SuppressWarnings("restriction")
+	private void archiveProjectToFile(IProject project, String zipFile) {
 		ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(project, zipFile);
 		archiveFileExportOperation.setUseCompression(true);
 		archiveFileExportOperation.setUseTarFormat(false);
@@ -77,16 +105,7 @@ public class SnapshotManager {
 			archiveFileExportOperation.run(new NullProgressMonitor());
 		} catch (InvocationTargetException | InterruptedException e) {
 			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
-			return null;
 		}
-		if (JavaProject.hasJavaNature(project)) {
-			IJavaProject javaProject = JavaCore.create(project);
-			List<String> nonWorkspaceLibraries = getNonWorkspaceLibraries(javaProject);
-			addLibsToZipFile(nonWorkspaceLibraries, zipFile);
-			COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
-			snapshotRequiredProjects(javaProject);
-		}
-		return zipFile;
 	}
 
 	private void snapshotRequiredProjects(IJavaProject javaProject) {
@@ -99,9 +118,9 @@ public class SnapshotManager {
 		}
 	}
 
-	private void takeSnapshot(String projectName) {
+	private String takeSnapshot(String projectName) {
 		IProject requiredProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-		takeSnapshot(requiredProject);
+		return takeSnapshot(requiredProject);
 	}
 
 	public List<String> getNonWorkspaceLibraries(IJavaProject project) {
@@ -166,7 +185,7 @@ public class SnapshotManager {
 	}
 	
 	protected void takeSnapshotOfKnownProjects() {
-		for (String project : knownProjects) {
+		for (String project : sessionTouchedProjects) {
 			takeSnapshot(project);
 		}
 	}
