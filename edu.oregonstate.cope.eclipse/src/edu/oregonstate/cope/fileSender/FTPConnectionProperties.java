@@ -13,6 +13,9 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.eclipse.COPEPlugin;
+
 //import org.slf4j.*;
 
 public class FTPConnectionProperties extends AbstractUIPlugin {
@@ -44,7 +47,7 @@ public class FTPConnectionProperties extends AbstractUIPlugin {
 						FTPConnectionProperties.getInstance().getBundle(), new Path(PROPERTIES_PATH), false
 					));
 			} catch (IOException e) {
-				e.printStackTrace();
+				COPEPlugin.getDefault().getLogger().error(FTPConnectionProperties.class, e.getMessage(), e);
 			}
 		}
 		return ftpProperties;

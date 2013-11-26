@@ -72,7 +72,7 @@ public class Uninstaller {
 			date = DATE_FORMATTER.parse(dateString);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			RecorderFacade.instance().getLogger().error(this, e.getMessage(), e);
 		}
 
 		Calendar cal = Calendar.getInstance();

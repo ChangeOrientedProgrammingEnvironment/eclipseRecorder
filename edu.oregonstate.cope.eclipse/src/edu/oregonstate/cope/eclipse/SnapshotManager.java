@@ -24,6 +24,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 
+import edu.oregonstate.cope.clientRecorder.util.COPELogger;
+
 public class SnapshotManager {
 
 	private String knownProjectsFileName = "known-projects";
@@ -37,6 +39,7 @@ public class SnapshotManager {
 			knownProjectsFile.createNewFile();
 			knownProjects = Files.readAllLines(knownProjectsFile.toPath(), Charset.defaultCharset());
 		} catch (IOException e) {
+			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
 		}
 	}
 
@@ -53,6 +56,7 @@ public class SnapshotManager {
 //		try {
 ////			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
 //		} catch (IOException e) {
+//			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
 //		}
 	}
 	
@@ -72,7 +76,7 @@ public class SnapshotManager {
 		try {
 			archiveFileExportOperation.run(new NullProgressMonitor());
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
 			return null;
 		}
 		if (JavaProject.hasJavaNature(project)) {
@@ -105,6 +109,7 @@ public class SnapshotManager {
 		try {
 			resolvedClasspath = project.getRawClasspath();
 		} catch (JavaModelException e) {
+			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
 			return new ArrayList<String>();
 		}
 		List<String> pathsOfLibraries = new ArrayList<String>();
@@ -131,7 +136,7 @@ public class SnapshotManager {
 			new File(zipFilePath).delete();
 			new File(zipFilePath+"-libs").renameTo(new File(zipFilePath));
 		} catch (IOException e) {
-			e.printStackTrace();
+			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
 		} finally {
 		}
 	}
@@ -156,6 +161,7 @@ public class SnapshotManager {
 			}
 			zipInputStream.close();
 		} catch (IOException e) {
+			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
 		}
 	}
 	
