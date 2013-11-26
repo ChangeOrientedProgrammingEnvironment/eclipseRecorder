@@ -79,6 +79,24 @@ public class SnapshotManager {
 		if (!isProjectKnown(project))
 			knowProject(project);
 		String zipFile = parentDirectory + "/" + project.getName() + "-" + System.currentTimeMillis() + ".zip";
+		archiveProjectToFile(project, zipFile);
+		COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
+		if (JavaProject.hasJavaNature(project)) {
+			IJavaProject javaProject = addExternalLibrariesToZipFile(project, zipFile);
+			snapshotRequiredProjects(javaProject);
+		}
+		return zipFile;
+	}
+
+	private IJavaProject addExternalLibrariesToZipFile(IProject project, String zipFile) {
+		IJavaProject javaProject = JavaCore.create(project);
+		List<String> nonWorkspaceLibraries = getNonWorkspaceLibraries(javaProject);
+		addLibsToZipFile(nonWorkspaceLibraries, zipFile);
+		return javaProject;
+	}
+
+	@SuppressWarnings("restriction")
+	private void archiveProjectToFile(IProject project, String zipFile) {
 		ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(project, zipFile);
 		archiveFileExportOperation.setUseCompression(true);
 		archiveFileExportOperation.setUseTarFormat(false);
@@ -87,16 +105,7 @@ public class SnapshotManager {
 			archiveFileExportOperation.run(new NullProgressMonitor());
 		} catch (InvocationTargetException | InterruptedException e) {
 			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
-			return null;
 		}
-		COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
-		if (JavaProject.hasJavaNature(project)) {
-			IJavaProject javaProject = JavaCore.create(project);
-			List<String> nonWorkspaceLibraries = getNonWorkspaceLibraries(javaProject);
-			addLibsToZipFile(nonWorkspaceLibraries, zipFile);
-			snapshotRequiredProjects(javaProject);
-		}
-		return zipFile;
 	}
 
 	private void snapshotRequiredProjects(IJavaProject javaProject) {
