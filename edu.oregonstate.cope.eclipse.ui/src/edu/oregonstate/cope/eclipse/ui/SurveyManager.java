@@ -72,17 +72,17 @@ public class SurveyManager {
 			
 		}
 		//UNCOMMENT THIS TO FOR THE SURVEY TO RUN EVERY TIME FOR DEBUGGING
-		SurveyWizard sw = new SurveyWizard();
-		WizardDialog wizardDialog = new WizardDialog(parent.getShell(), sw);
-		if (wizardDialog.open() == Window.OK) {
-			System.out.println("Ok pressed");
-			writeContentsToFile(workspaceSurveyPath,sw.surveyAnswers);
-			writeContentsToFile(bundleSurveyPath,sw.surveyAnswers);
-			writeContentsToFile(workspaceEmailPath,sw.email);
-			writeContentsToFile(bundleEmailPath,sw.email);
-		} else {
-			System.out.println("Cancel pressed");
-		}
+		// SurveyWizard sw = new SurveyWizard();
+		// WizardDialog wizardDialog = new WizardDialog(parent.getShell(), sw);
+		// if (wizardDialog.open() == Window.OK) {
+		// System.out.println("Ok pressed");
+		// writeContentsToFile(workspaceSurveyPath,sw.surveyAnswers);
+		// writeContentsToFile(bundleSurveyPath,sw.surveyAnswers);
+		// writeContentsToFile(workspaceEmailPath,sw.email);
+		// writeContentsToFile(bundleEmailPath,sw.email);
+		// } else {
+		// System.out.println("Cancel pressed");
+		// }
 		
 	}
 	
