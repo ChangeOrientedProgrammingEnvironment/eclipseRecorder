@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -15,18 +14,14 @@ import java.util.zip.ZipFile;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +32,7 @@ public class OutsideLibrariesTest {
 	@Rule
 	public TestName name = new TestName();
 	private static IJavaProject javaProject;
+	private static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
 
 	@BeforeClass
 	public static void setUp() throws Exception {
@@ -68,23 +64,21 @@ public class OutsideLibrariesTest {
 
 	@Test
 	public void testGetNonWorkspaceLibrary() throws Exception {
-		StartPluginUIJob job = new StartPluginUIJob(COPEPlugin.getDefault(), "");
-		List<String> nonWorkspaceLibraries = job.getNonWorkspaceLibraries(javaProject);
+		List<String> nonWorkspaceLibraries = snapshotManager.getNonWorkspaceLibraries(javaProject);
 		assertEquals(1, nonWorkspaceLibraries.size());
 		assertEquals("/Users/caius/osu/COPE/clientRecorder/edu.oregonstate.cope.eclipse.tests/projects/json-simple-1.1.1.jar",nonWorkspaceLibraries.get(0));
 	}
 	
 	@Test
 	public void testAddLibraryToZip() throws Exception {
-		StartPluginUIJob job = new StartPluginUIJob(COPEPlugin.getDefault(), "");
-		String zipFilePath = job.getInitialSnapshot();
+		String zipFilePath = snapshotManager.takeSnapshot(javaProject.getProject());
 		assertNotNull(zipFilePath);
 		
 		ArrayList<String> initialEntries = getEntriesInZipFile(zipFilePath);
 		System.out.println(initialEntries);
 		
-		List<String> libraries = job.getNonWorkspaceLibraries(javaProject);
-		job.addLibsToZipFile(libraries, zipFilePath);
+		List<String> libraries = snapshotManager.getNonWorkspaceLibraries(javaProject);
+		snapshotManager.addLibsToZipFile(libraries, zipFilePath);
 		
 		ArrayList<String> entriesNames = getEntriesInZipFile(zipFilePath);
 		System.out.println(entriesNames);
