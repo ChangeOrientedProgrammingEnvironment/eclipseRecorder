@@ -65,11 +65,12 @@ public class COPELogger {
 
 	private Logger setLoggingFile(final String file) {
 		final LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		
 		final PatternLayoutEncoder ple = new PatternLayoutEncoder();
-
 		ple.setPattern("%date{dd MMM yyyy;HH:mm:ss} [%thread] %level %logger %msg%n");
 		ple.setContext(lc);
 		ple.start();
+		
 		final FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
 		fileAppender.setName(FILE_APPENDER);
 		fileAppender.setFile(file);

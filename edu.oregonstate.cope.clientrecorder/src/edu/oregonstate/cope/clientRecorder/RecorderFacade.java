@@ -31,6 +31,7 @@ public class RecorderFacade {
 	private void initLogger(String rootDirectory) {
 		copeLogger = new COPELogger();
 		copeLogger.enableFileLogging(rootDirectory, LOG_FILE_NAME);
+		//copeLogger.logOnlyErrors();
 		copeLogger.logEverything();
 	}
 
