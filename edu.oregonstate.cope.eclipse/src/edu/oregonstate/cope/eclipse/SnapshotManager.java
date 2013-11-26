@@ -78,7 +78,7 @@ public class SnapshotManager {
 	public String takeSnapshot(IProject project) {
 		if (!isProjectKnown(project))
 			knowProject(project);
-		String zipFile = parentDirectory + "/" + project.getName() + "-" + System.currentTimeMillis() + ".zip";
+		String zipFile = parentDirectory + File.separator + project.getName() + "-" + System.currentTimeMillis() + ".zip";
 		archiveProjectToFile(project, zipFile);
 		COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
 		if (JavaProject.hasJavaNature(project)) {
