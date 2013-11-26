@@ -7,19 +7,23 @@ import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 public class RecorderFacade {
 	private static final String LOG_FILE_NAME = "log";
 	private static final String CONFIG_FILE_NAME = "config";
-	private static RecorderFacade _instance;
-	
+
+	private static class Instance {
+		public static final RecorderFacade _instance = new RecorderFacade();
+	}
+
 	private ClientRecorder clientRecorder;
 	private Properties properties;
 	private Uninstaller uninstaller;
 	private COPELogger copeLogger;
 
-	public RecorderFacade initialize(String rootDirectory, String IDE) {
-		//TODO this is horrible. Fix it.
-		_instance = this;
+	private RecorderFacade() {
+		initLogger();
+	}
 
-		initLogger(rootDirectory);
-		
+	public RecorderFacade initialize(String rootDirectory, String IDE) {
+		initFileLogging(rootDirectory);
+
 		initPersister(rootDirectory);
 		initProperties(rootDirectory);
 		initUninstaller();
@@ -28,12 +32,16 @@ public class RecorderFacade {
 		return this;
 	}
 
-	private void initLogger(String rootDirectory) {
-		copeLogger = new COPELogger();
+	private void initFileLogging(String rootDirectory) {
+		initLogger();
 		copeLogger.enableFileLogging(rootDirectory, LOG_FILE_NAME);
-		//copeLogger.logOnlyErrors();
-		copeLogger.logEverything();
+	}
+
+	private void initLogger() {
+		copeLogger = new COPELogger();
 		
+		// copeLogger.logOnlyErrors();
+		copeLogger.logEverything();
 	}
 
 	private void initClientRecorder(String IDE) {
@@ -68,13 +76,12 @@ public class RecorderFacade {
 	public Uninstaller getUninstaller() {
 		return uninstaller;
 	}
-	
-	public COPELogger getLogger(){
+
+	public COPELogger getLogger() {
 		return copeLogger;
 	}
-	
-	//TODO this is ugly. Needs to be fixed. Maybe turn this class into a configurable singleton?
-	public static RecorderFacade instance(){
-		return _instance;
+
+	public static RecorderFacade instance() {
+		return Instance._instance;
 	}
 }
