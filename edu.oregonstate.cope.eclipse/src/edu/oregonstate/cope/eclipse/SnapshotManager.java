@@ -142,7 +142,7 @@ public class SnapshotManager {
 	
 	public void addLibsToZipFile(List<String> pathOfLibraries, String zipFilePath) {
 		try {
-			String libFolder = "libs/";
+			String libFolder = "libs" + File.separator;
 			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath+"-libs", true));
 			copyExistingEntries(zipFilePath, zipOutputStream);
 			for (String library : pathOfLibraries) {

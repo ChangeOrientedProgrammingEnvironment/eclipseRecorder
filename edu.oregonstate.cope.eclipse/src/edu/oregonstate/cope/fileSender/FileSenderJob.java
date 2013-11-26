@@ -1,5 +1,6 @@
 package edu.oregonstate.cope.fileSender;
 
+import java.io.File;
 import java.net.UnknownHostException;
 
 import org.quartz.Job;
@@ -24,7 +25,7 @@ public class FileSenderJob implements Job
 			);
 			String localPath = COPEPlugin.getLocalStorage().getAbsolutePath();
 			// using eclipse workspace ID as a remote dir to store data
-			String remotePath = "COPE/" + COPEPlugin.getDefault().getWorkspaceID();
+			String remotePath = "COPE" + File.separator + COPEPlugin.getDefault().getWorkspaceID();
 			
 			COPEPlugin.getDefault().getLogger().info(this, "Sending files from " + localPath + " to " + FTPConnectionProperties.getHost() + ":" + remotePath + " ...");
 			
