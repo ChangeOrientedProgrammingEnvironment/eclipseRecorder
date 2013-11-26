@@ -29,7 +29,7 @@ public class SurveyPage extends WizardPage {
 
 	protected SurveyPage() {
 		super("Survey");
-		this.setDescription("Thank you for bla bla bla");
+		this.setDescription("Thanks you for participating in the study titled: Understanding TDD Practices.  Please answer just a few demographic questions before you begin using the plugin");
 		this.setTitle("COPE survey");
 	}
 
