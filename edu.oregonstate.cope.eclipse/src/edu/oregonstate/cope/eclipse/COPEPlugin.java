@@ -112,4 +112,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 	public static File getLocalStorage() {
 		return COPEPlugin.plugin.getStateLocation().toFile();
 	}
+	
+	public static File getBundleStorage() {
+		return COPEPlugin.getDefault().getBundle().getDataFile("");
+	}
 }

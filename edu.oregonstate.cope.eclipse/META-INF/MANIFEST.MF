@@ -27,3 +27,4 @@ Bundle-ClassPath: .,
  thirdParty/quartz-1.8.6.jar,
  thirdParty/slf4j-api-1.7.1.jar,
  thirdParty/slf4j-simple-1.7.1.jar
+Import-Package: edu.oregonstate.cope.eclipse.ui
