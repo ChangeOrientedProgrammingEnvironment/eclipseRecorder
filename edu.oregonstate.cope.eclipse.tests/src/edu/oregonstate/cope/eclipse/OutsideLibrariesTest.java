@@ -37,7 +37,7 @@ public class OutsideLibrariesTest {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		ImportOperation importOperation = new ImportOperation(new Path("librariesTest"), 
-				new File(Paths.get("projects/" + "librariesTest").toAbsolutePath().toString()), 
+				new File(Paths.get("projects" + File.separator + "librariesTest").toAbsolutePath().toString()), 
 				FileSystemStructureProvider.INSTANCE, 
 				new IOverwriteQuery() {
 

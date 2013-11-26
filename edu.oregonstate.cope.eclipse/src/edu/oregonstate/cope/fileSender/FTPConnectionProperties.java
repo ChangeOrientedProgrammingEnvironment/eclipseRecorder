@@ -1,5 +1,6 @@
 package edu.oregonstate.cope.fileSender;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -27,7 +28,7 @@ public class FTPConnectionProperties extends AbstractUIPlugin {
 	private static final byte[] SALT = { (byte) 0xde, (byte) 0x33, (byte) 0x9,
 			(byte) 0x12, (byte) 0xda, (byte) 0x34, (byte) 0x8, (byte) 0x42, };
 
-	protected final static String PROPERTIES_PATH = "resources/ftp.properties";
+	protected final static String PROPERTIES_PATH = "resources" + File.separator + "ftp.properties";
 	
 	protected static PropertyResourceBundle ftpProperties;
 		

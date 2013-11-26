@@ -51,7 +51,7 @@ public class SFTPUploader {
 	}
 	
 	public void createRemoteDir(String path) throws SftpException {
-		String[] folders = path.split( "/" );
+		String[] folders = path.split( File.separator );
 		for ( String folder : folders ) {
 		    if ( folder.length() > 0 ) {
 		        try {
@@ -73,7 +73,7 @@ public class SFTPUploader {
 				this.channelSftp.put(new FileInputStream(file), file.getName());
 			} else {	
 				this.createRemoteDir(file.getName());
-				this.uploadPathToFTP(localPath + '/' + file.getName(),  file.getName());
+				this.uploadPathToFTP(localPath + File.separator + file.getName(),  file.getName());
 				this.channelSftp.cd("..");
 			}
 		}
