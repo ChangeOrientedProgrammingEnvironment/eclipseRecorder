@@ -27,7 +27,7 @@ public class SurveyManager {
 		Path workspaceSurveyPath = Paths.get(WorkspaceDir,"survey.txt");
 		Path workspaceEmailPath = Paths.get(WorkspaceDir,"email.txt");
 		Path bundleSurveyPath = Paths.get(BundleDir,"survey.txt") ;
-		Path bundleEmailPath = Paths.get(BundleDir,"email.txt") ;
+		Path bundleEmailPath = Paths.get(BundleDir, "email.txt");
 		
 		
 		if(Files.exists(workspaceSurveyPath)){

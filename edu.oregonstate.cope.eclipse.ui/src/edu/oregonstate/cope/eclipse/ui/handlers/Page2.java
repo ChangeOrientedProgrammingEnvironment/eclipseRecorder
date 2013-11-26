@@ -12,32 +12,31 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 public class Page2 extends WizardPage {
-  private Text text1;
-  private Composite container;
+	private Text text1;
+	private Composite container;
 
-  public Page2() {
-    super("Thanks for Installing Plugin");
-    setTitle("Plugin Info");
-    setDescription("Thanks!");
-    setControl(text1);
-  }
+	public Page2() {
+		super("Thanks for Installing Plugin");
+		setTitle("Plugin Info");
+		setDescription("Thanks!");
+		setControl(text1);
+	}
 
-  @Override
-  public void createControl(Composite parent) {
-    container = new Composite(parent, SWT.NONE);
-    GridLayout layout = new GridLayout();
-    container.setLayout(layout);
-    layout.numColumns = 2;
-    Label label1 = new Label(container, SWT.NONE);
-    label1.setText("This is where we will talk about the plugin and how to turn it off.");
+	@Override
+	public void createControl(Composite parent) {
+		container = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		container.setLayout(layout);
+		layout.numColumns = 2;
+		Label label1 = new Label(container, SWT.NONE);
+		label1.setText("This is where we will talk about the plugin and how to turn it off.");
 
-    // Required to avoid an error in the system
-    setControl(container);
-    setPageComplete(true);
-  }
+		// Required to avoid an error in the system
+		setControl(container);
+		setPageComplete(true);
+	}
 
-  public String getText1() {
-    return text1.getText();
-  }
+	public String getText1() {
+		return text1.getText();
+	}
 }
- 
