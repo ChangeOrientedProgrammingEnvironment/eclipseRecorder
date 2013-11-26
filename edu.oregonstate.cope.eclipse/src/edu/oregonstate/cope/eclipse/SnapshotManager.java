@@ -8,7 +8,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -16,6 +15,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -53,11 +53,11 @@ public class SnapshotManager {
 
 	protected void knowProject(String string) {
 		knownProjects.add(string);
-		try {
-			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
-		} catch (IOException e) {
-			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
-		}
+//		try {
+////			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
+//		} catch (IOException e) {
+//			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
+//		}
 	}
 	
 	private void knowProject(IProject project) {
@@ -80,11 +80,28 @@ public class SnapshotManager {
 			return null;
 		}
 		if (JavaProject.hasJavaNature(project)) {
-			List<String> nonWorkspaceLibraries = getNonWorkspaceLibraries(JavaCore.create(project));
+			IJavaProject javaProject = JavaCore.create(project);
+			List<String> nonWorkspaceLibraries = getNonWorkspaceLibraries(javaProject);
 			addLibsToZipFile(nonWorkspaceLibraries, zipFile);
+			COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
+			snapshotRequiredProjects(javaProject);
 		}
-		COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
 		return zipFile;
+	}
+
+	private void snapshotRequiredProjects(IJavaProject javaProject) {
+		try {
+			String[] requiredProjectNames = javaProject.getRequiredProjectNames();
+			for (String requiredProjectName : requiredProjectNames) {
+				takeSnapshot(requiredProjectName);
+			}
+		} catch (JavaModelException e) {
+		}
+	}
+
+	private void takeSnapshot(String projectName) {
+		IProject requiredProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		takeSnapshot(requiredProject);
 	}
 
 	public List<String> getNonWorkspaceLibraries(IJavaProject project) {
@@ -145,6 +162,12 @@ public class SnapshotManager {
 			zipInputStream.close();
 		} catch (IOException e) {
 			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
+		}
+	}
+	
+	protected void takeSnapshotOfKnownProjects() {
+		for (String project : knownProjects) {
+			takeSnapshot(project);
 		}
 	}
 }
