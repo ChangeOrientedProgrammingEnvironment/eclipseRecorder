@@ -51,10 +51,10 @@ public class SnapshotManager {
 
 	protected void knowProject(String string) {
 		knownProjects.add(string);
-		try {
-			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
-		} catch (IOException e) {
-		}
+//		try {
+////			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
+//		} catch (IOException e) {
+//		}
 	}
 	
 	private void knowProject(IProject project) {
