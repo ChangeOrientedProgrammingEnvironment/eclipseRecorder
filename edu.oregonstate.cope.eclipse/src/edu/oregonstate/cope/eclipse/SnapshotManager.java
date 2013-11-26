@@ -89,11 +89,11 @@ public class SnapshotManager {
 			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
 			return null;
 		}
+		COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
 		if (JavaProject.hasJavaNature(project)) {
 			IJavaProject javaProject = JavaCore.create(project);
 			List<String> nonWorkspaceLibraries = getNonWorkspaceLibraries(javaProject);
 			addLibsToZipFile(nonWorkspaceLibraries, zipFile);
-			COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
 			snapshotRequiredProjects(javaProject);
 		}
 		return zipFile;
