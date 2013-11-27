@@ -2,7 +2,10 @@ package edu.oregonstate.cope.eclipse.ui.handlers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -15,6 +18,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.json.simple.JSONObject;
 
 public class SurveyPage extends WizardPage {
 
@@ -25,7 +29,7 @@ public class SurveyPage extends WizardPage {
 	 * selected at one time. Again, the order of the buttons corresponds to the
 	 * order of the answers in the initial list.
 	 */
-	private List<List<Button>> allButtons;
+	private Map<String, List<Button>> qAndA;
 	private Text emailInput;
 
 	protected SurveyPage() {
@@ -45,16 +49,16 @@ public class SurveyPage extends WizardPage {
 		Composite questions = new Composite(scrolledComposite, SWT.NONE);
 		addGridLayout(questions);
 
-		allButtons = new ArrayList<List<Button>>();
+		qAndA = new HashMap<String, List<Button>>();
 
-		allButtons.add(createQuestion(questions, "What is the extent of your programming experience?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years", "15-20 years", "More than 20 years" })));
-		allButtons.add(createQuestion(questions, "What is the extent of your programming experience with Java?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years", "15-20 years", "More than 20 years" })));
-		allButtons.add(createQuestion(questions, "What is the extent of your experience with Eclipse or IntelliJ IDEA IDE?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years" })));
-		allButtons.add(createQuestion(questions, "Select the project type you spend most of your time on", Arrays.asList(new String[] { "Proprietary Software Project", "Open Source Project", "Research Project", "Personal/Class project", "Other" })));
-		allButtons.add(createQuestion(questions, "What is the extent of your experience using TDD?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years" })));
-		allButtons.add(createQuestion(questions, "How often does your code development follow TDD practices?", Arrays.asList(new String[] { "Always", "Very often", "Sometimes", "Rarely", "Nevers" })));
-		allButtons.add(createQuestion(questions, "What is your gender", Arrays.asList(new String[] { "Male", "Female", "Decline to State" })));
-		allButtons.add(createQuestion(questions, "What is your current age", Arrays.asList(new String[] { "less than 18", "18-25", "26-29", "30-39", "40-49", "50 or older" })));
+		qAndA.put("Q1", createQuestion(questions, "What is the extent of your programming experience?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years", "15-20 years", "More than 20 years" })));
+		qAndA.put("Q2", createQuestion(questions, "What is the extent of your programming experience with Java?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years", "15-20 years", "More than 20 years" })));
+		qAndA.put("Q3", createQuestion(questions, "What is the extent of your experience with Eclipse or IntelliJ IDEA IDE?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years" })));
+		qAndA.put("Q4", createQuestion(questions, "Select the project type you spend most of your time on", Arrays.asList(new String[] { "Proprietary Software Project", "Open Source Project", "Research Project", "Personal/Class project", "Other" })));
+		qAndA.put("Q5", createQuestion(questions, "What is the extent of your experience using TDD?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years" })));
+		qAndA.put("Q6", createQuestion(questions, "How often does your code development follow TDD practices?", Arrays.asList(new String[] { "Always", "Very often", "Sometimes", "Rarely", "Nevers" })));
+		qAndA.put("Q7", createQuestion(questions, "What is your gender", Arrays.asList(new String[] { "Male", "Female", "Decline to State" })));
+		qAndA.put("Q8", createQuestion(questions, "What is your current age", Arrays.asList(new String[] { "less than 18", "18-25", "26-29", "30-39", "40-49", "50 or older" })));
 
 		Composite emailComposite = new Composite(questions, SWT.NONE);
 		emailComposite.setLayout(new GridLayout(1, false));
@@ -106,9 +110,10 @@ public class SurveyPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		for (List<Button> questionButtons : allButtons) {
+		Set<String> questions = qAndA.keySet();
+		for (String question : questions) {
 			boolean enabled = false;
-			for (Button button : questionButtons) {
+			for (Button button : qAndA.get(question)) {
 				if (button.getSelection())
 					enabled = true;
 			}
@@ -116,5 +121,21 @@ public class SurveyPage extends WizardPage {
 				return false;
 		}
 		return true;
+	}
+
+	@SuppressWarnings("unchecked")
+	public JSONObject getSurveyResults() {
+		JSONObject resultObject = new JSONObject();
+		for (String question : qAndA.keySet()) {
+			List<Button> answers = qAndA.get(question);
+			for (Button answer : answers) {
+				if (answer.getSelection()) {
+					resultObject.put(question, answer.getText());
+					break;
+				}
+			}
+		}
+		resultObject.put("email", emailInput.getText());
+		return resultObject;
 	}
 }
