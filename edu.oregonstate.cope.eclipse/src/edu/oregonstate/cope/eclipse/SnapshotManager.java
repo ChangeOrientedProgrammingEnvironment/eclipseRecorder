@@ -26,8 +26,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 
-import edu.oregonstate.cope.clientRecorder.util.COPELogger;
-
 public class SnapshotManager {
 
 	private String knownProjectsFileName = "known-projects";
@@ -54,6 +52,8 @@ public class SnapshotManager {
 	}
 	
 	public boolean isProjectKnown(IProject project) {
+		if (project == null)
+			return true;
 		return isProjectKnown(project.getName());
 	}
 	
