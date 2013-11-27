@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -146,9 +147,12 @@ public class SnapshotManager {
 			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath+"-libs", true));
 			copyExistingEntries(zipFilePath, zipOutputStream);
 			for (String library : pathOfLibraries) {
-				ZipEntry libraryZipEntry = new ZipEntry(libFolder + Paths.get(library).getFileName());
+				Path path = Paths.get(library);
+				if(!Files.exists(path)) //if the project is in the workspace
+					continue;
+				ZipEntry libraryZipEntry = new ZipEntry(libFolder + path.getFileName());
 				zipOutputStream.putNextEntry(libraryZipEntry);
-				byte[] libraryContents = Files.readAllBytes(Paths.get(library));
+				byte[] libraryContents = Files.readAllBytes(path);
 				zipOutputStream.write(libraryContents);
 			}
 			zipOutputStream.close();
