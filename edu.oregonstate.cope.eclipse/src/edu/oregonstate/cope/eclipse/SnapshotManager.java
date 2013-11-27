@@ -113,7 +113,8 @@ public class SnapshotManager {
 		try {
 			String[] requiredProjectNames = javaProject.getRequiredProjectNames();
 			for (String requiredProjectName : requiredProjectNames) {
-				takeSnapshot(requiredProjectName);
+				if(!isProjectKnown(requiredProjectName))
+					takeSnapshot(requiredProjectName);
 			}
 		} catch (JavaModelException e) {
 		}
