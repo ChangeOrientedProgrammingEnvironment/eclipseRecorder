@@ -123,7 +123,8 @@ public class SurveyPage extends WizardPage {
 		return true;
 	}
 
-	public String getSurveyResults() {
+	@SuppressWarnings("unchecked")
+	public JSONObject getSurveyResults() {
 		JSONObject resultObject = new JSONObject();
 		for (String question : qAndA.keySet()) {
 			List<Button> answers = qAndA.get(question);
@@ -135,6 +136,6 @@ public class SurveyPage extends WizardPage {
 			}
 		}
 		resultObject.put("email", emailInput.getText());
-		return resultObject.toJSONString();
+		return resultObject;
 	}
 }

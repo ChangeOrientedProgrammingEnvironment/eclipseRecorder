@@ -1,8 +1,10 @@
 package edu.oregonstate.cope.eclipse.ui;
-import java.util.*;
+
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -14,8 +16,6 @@ import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 public class SurveyManager {
 	
 
-	private static final String SAMPLE_SURVEY = "Question Number: 0 answer:-1 Question Number: 1 answer:-1";
-
 	public SurveyManager(){
 		
 	}
@@ -24,9 +24,7 @@ public class SurveyManager {
 		boolean workspaceFileExists = false;
 		boolean bundleFileExists = false;
 		Path workspaceSurveyPath = Paths.get(WorkspaceDir,"survey.txt");
-		Path workspaceEmailPath = Paths.get(WorkspaceDir,"email.txt");
 		Path bundleSurveyPath = Paths.get(BundleDir,"survey.txt") ;
-		Path bundleEmailPath = Paths.get(BundleDir, "email.txt");
 		
 		
 		if(Files.exists(workspaceSurveyPath)){
@@ -60,29 +58,19 @@ public class SurveyManager {
 			System.out.println("NO FILE EXISTS, GIVE SURVEY");
 			SurveyWizard sw = new SurveyWizard();
 			WizardDialog wizardDialog = new WizardDialog(parent.getShell(), sw);
-			if (wizardDialog.open() == Window.OK) {
-				System.out.println("Ok pressed");
-				writeContentsToFile(workspaceSurveyPath,sw.surveyAnswers);
-				writeContentsToFile(bundleSurveyPath,sw.surveyAnswers);
-				writeContentsToFile(workspaceEmailPath,sw.email);
-				writeContentsToFile(bundleEmailPath,sw.email);
-			} else {
-				System.out.println("Cancel pressed");
-			}
-			
+			wizardDialog.open();
+			writeContentsToFile(workspaceSurveyPath,sw.getSurveyResults());
+			writeContentsToFile(bundleSurveyPath, sw.getSurveyResults());
+			System.out.println("Cancel pressed");
 		}
+			
 		//UNCOMMENT THIS TO FOR THE SURVEY TO RUN EVERY TIME FOR DEBUGGING
-		// SurveyWizard sw = new SurveyWizard();
-		// WizardDialog wizardDialog = new WizardDialog(parent.getShell(), sw);
-		// if (wizardDialog.open() == Window.OK) {
-		// System.out.println("Ok pressed");
-		// writeContentsToFile(workspaceSurveyPath,sw.surveyAnswers);
-		// writeContentsToFile(bundleSurveyPath,sw.surveyAnswers);
-		// writeContentsToFile(workspaceEmailPath,sw.email);
-		// writeContentsToFile(bundleEmailPath,sw.email);
-		// } else {
-		// System.out.println("Cancel pressed");
-		// }
+//		 SurveyWizard sw = new SurveyWizard();
+//		 WizardDialog wizardDialog = new WizardDialog(parent.getShell(), sw);
+//		 wizardDialog.open();
+//		 System.out.println("Ok pressed");
+//		 writeContentsToFile(workspaceSurveyPath,sw.getSurveyResults());
+//		 writeContentsToFile(bundleSurveyPath,sw.getSurveyResults());
 		
 	}
 	
