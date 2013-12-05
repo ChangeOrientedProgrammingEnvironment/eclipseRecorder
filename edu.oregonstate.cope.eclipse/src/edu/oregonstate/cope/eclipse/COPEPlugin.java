@@ -96,7 +96,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	protected File getWorkspaceIdFile() {
 		File pluginStoragePath = COPEPlugin.getLocalStorage();
-		return new File(pluginStoragePath.getAbsolutePath() + "/workspace_id");
+		return new File(pluginStoragePath.getAbsolutePath() + File.separator + "workspace_id");
 	}
 
 	public String getWorkspaceID() {
