@@ -42,6 +42,7 @@ public class RecorderFacade {
 		
 		// copeLogger.logOnlyErrors();
 		copeLogger.logEverything();
+		copeLogger.disableConsoleLogging();
 	}
 
 	private void initClientRecorder(String IDE) {
