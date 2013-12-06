@@ -2,54 +2,5 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-   <extension
-         point="org.eclipse.ui.commands">
-      <category
-            name="Sample Category"
-            id="edu.oregonstate.cope.eclipse.ui.commands.category">
-      </category>
-      <command
-            name="Sample Command"
-            categoryId="edu.oregonstate.cope.eclipse.ui.commands.category"
-            id="edu.oregonstate.cope.eclipse.ui.commands.sampleCommand">
-      </command>
-   </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="edu.oregonstate.cope.eclipse.ui.commands.sampleCommand"
-            contextId="org.eclipse.ui.contexts.window"
-            sequence="M1+6"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
-         <menu
-               label="Sample Menu"
-               mnemonic="M"
-               id="edu.oregonstate.cope.eclipse.ui.menus.sampleMenu">
-            <command
-                  commandId="edu.oregonstate.cope.eclipse.ui.commands.sampleCommand"
-                  mnemonic="S"
-                  id="edu.oregonstate.cope.eclipse.ui.menus.sampleCommand">
-            </command>
-         </menu>
-      </menuContribution>
-      <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-         <toolbar
-               id="edu.oregonstate.cope.eclipse.ui.toolbars.sampleToolbar">
-            <command
-                  commandId="edu.oregonstate.cope.eclipse.ui.commands.sampleCommand"
-                  icon="icons/sample.gif"
-                  tooltip="Say hello world"
-                  id="edu.oregonstate.cope.eclipse.ui.toolbars.sampleCommand">
-            </command>
-         </toolbar>
-      </menuContribution>
-   </extension>
 
 </plugin>
