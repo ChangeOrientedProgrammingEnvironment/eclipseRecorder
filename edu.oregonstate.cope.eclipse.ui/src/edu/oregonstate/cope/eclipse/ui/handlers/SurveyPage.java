@@ -81,8 +81,8 @@ public class SurveyPage extends WizardPage {
 		      }
 		      @Override
 		      public void keyReleased(KeyEvent e) {
-		        if (!emailInput.getText().isEmpty()) {
-		        	setPageComplete(true);
+		    	  if (isPageComplete()){
+						setPageComplete(true);
 		        }
 		      }
 		    });
