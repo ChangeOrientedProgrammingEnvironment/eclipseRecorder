@@ -81,8 +81,12 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return recorderFacade.getClientRecorder();
 	}
 
-	public Properties getProperties() {
-		return recorderFacade.getProperties();
+	public Properties getWorkspaceProperties() {
+		return recorderFacade.getWorkspaceProperties();
+	}
+
+	public Properties getInstallationProperties() {
+		return recorderFacade.getInstallationProperties();
 	}
 
 	Uninstaller getUninstaller() {
@@ -115,10 +119,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 	public static File getLocalStorage() {
 		return COPEPlugin.plugin.getStateLocation().toFile();
 	}
-	
+
 	public static File getBundleStorage() {
-	    return COPEPlugin.getDefault().getBundle().getDataFile("");
-	  }
+		return COPEPlugin.getDefault().getBundle().getDataFile("");
+	}
 
 	public COPELogger getLogger() {
 		return recorderFacade.getLogger();
