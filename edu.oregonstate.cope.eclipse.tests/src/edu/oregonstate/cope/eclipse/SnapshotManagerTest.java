@@ -177,7 +177,6 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 							fail("Directories don't match");
 				}
 			} 
-			System.out.println(memberName);
 			assertTrue(found);
 		}
 	}
