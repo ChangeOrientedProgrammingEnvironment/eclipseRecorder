@@ -3,20 +3,29 @@ package edu.oregonstate.cope.eclipse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -127,4 +136,49 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		return listFiles;
 	}
 	
+	@Test
+	public void testCompleteSnapshot() throws Exception {
+		String snapshotFile = snapshotManager.takeSnapshot(javaProject.getProject());
+		ZipFileStructureProvider structureProvider = new ZipFileStructureProvider(new ZipFile(snapshotFile));
+		ZipEntry rootEntry = structureProvider.getRoot();
+		
+		List children = structureProvider.getChildren(rootEntry);
+		ZipEntry projectRoot = null;
+		for (Object child : children) {
+			if(((ZipEntry) child).getName().equals("librariesTest/"))
+				projectRoot = (ZipEntry) child;
+		}
+		assertEntryMatchesDir(structureProvider, javaProject.getProject(), projectRoot);
+	}
+
+	private void assertEntryMatchesDir(ZipFileStructureProvider structureProvider, IContainer folder, ZipEntry parentEntry) throws Exception {
+		List unexportedItems = Arrays.asList("bin");
+		IResource[] members = folder.members();
+		List children = structureProvider.getChildren(parentEntry);
+		for (IResource member : members) {
+			String memberName = member.getName();
+			if (unexportedItems.contains(memberName))
+				continue;
+			boolean found = false;
+			for (Object child : children) {
+				if (!(child instanceof ZipEntry))
+					continue;
+				ZipEntry entry = (ZipEntry) child;
+				String entryName = entry.getName();
+				if (entryName.endsWith("/"))
+					entryName = entryName.substring(0, entryName.length() - 1);
+				entryName = entryName.substring(entryName.lastIndexOf("/") + 1);
+				if (entryName.equals(memberName)) {
+					found = true;
+					if (member instanceof IFolder)
+						if (entry.isDirectory())
+							assertEntryMatchesDir(structureProvider, (IContainer) member, entry);
+						else
+							fail("Directories don't match");
+				}
+			} 
+			System.out.println(memberName);
+			assertTrue(found);
+		}
+	}
 }
