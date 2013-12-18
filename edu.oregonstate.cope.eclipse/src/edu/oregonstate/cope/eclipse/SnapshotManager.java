@@ -173,15 +173,14 @@ public class SnapshotManager {
 				if (entry == null)
 					continue;
 				zipOutputStream.putNextEntry(new ZipEntry(entry.getName()));
-				long entrySize = entry.getSize();
-				if (entrySize < 0)
-					continue;
-				byte[] contents = new byte[(int) entrySize];
-				int count = 0;
+				int blockSize = 1024;
 				do {
-					count = zipInputStream.read(contents, count, (int) entrySize);
-				} while (count < entrySize);
-				zipOutputStream.write(contents);
+					byte[] contents = new byte[blockSize];
+					int read = zipInputStream.read(contents, 0, blockSize);
+					zipOutputStream.write(contents);
+					if (read == -1)
+						break;
+				} while (true);
 			}
 			zipInputStream.close();
 		} catch (IOException e) {
