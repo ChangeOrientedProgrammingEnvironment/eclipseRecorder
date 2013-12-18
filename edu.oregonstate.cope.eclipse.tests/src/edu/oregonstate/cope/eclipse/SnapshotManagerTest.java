@@ -143,12 +143,17 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		ZipEntry rootEntry = structureProvider.getRoot();
 		
 		List children = structureProvider.getChildren(rootEntry);
+		ZipEntry projectRoot = getProjectEntry(children);
+		assertEntryMatchesDir(structureProvider, javaProject.getProject(), projectRoot);
+	}
+
+	private ZipEntry getProjectEntry(List children) {
 		ZipEntry projectRoot = null;
 		for (Object child : children) {
 			if(((ZipEntry) child).getName().equals("librariesTest/"))
 				projectRoot = (ZipEntry) child;
 		}
-		assertEntryMatchesDir(structureProvider, javaProject.getProject(), projectRoot);
+		return projectRoot;
 	}
 
 	private void assertEntryMatchesDir(ZipFileStructureProvider structureProvider, IContainer folder, ZipEntry parentEntry) throws Exception {
@@ -161,13 +166,8 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 				continue;
 			boolean found = false;
 			for (Object child : children) {
-				if (!(child instanceof ZipEntry))
-					continue;
 				ZipEntry entry = (ZipEntry) child;
-				String entryName = entry.getName();
-				if (entryName.endsWith("/"))
-					entryName = entryName.substring(0, entryName.length() - 1);
-				entryName = entryName.substring(entryName.lastIndexOf("/") + 1);
+				String entryName = getEntryName(entry);
 				if (entryName.equals(memberName)) {
 					found = true;
 					if (member instanceof IFolder)
@@ -180,5 +180,13 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 			System.out.println(memberName);
 			assertTrue(found);
 		}
+	}
+
+	private String getEntryName(ZipEntry entry) {
+		String entryName = entry.getName();
+		if (entryName.endsWith("/"))
+			entryName = entryName.substring(0, entryName.length() - 1);
+		entryName = entryName.substring(entryName.lastIndexOf("/") + 1);
+		return entryName;
 	}
 }
