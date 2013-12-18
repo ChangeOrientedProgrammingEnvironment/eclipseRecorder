@@ -77,7 +77,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 			int count = 0;
 			byte[] contents = new byte[1000];
 			do {
-				int read = zipInputStream.read(contents, count, 1000);
+				int read = zipInputStream.read(contents, 0, 1000);
 				if (read != -1)
 					count += read;
 				else 
