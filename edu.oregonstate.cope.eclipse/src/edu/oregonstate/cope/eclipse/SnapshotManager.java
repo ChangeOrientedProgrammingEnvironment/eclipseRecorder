@@ -1,5 +1,6 @@
 package edu.oregonstate.cope.eclipse;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,6 +14,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -168,15 +170,17 @@ public class SnapshotManager {
 	private void copyExistingEntries(String zipFilePath, ZipOutputStream zipOutputStream) {
 		try {
 			ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFilePath));
+			ZipFile zipFile = new ZipFile(zipFilePath);
 			while(zipInputStream.available() == 1) {
 				ZipEntry entry = zipInputStream.getNextEntry();
 				if (entry == null)
 					continue;
 				zipOutputStream.putNextEntry(new ZipEntry(entry.getName()));
 				int blockSize = 1024;
+				BufferedInputStream entryInputStream = new BufferedInputStream(zipFile.getInputStream(entry));
 				do {
 					byte[] contents = new byte[blockSize];
-					int read = zipInputStream.read(contents, 0, blockSize);
+					int read = entryInputStream.read(contents, 0, blockSize);
 					zipOutputStream.write(contents);
 					if (read == -1)
 						break;
