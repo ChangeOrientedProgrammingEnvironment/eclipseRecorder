@@ -77,6 +77,16 @@ class StartPluginUIJob extends UIJob {
 		return Status.OK_STATUS;
 	}
 	
+	private void performInstall() {
+		SurveyManager sm = new SurveyManager();
+		sm.checkAndRunSurvey(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
+	}
+
+	private boolean installed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	private void performUninstall(Uninstaller uninstaller) {
 		uninstaller.setUninstall();
 		MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Recording shutting down", "Thank you for your participation. The recorder has shut down permanently. You may delete it if you wish to do so.");
@@ -84,6 +94,9 @@ class StartPluginUIJob extends UIJob {
 
 	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
+		
+		if(!installed())
+			performInstall();
 		
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
@@ -104,9 +117,6 @@ class StartPluginUIJob extends UIJob {
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 		
-		SurveyManager sm = new SurveyManager();
-		sm.checkAndRunSurvey(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
-
 		initializeFileSender();
 	}
 
