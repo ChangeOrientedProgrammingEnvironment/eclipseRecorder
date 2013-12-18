@@ -19,11 +19,23 @@ public class ResourceListener implements IResourceChangeListener {
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		if (isSavedAction() || isRefactoringInProgress())
-		
-			COPEPlugin.getDefault().getLogger().info(this, "This is a save action, so I will ignore it");
-		else
+		if (isSavedAction() || isRefactoringInProgress()) {
+			recordFileSave(event.getDelta());
+		} else
 			recordRefresh(event.getDelta());
+	}
+
+	private void recordFileSave(IResourceDelta delta) {
+		IResource affectedResource = delta.getResource();
+		if (affectedResource.getType() == IResource.FILE) {
+			recorder.recordFileSave(affectedResource.getFullPath().toPortableString());
+			return;
+		}
+		
+		IResourceDelta[] affectedChildren = delta.getAffectedChildren();
+		for (IResourceDelta child : affectedChildren) {
+			recordFileSave(child);
+		}
 	}
 
 	private void recordRefresh(IResourceDelta delta) {
