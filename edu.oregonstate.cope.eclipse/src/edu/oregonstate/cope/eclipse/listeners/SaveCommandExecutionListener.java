@@ -27,7 +27,7 @@ public class SaveCommandExecutionListener implements IExecutionListener {
 	}
 
 	private boolean isFileSave(String commandId) {
-		return commandId.equals("org.eclipse.ui.file.save");
+		return commandId.equals("org.eclipse.ui.file.save") || commandId.equalsIgnoreCase("org.eclipse.ui.file.saveAll");
 	}
 
 	@Override
