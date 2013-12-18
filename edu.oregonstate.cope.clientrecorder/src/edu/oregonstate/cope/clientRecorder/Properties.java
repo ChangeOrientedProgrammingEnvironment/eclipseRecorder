@@ -30,10 +30,9 @@ public class Properties {
 
 	public Properties(FileProvider fileProvider) {
 		this.fileProvider = fileProvider;
-		initFromProvider(fileProvider);
 	}
 
-	private void initFromProvider(FileProvider fileProvider) {
+	private void initFromFile() {
 		List<String> lines = fileProvider.readAllLines();
 
 		for (String line : lines) {
@@ -58,7 +57,8 @@ public class Properties {
 	public void addProperty(String key, String value) {
 		if (key == null)
 			return;
-	
+		
+		initFromFile();
 		properties.put(key, value);
 		persist();
 	}
@@ -66,7 +66,8 @@ public class Properties {
 	public String getProperty(String key) {
 		if (key == null)
 			return null;
-
+		
+		initFromFile();
 		return properties.get(key);
 	}
 }
