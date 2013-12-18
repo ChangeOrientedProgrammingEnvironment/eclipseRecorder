@@ -8,11 +8,16 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,18 +80,41 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 			if (nextEntry == null)
 				break;
 			int count = 0;
-			byte[] contents = new byte[1000];
+			ArrayList<Byte> contents = new ArrayList<Byte>();
 			do {
-				int read = zipInputStream.read(contents, 0, 1000);
-				if (read != -1)
+				byte[] block = new byte[1024];
+				int read = zipInputStream.read(block, 0, 1024);
+				if (read != -1) {
 					count += read;
-				else 
+					contents.addAll(Arrays.asList(boxByteArray(block)));
+				} else {
+					assertContentsAreTheSameAsTheOriginal(contents, nextEntry.getName());
 					break;
+				}
 			} while(true);
 			System.out.println(count);
 			assertTrue(count != 0);
 		}
 		zipInputStream.close();
+	}
+
+	private Byte[] boxByteArray(byte[] block) {
+		Byte[] boxedBlock = new Byte[1024];
+		for (int i=0; i< 1024; i++) {
+			boxedBlock[i] = block[i];
+		}
+		return boxedBlock;
+	}
+
+	private void assertContentsAreTheSameAsTheOriginal(ArrayList<Byte> contents, String fileName) throws Exception {
+		IFile file = javaProject.getProject().getFile(fileName);
+		byte[] actualFileContents = null;
+		try {
+			actualFileContents = Files.readAllBytes(Paths.get(file.getLocation().toPortableString()));
+		} catch (NoSuchFileException e) {
+			return;
+		}
+		assertEquals(actualFileContents, contents);
 	}
 
 	private File[] listZipFilesInDir(File fileDir) {
