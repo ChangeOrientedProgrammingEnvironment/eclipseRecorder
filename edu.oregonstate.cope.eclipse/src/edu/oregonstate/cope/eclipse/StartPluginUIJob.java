@@ -30,7 +30,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.internal.UIPlugin;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.progress.UIJob;
@@ -45,7 +44,6 @@ import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
-import edu.oregonstate.cope.eclipse.ui.SurveyManager;
 import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
@@ -77,16 +75,6 @@ class StartPluginUIJob extends UIJob {
 		return Status.OK_STATUS;
 	}
 	
-	private void performInstall() {
-		SurveyManager sm = new SurveyManager();
-		sm.checkAndRunSurvey(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
-	}
-
-	private boolean installed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	private void performUninstall(Uninstaller uninstaller) {
 		uninstaller.setUninstall();
 		MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Recording shutting down", "Thank you for your participation. The recorder has shut down permanently. You may delete it if you wish to do so.");
@@ -95,8 +83,7 @@ class StartPluginUIJob extends UIJob {
 	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
 		
-		if(!installed())
-			performInstall();
+		new Installer(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath()).doInstall();
 		
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
