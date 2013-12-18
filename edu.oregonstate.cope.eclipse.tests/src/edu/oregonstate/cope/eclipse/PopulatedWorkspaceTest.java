@@ -22,6 +22,7 @@ public class PopulatedWorkspaceTest {
 	protected static IJavaProject javaProject;
 	protected static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
 
+	@SuppressWarnings("restriction")
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		ImportOperation importOperation = new ImportOperation(new Path("librariesTest"), 
@@ -42,7 +43,6 @@ public class PopulatedWorkspaceTest {
 	
 		IProject project = projects[0];
 		project.open(new NullProgressMonitor());
-		String[] natureIds = project.getDescription().getNatureIds();
 		if (JavaProject.hasJavaNature(project)) {
 			javaProject = JavaCore.create(project);
 		} else {
