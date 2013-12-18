@@ -6,14 +6,17 @@ import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 
 public class RecorderFacade {
 	private static final String LOG_FILE_NAME = "log";
-	private static final String CONFIG_FILE_NAME = "config";
+	private static final String WORKSPACE_CONFIG_FILENAME = "config";
+	private static final String INSTALLATION_CONFIG_FILENAME = "config-install";
 
 	private static class Instance {
 		public static final RecorderFacade _instance = new RecorderFacade();
 	}
 
+	private Properties workspaceProperties;
+	private Properties installationProperties;
+
 	private ClientRecorder clientRecorder;
-	private Properties properties;
 	private Uninstaller uninstaller;
 	private COPELogger copeLogger;
 
@@ -21,12 +24,12 @@ public class RecorderFacade {
 		initLogger();
 	}
 
-	public RecorderFacade initialize(String rootDirectory, String IDE) {
-		initFileLogging(rootDirectory);
+	public RecorderFacade initialize(String workspaceDirectory, String permanentDirectory, String IDE) {
+		initFileLogging(workspaceDirectory);
 
-		initPersister(rootDirectory);
-		initProperties(rootDirectory);
+		initProperties(workspaceDirectory, permanentDirectory);
 		initUninstaller();
+		initPersister(workspaceDirectory);
 		initClientRecorder(IDE);
 
 		return this;
@@ -51,13 +54,18 @@ public class RecorderFacade {
 	}
 
 	private void initUninstaller() {
-		uninstaller = new Uninstaller(properties);
+		uninstaller = new Uninstaller(installationProperties);
 	}
 
-	private void initProperties(String rootDirectory) {
-		SimpleFileProvider configFileProvider = new SimpleFileProvider(CONFIG_FILE_NAME);
+	private void initProperties(String workspaceDirectory, String permanentDirectory) {
+		workspaceProperties = createProperties(workspaceDirectory, WORKSPACE_CONFIG_FILENAME);
+		installationProperties = createProperties(permanentDirectory, INSTALLATION_CONFIG_FILENAME);
+	}
+
+	private Properties createProperties(String rootDirectory, String fileName) {
+		SimpleFileProvider configFileProvider = new SimpleFileProvider(fileName);
 		configFileProvider.setRootDirectory(rootDirectory);
-		properties = new Properties(configFileProvider);
+		return new Properties(configFileProvider);
 	}
 
 	private void initPersister(String rootDirectory) {
@@ -70,8 +78,12 @@ public class RecorderFacade {
 		return clientRecorder;
 	}
 
-	public Properties getProperties() {
-		return properties;
+	public Properties getWorkspaceProperties() {
+		return workspaceProperties;
+	}
+
+	public Properties getInstallationProperties() {
+		return installationProperties;
 	}
 
 	public Uninstaller getUninstaller() {
@@ -85,4 +97,5 @@ public class RecorderFacade {
 	public static RecorderFacade instance() {
 		return Instance._instance;
 	}
+
 }
