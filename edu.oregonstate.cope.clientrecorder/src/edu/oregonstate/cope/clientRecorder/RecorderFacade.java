@@ -27,9 +27,9 @@ public class RecorderFacade {
 	public RecorderFacade initialize(String workspaceDirectory, String permanentDirectory, String IDE) {
 		initFileLogging(workspaceDirectory);
 
-		initPersister(workspaceDirectory);
 		initProperties(workspaceDirectory, permanentDirectory);
 		initUninstaller();
+		initPersister(workspaceDirectory);
 		initClientRecorder(IDE);
 
 		return this;
@@ -54,7 +54,7 @@ public class RecorderFacade {
 	}
 
 	private void initUninstaller() {
-		uninstaller = new Uninstaller(workspaceProperties);
+		uninstaller = new Uninstaller(installationProperties);
 	}
 
 	private void initProperties(String workspaceDirectory, String permanentDirectory) {
