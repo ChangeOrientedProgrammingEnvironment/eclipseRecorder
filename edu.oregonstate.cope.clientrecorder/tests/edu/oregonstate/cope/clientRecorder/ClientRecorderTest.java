@@ -1,5 +1,7 @@
 package edu.oregonstate.cope.clientRecorder;
 
+import java.util.HashMap;
+
 import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -104,6 +106,18 @@ public class ClientRecorderTest {
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
+	}
+	
+	@Test
+	public void testLaunchEnd() throws Exception {
+		JSONObject actual = clientRecorder.buildLaunchEndEventJSON(EventType.launchEnd, "123");
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSON_EVENT_TYPE, EventType.launchEnd + "");
+		expected.put(JSON_LAUNCH_TIMESTAMP, "123");
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
 	}
 
 	@Test
@@ -213,5 +227,23 @@ public class ClientRecorderTest {
 		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, output);
+	}
+	
+	@Test
+	public void testRecordLaunchEvent() {
+		HashMap launchAttributes = new HashMap();
+		launchAttributes.put("attr1", "something");
+		launchAttributes.put("attr2", "something else");
+		JSONObject actual = clientRecorder.buildLaunchEventJSON(EventType.normalLaunch, "123", "something", launchAttributes);
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_EVENT_TYPE,EventType.normalLaunch + "");
+		expected.put(JSON_ENTITY_ADDRESS,"something");
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSON_LAUNCH_ATTRIBUTES, launchAttributes);
+		expected.put(JSON_LAUNCH_TIMESTAMP, "123");
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
 	}
 }
