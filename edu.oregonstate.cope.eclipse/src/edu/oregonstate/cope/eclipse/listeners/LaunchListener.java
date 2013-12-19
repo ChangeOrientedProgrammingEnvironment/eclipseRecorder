@@ -19,6 +19,22 @@ public class LaunchListener implements ILaunchListener {
 	public void launchChanged(ILaunch launch) {
 	}
 
+	@Override
+	public void launchAdded(ILaunch launch) {
+		ClientRecorder clientRecorderInstance = COPEPlugin.getDefault().getClientRecorder();
+		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
+		String mainType = getMainType(launchConfiguration);
+		String launchMode = launch.getLaunchMode();
+		try {
+			if (launchMode.equals(ILaunchManager.RUN_MODE))
+				clientRecorderInstance.recordNormalLaunch(mainType, launchConfiguration.getAttributes());
+			if (launchMode.equals(ILaunchManager.DEBUG_MODE))
+				clientRecorderInstance.recordDebugLaunch(mainType, launchConfiguration.getAttributes());
+		} catch (CoreException e) {
+			COPEPlugin.getDefault().getLogger().error(this, "Error retrievieng the launch config", e);
+		}
+	}
+	
 	private boolean isTestLauch(ILaunchConfiguration launchConfiguration) {
 		try {
 			String attribute = launchConfiguration.getAttribute("org.eclipse.jdt.junit.TEST_KIND", "");
@@ -35,24 +51,5 @@ public class LaunchListener implements ILaunchListener {
 		} catch (CoreException e) {
 		}
 		return "";
-	}
-
-	@Override
-	public void launchAdded(ILaunch launch) {
-		ClientRecorder clientRecorderInstance = COPEPlugin.getDefault().getClientRecorder();
-		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
-		String mainType = getMainType(launchConfiguration);
-		String launchMode = launch.getLaunchMode();
-		try {
-			if (isTestLauch(launchConfiguration))
-				return;
-			if (launchMode.equals(ILaunchManager.RUN_MODE))
-				clientRecorderInstance.recordNormalLaunch(mainType, launchConfiguration.getAttributes());
-			// TODO Auto-generated catch block
-			if (launchMode.equals(ILaunchManager.DEBUG_MODE))
-				clientRecorderInstance.recordDebugLaunch(mainType, launchConfiguration.getAttributes());
-		} catch (CoreException e) {
-			COPEPlugin.getDefault().getLogger().error(this, "Error retrievieng the launch config", e);
-		}
 	}
 }
