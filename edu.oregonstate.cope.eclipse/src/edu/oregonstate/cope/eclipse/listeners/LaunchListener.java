@@ -10,6 +10,16 @@ import org.eclipse.debug.core.ILaunchManager;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
+/**
+ * Listens to launches that are being added to the LaunchManager.
+ * 
+ * It records both the test launch and it's end. The launch timestamp
+ * serves as a unique ID to connect the beginning event with the end
+ * event.
+ *   
+ * @author Caius Brindescu
+ *
+ */
 public class LaunchListener implements ILaunchListener {
 
 	private ClientRecorder clientRecorder = COPEPlugin.getDefault().getClientRecorder();
