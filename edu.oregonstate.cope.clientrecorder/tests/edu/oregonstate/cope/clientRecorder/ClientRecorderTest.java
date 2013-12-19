@@ -210,13 +210,14 @@ public class ClientRecorderTest {
 		HashMap launchAttributes = new HashMap();
 		launchAttributes.put("attr1", "something");
 		launchAttributes.put("attr2", "something else");
-		JSONObject actual = clientRecorder.buildLaunchEventJSON(EventType.normalLaunch, "something", launchAttributes);
+		JSONObject actual = clientRecorder.buildLaunchEventJSON(EventType.normalLaunch, "123", "something", launchAttributes);
 		
 		JSONObject expected = new JSONObject();
 		expected.put(JSON_EVENT_TYPE,EventType.normalLaunch + "");
 		expected.put(JSON_ENTITY_ADDRESS,"something");
 		expected.put(JSON_IDE, clientRecorder.getIDE());
 		expected.put(JSON_LAUNCH_ATTRIBUTES, launchAttributes);
+		expected.put(JSON_LAUNCH_TIMESTAMP, "123");
 		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, actual);

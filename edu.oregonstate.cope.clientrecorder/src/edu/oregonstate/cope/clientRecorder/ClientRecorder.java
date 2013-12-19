@@ -30,6 +30,7 @@ public class ClientRecorder {
 	protected static final String JSON_TEXT = "text";
 	protected static final String JSON_ENTITY_ADDRESS = "entityAddress";
 	protected static final String JSON_LAUNCH_ATTRIBUTES = "launchConfiguration";
+	protected static final String JSON_LAUNCH_TIMESTAMP = "launchTimestamp";
 
 	private String IDE;
 
@@ -65,12 +66,12 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
 	}
 
-	public void recordDebugLaunch(String fullyQualifiedMainMethod, Map launchAttributes) {
-		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.debugLaunch, fullyQualifiedMainMethod, launchAttributes));
+	public void recordDebugLaunch(String launchTime, String fullyQualifiedMainMethod, Map launchAttributes) {
+		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.debugLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
 	}
 
-	public void recordNormalLaunch(String fullyQualifiedMainMethod, Map launchAttributes) {
-		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.normalLaunch, fullyQualifiedMainMethod, launchAttributes));
+	public void recordNormalLaunch(String launchTime, String fullyQualifiedMainMethod, Map launchAttributes) {
+		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.normalLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
 	}
 
 	public void recordFileOpen(String fullyQualifiedFileAddress) {
@@ -130,9 +131,10 @@ public class ClientRecorder {
 		return obj;
 	}
 	
-	protected JSONObject buildLaunchEventJSON(Enum EventType, String fullyQualifiedEntityAddress, Map launchAttributes) {
+	protected JSONObject buildLaunchEventJSON(Enum EventType, String launchTime, String fullyQualifiedEntityAddress, Map launchAttributes) {
 		JSONObject json = buildIDEEventJSON(EventType, fullyQualifiedEntityAddress);
 		json.put(JSON_LAUNCH_ATTRIBUTES, launchAttributes);
+		json.put(JSON_LAUNCH_TIMESTAMP, launchTime);
 		return json;
 	}
 

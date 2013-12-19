@@ -1,10 +1,12 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchListener;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.internal.core.DebugCoreMessages;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
@@ -25,11 +27,12 @@ public class LaunchListener implements ILaunchListener {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		String mainType = getMainType(launchConfiguration);
 		String launchMode = launch.getLaunchMode();
+		String launchTime = launch.getAttribute(DebugPlugin.ATTR_LAUNCH_TIMESTAMP);
 		try {
 			if (launchMode.equals(ILaunchManager.RUN_MODE))
-				clientRecorderInstance.recordNormalLaunch(mainType, launchConfiguration.getAttributes());
+				clientRecorderInstance.recordNormalLaunch(launchTime, mainType, launchConfiguration.getAttributes());
 			if (launchMode.equals(ILaunchManager.DEBUG_MODE))
-				clientRecorderInstance.recordDebugLaunch(mainType, launchConfiguration.getAttributes());
+				clientRecorderInstance.recordDebugLaunch(launchTime, mainType, launchConfiguration.getAttributes());
 		} catch (CoreException e) {
 			COPEPlugin.getDefault().getLogger().error(this, "Error retrievieng the launch config", e);
 		}
