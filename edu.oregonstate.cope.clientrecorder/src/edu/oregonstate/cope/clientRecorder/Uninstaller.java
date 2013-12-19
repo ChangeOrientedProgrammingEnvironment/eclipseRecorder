@@ -39,9 +39,21 @@ public class Uninstaller {
 	 * 
 	 * @param dayOffset
 	 */
-	public void initUninstall(Integer dayOffset) {
+	public void initUninstallInDays(Integer dayOffset) {
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.DAY_OF_MONTH, dayOffset);
+
+		setUninstallDate(now);
+	}
+	
+	/**
+	 * Sets the uninstall date as the number of months relative to current date.
+	 * 
+	 * @param monthOffset
+	 */
+	public void initUninstallInMonths(Integer monthOffset) {
+		Calendar now = Calendar.getInstance();
+		now.add(Calendar.MONTH, monthOffset);
 
 		setUninstallDate(now);
 	}

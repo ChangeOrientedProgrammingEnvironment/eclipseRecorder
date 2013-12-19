@@ -74,7 +74,7 @@ public class Installer {
 
 		@Override
 		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-			uninstaller.initUninstall(90);
+			uninstaller.initUninstallInMonths(3);
 
 			Files.copy(permanentFile.toPath(), workspaceFile.toPath());
 		}
