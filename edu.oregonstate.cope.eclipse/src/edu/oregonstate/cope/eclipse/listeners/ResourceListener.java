@@ -2,6 +2,7 @@ package edu.oregonstate.cope.eclipse.listeners;
 
 import java.io.InputStream;
 import java.util.Scanner;
+import java.util.concurrent.ForkJoinPool;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -14,28 +15,56 @@ import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class ResourceListener implements IResourceChangeListener {
+	
+	private class SaveRecorder implements Runnable {
+		
+		private IResourceChangeEvent event;
+		private ClientRecorder recorder;
+
+		public SaveRecorder(IResourceChangeEvent event, ClientRecorder recorder) {
+			this.event = event;
+			this.recorder = recorder;
+		}
+
+		@Override
+		public void run() {
+			IResourceDelta delta = event.getDelta();
+			recordFileSave(delta);
+		}
+
+		private void recordFileSave(IResourceDelta delta) {
+			IResource affectedResource = delta.getResource();
+			if (affectedResource.getType() == IResource.FILE) {
+				String filePath = affectedResource.getFullPath().toPortableString();
+				if (filePath.endsWith(".class"))
+					return;
+				recorder.recordFileSave(filePath);
+				return;
+			}
+			
+			IResourceDelta[] affectedChildren = delta.getAffectedChildren();
+			for (IResourceDelta child : affectedChildren) {
+				recordFileSave(child);
+			}
+		}
+
+	}
+
 
 	ClientRecorder recorder = COPEPlugin.getDefault().getClientRecorder();
+	ForkJoinPool pool = new ForkJoinPool(1);
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
+		System.out.println("" + System.currentTimeMillis() + event);
 		if (isSavedAction() || isRefactoringInProgress()) {
-			recordFileSave(event.getDelta());
-		} else
+			recordFileSave(event);
+		} else {}
 			recordRefresh(event.getDelta());
 	}
 
-	private void recordFileSave(IResourceDelta delta) {
-		IResource affectedResource = delta.getResource();
-		if (affectedResource.getType() == IResource.FILE) {
-			recorder.recordFileSave(affectedResource.getFullPath().toPortableString());
-			return;
-		}
-		
-		IResourceDelta[] affectedChildren = delta.getAffectedChildren();
-		for (IResourceDelta child : affectedChildren) {
-			recordFileSave(child);
-		}
+	private void recordFileSave(IResourceChangeEvent event) {
+		pool.execute(new SaveRecorder(event, recorder));
 	}
 
 	private void recordRefresh(IResourceDelta delta) {
