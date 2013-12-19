@@ -13,13 +13,13 @@ import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class LaunchListener implements ILaunchListener {
-	
+
 	@Override
 	public void launchRemoved(ILaunch launch) {
 	}
 
 	@Override
-	public void launchChanged(ILaunch launch) {		
+	public void launchChanged(ILaunch launch) {
 	}
 
 	private boolean isTestLauch(ILaunchConfiguration launchConfiguration) {
@@ -46,11 +46,16 @@ public class LaunchListener implements ILaunchListener {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		String mainType = getMainType(launchConfiguration);
 		String launchMode = launch.getLaunchMode();
-		if (isTestLauch(launchConfiguration))
-			return;
-		if (launchMode.equals(ILaunchManager.RUN_MODE))
-			clientRecorderInstance.recordNormalLaunch(mainType, new HashMap());
-		if (launchMode.equals(ILaunchManager.DEBUG_MODE))
-			clientRecorderInstance.recordDebugLaunch(mainType, new HashMap());
+		try {
+			if (isTestLauch(launchConfiguration))
+				return;
+			if (launchMode.equals(ILaunchManager.RUN_MODE))
+				clientRecorderInstance.recordNormalLaunch(mainType, launchConfiguration.getAttributes());
+			// TODO Auto-generated catch block
+			if (launchMode.equals(ILaunchManager.DEBUG_MODE))
+				clientRecorderInstance.recordDebugLaunch(mainType, launchConfiguration.getAttributes());
+		} catch (CoreException e) {
+			COPEPlugin.getDefault().getLogger().error(this, "Error retrievieng the launch config", e);
+		}
 	}
 }
