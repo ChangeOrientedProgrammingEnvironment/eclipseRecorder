@@ -6,7 +6,6 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchListener;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.internal.core.DebugCoreMessages;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
@@ -15,6 +14,8 @@ public class LaunchListener implements ILaunchListener {
 
 	@Override
 	public void launchRemoved(ILaunch launch) {
+		ClientRecorder clientRecorder = COPEPlugin.getDefault().getClientRecorder();
+		clientRecorder.recordLaunchEnd(launch.getAttribute(DebugPlugin.ATTR_LAUNCH_TIMESTAMP));
 	}
 
 	@Override
