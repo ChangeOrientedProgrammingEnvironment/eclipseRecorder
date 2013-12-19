@@ -218,6 +218,18 @@ public class ClientRecorderTest {
 	}
 	
 	@Test
+	public void testFileSave() {
+		JSONObject output = clientRecorder.buildIDEEventJSON(EventType.fileSave, "/workspace/project/file");
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_EVENT_TYPE, EventType.fileSave + "");
+		expected.put(JSON_ENTITY_ADDRESS, "/workspace/project/file");
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, output);
+	}
+	
+	@Test
 	public void testRecordLaunchEvent() {
 		HashMap launchAttributes = new HashMap();
 		launchAttributes.put("attr1", "something");

@@ -35,7 +35,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, launchEnd
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd
 	};
 
 	public String getIDE() {
@@ -92,6 +92,10 @@ public class ClientRecorder {
 	
 	public void recordSnapshot(String snapshotPath) {
 		ChangePersister.instance().persist(buildSnapshotJSON(snapshotPath));
+	}
+	
+	public void recordFileSave(String filePath) {
+		ChangePersister.instance().persist(buildIDEEventJSON(EventType.fileSave, filePath));
 	}
 
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
