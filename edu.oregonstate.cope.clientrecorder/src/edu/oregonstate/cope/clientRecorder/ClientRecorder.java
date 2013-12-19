@@ -66,11 +66,11 @@ public class ClientRecorder {
 	}
 
 	public void recordDebugLaunch(String fullyQualifiedMainMethod, Map launchAttributes) {
-		ChangePersister.instance().persist(buildIDEEventJSON(EventType.debugLaunch, fullyQualifiedMainMethod));
+		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.debugLaunch, fullyQualifiedMainMethod, launchAttributes));
 	}
 
 	public void recordNormalLaunch(String fullyQualifiedMainMethod, Map launchAttributes) {
-		ChangePersister.instance().persist(buildIDEEventJSON(EventType.normalLaunch, fullyQualifiedMainMethod));
+		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.normalLaunch, fullyQualifiedMainMethod, launchAttributes));
 	}
 
 	public void recordFileOpen(String fullyQualifiedFileAddress) {
