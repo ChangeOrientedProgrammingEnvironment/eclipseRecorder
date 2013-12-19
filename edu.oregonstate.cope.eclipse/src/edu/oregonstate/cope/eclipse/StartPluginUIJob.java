@@ -83,7 +83,7 @@ class StartPluginUIJob extends UIJob {
 	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
 		
-		new Installer(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath()).doInstall();
+		new Installer(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), COPEPlugin.getDefault().getUninstaller(), COPEPlugin.getDefault()._getInstallationConfigFileName()).doInstall();
 		
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();

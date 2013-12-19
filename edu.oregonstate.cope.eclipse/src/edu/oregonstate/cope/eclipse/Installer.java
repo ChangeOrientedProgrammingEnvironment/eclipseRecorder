@@ -10,15 +10,17 @@ import java.nio.file.StandardOpenOption;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 
+import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 public class Installer {
 
-	private static final String INSTALL_CONFIG_FILENAME = "install-config";
 	private static final String SURVEY_FILENAME = "survey.txt";
 
 	private String workspaceDirectory;
 	private String permanentDirectory;
+	private Uninstaller uninstaller;
+	private String installationConfigFileName;
 
 	private abstract class Operation {
 
@@ -58,19 +60,33 @@ public class Installer {
 		@Override
 		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
 			System.out.println("GIVE SURVEY");
-			
+
 			SurveyWizard sw = new SurveyWizard();
 			WizardDialog wizardDialog = new WizardDialog(Display.getDefault().getActiveShell(), sw);
 			wizardDialog.open();
-			
+
 			writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 			writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
 		}
 	}
 
-	public Installer(String workspaceDirectory, String permanentDirectory) {
+	private class ConfigInstallOperation extends Operation {
+
+		@Override
+		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
+			uninstaller.initUninstall(90);
+
+			Files.copy(permanentFile.toPath(), workspaceFile.toPath());
+		}
+
+	}
+
+	public Installer(String workspaceDirectory, String permanentDirectory,
+			Uninstaller uninstaller, String installationConfigFileName) {
 		this.workspaceDirectory = workspaceDirectory;
 		this.permanentDirectory = permanentDirectory;
+		this.uninstaller = uninstaller;
+		this.installationConfigFileName = installationConfigFileName;
 		
 		System.err.println(workspaceDirectory);
 		System.err.println(permanentDirectory);
@@ -79,6 +95,8 @@ public class Installer {
 	public void doInstall() {
 		try {
 			new SurveyOperation().perform(SURVEY_FILENAME);
+			new ConfigInstallOperation().perform(installationConfigFileName);
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
