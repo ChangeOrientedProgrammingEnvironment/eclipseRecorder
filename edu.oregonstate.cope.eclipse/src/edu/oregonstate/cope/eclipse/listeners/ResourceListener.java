@@ -16,6 +16,12 @@ import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class ResourceListener implements IResourceChangeListener {
 	
+	/**
+	 * Class that handles the save recording in a different thread.
+	 * 
+	 * @author Caius Brindescu
+	 *
+	 */
 	private class SaveRecorder implements Runnable {
 		
 		private IResourceChangeEvent event;
@@ -63,6 +69,15 @@ public class ResourceListener implements IResourceChangeListener {
 			recordRefresh(event.getDelta());
 	}
 
+	/**
+	 * Records a save. It creates a new {@link SaveRecorder} and
+	 * launches it in a separate thread. I need this to ensure
+	 * a speedy resolution of the save, so I can catch following
+	 * events. This is needed when dealing with multiple save,
+	 * since each one is sent as a different event.
+	 * r
+	 * @param event the event being recorded
+	 */
 	private void recordFileSave(IResourceChangeEvent event) {
 		pool.execute(new SaveRecorder(event, recorder));
 	}
