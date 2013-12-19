@@ -35,7 +35,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, launchEnd
 	};
 
 	public String getIDE() {
@@ -72,6 +72,10 @@ public class ClientRecorder {
 
 	public void recordNormalLaunch(String launchTime, String fullyQualifiedMainMethod, Map launchAttributes) {
 		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.normalLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
+	}
+	
+	public void recordLaunchEnd(String launchTime) {
+		ChangePersister.instance().persist(buildLaunchEndEventJSON(EventType.launchEnd, launchTime));
 	}
 
 	public void recordFileOpen(String fullyQualifiedFileAddress) {
@@ -136,6 +140,12 @@ public class ClientRecorder {
 		json.put(JSON_LAUNCH_ATTRIBUTES, launchAttributes);
 		json.put(JSON_LAUNCH_TIMESTAMP, launchTime);
 		return json;
+	}
+	
+	protected JSONObject buildLaunchEndEventJSON(Enum eventType, String launchTime) {
+		JSONObject jsonObject = buildCommonJSONObj(eventType);
+		jsonObject.put(JSON_LAUNCH_TIMESTAMP, launchTime);
+		return jsonObject;
 	}
 
 	protected JSONObject buildTestEventJSON(String fullyQualifiedTestMethod, String testResult) {

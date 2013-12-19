@@ -107,6 +107,18 @@ public class ClientRecorderTest {
 
 		assertJSONEquals(expected, retObj);
 	}
+	
+	@Test
+	public void testLaunchEnd() throws Exception {
+		JSONObject actual = clientRecorder.buildLaunchEndEventJSON(EventType.launchEnd, "123");
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSON_EVENT_TYPE, EventType.launchEnd + "");
+		expected.put(JSON_LAUNCH_TIMESTAMP, "123");
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
 
 	@Test
 	public void testFileOpen() throws Exception {
