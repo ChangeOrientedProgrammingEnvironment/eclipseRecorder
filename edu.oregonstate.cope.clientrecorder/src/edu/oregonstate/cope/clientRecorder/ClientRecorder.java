@@ -1,5 +1,7 @@
 package edu.oregonstate.cope.clientRecorder;
 
+import java.util.Map;
+
 import org.json.simple.JSONObject;
 
 /**
@@ -62,11 +64,11 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
 	}
 
-	public void recordDebugLaunch(String fullyQualifiedMainMethod) {
+	public void recordDebugLaunch(String fullyQualifiedMainMethod, Map launchAttributes) {
 		ChangePersister.instance().persist(buildIDEEventJSON(EventType.debugLaunch, fullyQualifiedMainMethod));
 	}
 
-	public void recordNormalLaunch(String fullyQualifiedMainMethod) {
+	public void recordNormalLaunch(String fullyQualifiedMainMethod, Map launchAttributes) {
 		ChangePersister.instance().persist(buildIDEEventJSON(EventType.normalLaunch, fullyQualifiedMainMethod));
 	}
 

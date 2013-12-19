@@ -1,5 +1,8 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -16,18 +19,7 @@ public class LaunchListener implements ILaunchListener {
 	}
 
 	@Override
-	public void launchChanged(ILaunch launch) {
-		ClientRecorder clientRecorderInstance = COPEPlugin.getDefault().getClientRecorder();
-		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
-		String mainType = getMainType(launchConfiguration);
-		String launchMode = launch.getLaunchMode();
-		if (isTestLauch(launchConfiguration))
-			return;
-		if (launchMode.equals(ILaunchManager.RUN_MODE))
-			clientRecorderInstance.recordNormalLaunch(mainType);
-		if (launchMode.equals(ILaunchManager.DEBUG_MODE))
-			clientRecorderInstance.recordDebugLaunch(mainType);
-		
+	public void launchChanged(ILaunch launch) {		
 	}
 
 	private boolean isTestLauch(ILaunchConfiguration launchConfiguration) {
@@ -50,5 +42,15 @@ public class LaunchListener implements ILaunchListener {
 
 	@Override
 	public void launchAdded(ILaunch launch) {
+		ClientRecorder clientRecorderInstance = COPEPlugin.getDefault().getClientRecorder();
+		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
+		String mainType = getMainType(launchConfiguration);
+		String launchMode = launch.getLaunchMode();
+		if (isTestLauch(launchConfiguration))
+			return;
+		if (launchMode.equals(ILaunchManager.RUN_MODE))
+			clientRecorderInstance.recordNormalLaunch(mainType, new HashMap());
+		if (launchMode.equals(ILaunchManager.DEBUG_MODE))
+			clientRecorderInstance.recordDebugLaunch(mainType, new HashMap());
 	}
 }
