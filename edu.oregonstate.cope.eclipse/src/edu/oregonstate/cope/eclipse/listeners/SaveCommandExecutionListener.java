@@ -4,6 +4,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 
 public class SaveCommandExecutionListener implements IExecutionListener {
 
@@ -27,7 +28,7 @@ public class SaveCommandExecutionListener implements IExecutionListener {
 	}
 
 	private boolean isFileSave(String commandId) {
-		return commandId.equals("org.eclipse.ui.file.save") || commandId.equalsIgnoreCase("org.eclipse.ui.file.saveAll");
+		return commandId.equals(IWorkbenchCommandConstants.FILE_SAVE) || commandId.equalsIgnoreCase(IWorkbenchCommandConstants.FILE_SAVE_ALL);
 	}
 
 	@Override
