@@ -11,6 +11,13 @@ import org.eclipse.swt.widgets.Display;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
+/**
+ * Runs plugin installation mode. This is implemented by storing files both in
+ * the eclipse installation path and in the workspace path. When either one does
+ * not exist, it is copied there from the other place. When none exists, the one
+ * time installation code is run.
+ * 
+ */
 public class Installer {
 
 	private static final String SURVEY_FILENAME = "survey.txt";
@@ -22,8 +29,7 @@ public class Installer {
 
 	private class SurveyOperation extends InstallerOperation {
 
-		public SurveyOperation(Path workspaceDirectory,
-				Path permanentDirectory) {
+		public SurveyOperation(Path workspaceDirectory, Path permanentDirectory) {
 			super(workspaceDirectory, permanentDirectory);
 		}
 
