@@ -37,6 +37,7 @@ import org.quartz.SchedulerException;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
+import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
 import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
@@ -71,10 +72,10 @@ class StartPluginUIJob extends UIJob {
 			performUninstall(uninstaller);
 		else
 			performStartup(monitor);
-		
+
 		return Status.OK_STATUS;
 	}
-	
+
 	private void performUninstall(Uninstaller uninstaller) {
 		uninstaller.setUninstall();
 		MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Recording shutting down", "Thank you for your participation. The recorder has shut down permanently. You may delete it if you wish to do so.");
@@ -82,16 +83,15 @@ class StartPluginUIJob extends UIJob {
 
 	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
-		
-		new Installer(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), COPEPlugin.getDefault().getUninstaller(), COPEPlugin.getDefault()._getInstallationConfigFileName()).doInstall();
-		
+
+		new Installer(COPEPlugin.getLocalStorage().toPath().toAbsolutePath(), COPEPlugin.getBundleStorage().toPath().toAbsolutePath(), COPEPlugin.getDefault().getUninstaller(), COPEPlugin.getDefault()._getInstallationConfigFileName()).doInstall();
+
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
 		}
 
 		monitor.worked(1);
 
-		
 		registerDocumentListenersForOpenEditors();
 		FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -103,7 +103,7 @@ class StartPluginUIJob extends UIJob {
 		refactoringHistoryService.addExecutionListener(new RefactoringExecutionListener());
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
-		
+
 		initializeFileSender();
 	}
 
@@ -145,7 +145,7 @@ class StartPluginUIJob extends UIJob {
 		try {
 			editorInput = editorReference.getEditorInput();
 			if (editorInput instanceof FileEditorInput) {
-				IFile file = ((FileEditorInput)editorInput).getFile();
+				IFile file = ((FileEditorInput) editorInput).getFile();
 				project = file.getProject();
 			}
 		} catch (PartInitException e) {
@@ -157,14 +157,14 @@ class StartPluginUIJob extends UIJob {
 	private IDocument getDocumentForEditor(IEditorReference editorReference) {
 		IEditorPart editorPart = editorReference.getEditor(true);
 		if (editorPart instanceof MultiPageEditorPart) {
-			((MultiPageEditorPart)editorPart).addPageChangedListener(new MultiEditorPageChangedListener());
+			((MultiPageEditorPart) editorPart).addPageChangedListener(new MultiEditorPageChangedListener());
 			return null;
 		}
 		ISourceViewer sourceViewer = (ISourceViewer) editorPart.getAdapter(ITextOperationTarget.class);
 		IDocument document = sourceViewer.getDocument();
 		return document;
 	}
-	
+
 	private void initializeFileSender() {
 		try {
 			new FileSender();
