@@ -1,5 +1,7 @@
 package edu.oregonstate.cope.clientRecorder;
 
+import java.util.HashMap;
+
 import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -201,5 +203,22 @@ public class ClientRecorderTest {
 		Long actualTimestamp = Long.parseLong((String) actual);
 		
 		assertTrue(expectedTimestamp > actualTimestamp - oneSecond);
+	}
+	
+	@Test
+	public void testRecordLaunchEvent() {
+		HashMap launchAttributes = new HashMap();
+		launchAttributes.put("attr1", "something");
+		launchAttributes.put("attr2", "something else");
+		JSONObject actual = clientRecorder.buildLaunchEventJSON(EventType.normalLaunch, "something", launchAttributes);
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_EVENT_TYPE,EventType.normalLaunch + "");
+		expected.put(JSON_ENTITY_ADDRESS,"something");
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSON_LAUNCH_ATTRIBUTES, launchAttributes);
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
 	}
 }

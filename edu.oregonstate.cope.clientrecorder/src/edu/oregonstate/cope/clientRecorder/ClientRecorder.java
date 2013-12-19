@@ -29,6 +29,7 @@ public class ClientRecorder {
 	protected static final String JSON_IDE = "IDE";
 	protected static final String JSON_TEXT = "text";
 	protected static final String JSON_ENTITY_ADDRESS = "entityAddress";
+	protected static final String JSON_LAUNCH_ATTRIBUTES = "launchConfiguration";
 
 	private String IDE;
 
@@ -127,6 +128,12 @@ public class ClientRecorder {
 		obj.put(JSON_ENTITY_ADDRESS, fullyQualifiedEntityAddress);
 
 		return obj;
+	}
+	
+	protected JSONObject buildLaunchEventJSON(Enum EventType, String fullyQualifiedEntityAddress, Map launchAttributes) {
+		JSONObject json = buildIDEEventJSON(EventType, fullyQualifiedEntityAddress);
+		json.put(JSON_LAUNCH_ATTRIBUTES, launchAttributes);
+		return json;
 	}
 
 	protected JSONObject buildTestEventJSON(String fullyQualifiedTestMethod, String testResult) {
