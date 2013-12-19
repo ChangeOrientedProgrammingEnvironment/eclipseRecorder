@@ -8,7 +8,7 @@ import java.util.Locale;
 
 /**
  * Responsible with knowing whether the plugin should be uninstalled or not. If
- * no uninstall date is set, the maximum date allowed by GregorianCalendar is
+ * no uninstall date is present in the properties, the maximum date allowed by GregorianCalendar is
  * used as the uninstall date.
  * 
  * This class persists its state across runs.
@@ -25,16 +25,13 @@ public class Uninstaller {
 
 	public Uninstaller(Properties props) {
 		this.props = props;
-		initUninstallDateIfNull();
 	}
 
-	private void initUninstallDateIfNull() {
-		if (getUninstallDate() == null) {
-			Calendar lastDate = Calendar.getInstance();
-			lastDate.setTime(new Date(Long.MAX_VALUE));
-
-			setUninstallDate(lastDate);
-		}
+	private Calendar maximumDateValue() {
+		Calendar lastDate = Calendar.getInstance();
+		lastDate.setTime(new Date(Long.MAX_VALUE));
+		
+		return lastDate;
 	}
 
 	/**
@@ -66,12 +63,11 @@ public class Uninstaller {
 		String dateString = props.getProperty(UNINSTALL_DATE);
 
 		if (dateString == null)
-			return null;
+			return maximumDateValue();
 
 		try {
 			date = DATE_FORMATTER.parse(dateString);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			RecorderFacade.instance().getLogger().error(this, e.getMessage(), e);
 		}
 
