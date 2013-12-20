@@ -19,5 +19,6 @@ Require-Bundle: edu.oregonstate.cope.eclipse.compare.helpers;visibility:=reexpor
  edu.oregonstate.cope.eclipse.helpers;visibility:=reexport,
  org.eclipse.jdt.core,
  org.eclipse.jdt.ui,
- edu.oregonstate.cope.eclipse.jdt.project.manipulation
+ edu.oregonstate.cope.eclipse.jdt.project.manipulation,
+ edu.oregonstate.cope.eclipse.clientrecorder
 Bundle-Vendor: University of Illinois

@@ -4,6 +4,7 @@
 package edu.oregonstate.cope.eclipse.replaying;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,9 +29,10 @@ import edu.illinois.codingtracker.helpers.Configuration;
 import edu.illinois.codingtracker.compare.helpers.EditorHelper;
 import edu.illinois.codingtracker.helpers.ResourceHelper;
 import edu.illinois.codingtracker.helpers.ViewerHelper;
+import edu.illinois.codingtracker.operations.Event;
 import edu.illinois.codingtracker.operations.JavaProjectsUpkeeper;
 import edu.illinois.codingtracker.operations.OperationDeserializer;
-import edu.illinois.codingtracker.operations.UserOperation;
+import edu.illinois.codingtracker.operations.Event;
 import edu.illinois.codingtracker.operations.files.EditedFileOperation;
 import edu.illinois.codingtracker.operations.files.EditedUnsychronizedFileOperation;
 import edu.illinois.codingtracker.operations.files.SavedFileOperation;
@@ -61,13 +63,15 @@ public class UserOperationReplayer {
 
 	private final Collection<IAction> replayActions= new LinkedList<IAction>();
 
-	private List<UserOperation> userOperations;
+//	private List<UserOperation> userOperations;
 
-	private Iterator<UserOperation> userOperationsIterator;
+	private List<Event> userOperations;
 
-	private UserOperation currentUserOperation;
+	private Iterator<Event> userOperationsIterator;
 
-	private Collection<UserOperation> breakpoints;
+	private Event currentUserOperation;
+
+	private Collection<Event> breakpoints;
 
 	private Thread userOperationExecutionThread;
 
@@ -94,10 +98,10 @@ public class UserOperationReplayer {
 		toolBarManager.add(new Separator());
 	}
 
-	private UserOperation findUserOperationClosestToTimestamp(long searchedTimestamp) {
-		UserOperation foundUserOperation= null;
+	private Event findUserOperationClosestToTimestamp(long searchedTimestamp) {
+		Event foundUserOperation= null;
 		long minimumDeltaTime= Long.MAX_VALUE;
-		for (UserOperation userOperation : userOperations) {
+		for (Event userOperation : userOperations) {
 			long currentDeltaTime= Math.abs(userOperation.getTime() - searchedTimestamp);
 			if (currentDeltaTime < minimumDeltaTime) {
 				minimumDeltaTime= currentDeltaTime;
@@ -118,7 +122,7 @@ public class UserOperationReplayer {
 				TimestampDialog dialog= new TimestampDialog(operationSequenceView.getShell(), "Find operation");
 				if (dialog.open() == Window.OK) {
 					long searchedTimestamp= dialog.getTimestamp();
-					UserOperation foundUserOperation= findUserOperationClosestToTimestamp(searchedTimestamp);
+					Event foundUserOperation= findUserOperationClosestToTimestamp(searchedTimestamp);
 					if (foundUserOperation == null) {
 						showMessage("There are no operations near timestamp " + searchedTimestamp);
 					} else {
@@ -148,6 +152,7 @@ public class UserOperationReplayer {
 				String selectedFilePath= fileDialog.open();
 				if (selectedFilePath != null) {
 					String operationsRecord= ResourceHelper.readFileContent(new File(selectedFilePath));
+					
 					try {
 						userOperations= OperationDeserializer.getUserOperations(operationsRecord);
 					} catch (RuntimeException e) {
@@ -158,7 +163,7 @@ public class UserOperationReplayer {
 						resetAction.setEnabled(true);
 						findAction.setEnabled(true);
 					}
-					breakpoints= new HashSet<UserOperation>();
+					breakpoints= new HashSet<Event>();
 					prepareForReplay();
 					System.out.println("Loaded " + userOperations.size() + " operations.");
 				}
@@ -189,7 +194,7 @@ public class UserOperationReplayer {
 	}
 
 	private void initializeReplay() {
-		UserOperation.isReplayedRefactoring= false;
+//		UserOperation.isReplayedRefactoring= false;
 		currentEditor= null;
 		userOperationsIterator= userOperations.iterator();
 	}
@@ -232,7 +237,7 @@ public class UserOperationReplayer {
 
 	private IAction newJumpToAction() {
 		return new Action() {
-			private final Map<String, UserOperation> snapshotsBeforeJumpToTimestamp= new HashMap<String, UserOperation>();
+			private final Map<String, Event> snapshotsBeforeJumpToTimestamp= new HashMap<String, Event>();
 
 			private final Set<String> snapshotsAfterJumpToTimestamp= new HashSet<String>();
 
@@ -253,15 +258,15 @@ public class UserOperationReplayer {
 					jumpToTimestamp= dialog.getTimestamp();
 					while (true) {
 						initializeAction();
-						for (UserOperation userOperation : userOperations) {
-							if (userOperation instanceof ResourceOperation) {
-								handleResourceOperation((ResourceOperation)userOperation);
-							}
-							if (doesChangeFileContent(userOperation) && isAfterJumpToTimestamp(userOperation) && !metFirstEditAfterJumpTo) {
-								shouldConsiderLastEditBeforeJumpTo= true;
-							}
+						for (Event userOperation : userOperations) {
+//							if (userOperation instanceof ResourceOperation) {
+//								handleResourceOperation((ResourceOperation)userOperation);
+//							}
+//							if (doesChangeFileContent(userOperation) && isAfterJumpToTimestamp(userOperation) && !metFirstEditAfterJumpTo) {
+//								shouldConsiderLastEditBeforeJumpTo= true;
+//							}
 						}
-						UserOperation startOperation= getStartOperation();
+						Event startOperation= getStartOperation();
 						if (ensureSnapshots.size() == 0) {
 							jumpTo(startOperation);
 							break;
@@ -281,10 +286,10 @@ public class UserOperationReplayer {
 				lastEditBeforeJumpToTimestamp= null;
 			}
 
-			private void handleResourceOperation(ResourceOperation resourceOperation) {
+			/*private void handleResourceOperation(ResourceOperation resourceOperation) {
 				if (resourceOperation instanceof ReorganizedResourceOperation) {
 					ReorganizedResourceOperation reorganizedResourceOperation= (ReorganizedResourceOperation)resourceOperation;
-					UserOperation snapshotOperation= snapshotsBeforeJumpToTimestamp.get(reorganizedResourceOperation.getResourcePath());
+					Event snapshotOperation= snapshotsBeforeJumpToTimestamp.get(reorganizedResourceOperation.getResourcePath());
 					if (snapshotOperation != null) {
 						snapshotsBeforeJumpToTimestamp.put(reorganizedResourceOperation.getDestinationPath(), snapshotOperation);
 					}
@@ -311,9 +316,9 @@ public class UserOperationReplayer {
 						lastEditBeforeJumpToTimestamp= resourceOperation;
 					}
 				}
-			}
+			}*/
 
-			private boolean isAfterJumpToTimestamp(UserOperation userOperation) {
+			private boolean isAfterJumpToTimestamp(Event userOperation) {
 				//Note that equals is also after since this will be replayed after jump as well.
 				return userOperation.getTime() >= jumpToTimestamp;
 			}
@@ -326,12 +331,12 @@ public class UserOperationReplayer {
 				return resourceOperation instanceof EditedFileOperation || resourceOperation instanceof EditedUnsychronizedFileOperation;
 			}
 
-			private boolean doesChangeFileContent(UserOperation userOperation) {
-				return userOperation instanceof TextChangeOperation || userOperation instanceof SavedFileOperation;
-			}
+//			private boolean doesChangeFileContent(Event userOperation) {
+//				return userOperation instanceof TextChangeOperation || userOperation instanceof SavedFileOperation;
+//			}
 
-			private UserOperation getStartOperation() {
-				UserOperation startOperation= null;
+			private Event getStartOperation() {
+				Event startOperation= null;
 				//Ensure that the last edited file before the "jump to" timestamp is snapshoted to account for jumps inside such edits.
 				if (lastEditBeforeJumpToTimestamp != null && shouldConsiderLastEditBeforeJumpTo) {
 					ensureSnapshots.add(lastEditBeforeJumpToTimestamp.getResourcePath());
@@ -340,7 +345,7 @@ public class UserOperationReplayer {
 					startOperation= findUserOperationClosestToTimestamp(jumpToTimestamp);
 				} else {
 					for (String fileToEnsureSnapshot : ensureSnapshots) {
-						UserOperation snapshotOperation= snapshotsBeforeJumpToTimestamp.get(fileToEnsureSnapshot);
+						Event snapshotOperation= snapshotsBeforeJumpToTimestamp.get(fileToEnsureSnapshot);
 						if (snapshotOperation == null) {
 							showMessage("A file edited after jump to timestamp was not snapshoted before it: " + fileToEnsureSnapshot);
 							break;
@@ -353,9 +358,9 @@ public class UserOperationReplayer {
 				return startOperation;
 			}
 
-			private void jumpTo(UserOperation userOperation) {
+			private void jumpTo(Event userOperation) {
 				initializeReplay();
-				UserOperation oldUserOperation= currentUserOperation;
+				Event oldUserOperation= currentUserOperation;
 				currentUserOperation= userOperation;
 				while (userOperationsIterator.hasNext()) {
 					if (currentUserOperation == userOperationsIterator.next()) {
@@ -395,7 +400,7 @@ public class UserOperationReplayer {
 				showMessage("The current editor is wrong. Should be: \"" + currentEditor.getTitle() + "\"");
 				return;
 			}
-			currentUserOperation.replay();
+//			currentUserOperation.replay();
 			currentEditor= EditorHelper.getActiveEditor();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -404,7 +409,7 @@ public class UserOperationReplayer {
 	}
 
 	private void advanceCurrentUserOperation(ReplayPace replayPace) {
-		UserOperation oldUserOperation= currentUserOperation;
+		Event oldUserOperation= currentUserOperation;
 		if (userOperationsIterator.hasNext()) {
 			currentUserOperation= userOperationsIterator.next();
 		} else {
@@ -415,13 +420,13 @@ public class UserOperationReplayer {
 		}
 	}
 
-	private void updateSequenceView(UserOperation oldUserOperation) {
+	private void updateSequenceView(Event oldUserOperation) {
 		operationSequenceView.removeSelection();
 		if (oldUserOperation != null) {
-			operationSequenceView.updateTableViewerElement(oldUserOperation);
+//			operationSequenceView.updateTableViewerElement(oldUserOperation);
 		}
 		operationSequenceView.displayInOperationTextPane(currentUserOperation);
-		operationSequenceView.updateTableViewerElement(currentUserOperation);
+//		operationSequenceView.updateTableViewerElement(currentUserOperation);
 	}
 
 	private void updateReplayActionsStateForCurrentUserOperation() {
@@ -442,7 +447,7 @@ public class UserOperationReplayer {
 		return currentUserOperation == object;
 	}
 
-	void toggleBreakpoint(UserOperation userOperation) {
+	void toggleBreakpoint(Event userOperation) {
 		if (breakpoints.contains(userOperation)) {
 			breakpoints.remove(userOperation);
 		} else {
@@ -470,7 +475,7 @@ public class UserOperationReplayer {
 
 		private boolean stoppedDueToException= false;
 
-		private final UserOperation firstUserOperation;
+		private final Event firstUserOperation;
 
 		private UserOperationExecutionThread(IAction executionAction, ReplayPace replayPace, int customDelayTime) {
 			this.executionAction= executionAction;
