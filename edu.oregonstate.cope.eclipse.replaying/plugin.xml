@@ -9,7 +9,7 @@
             id="edu.illinois.codingtracker.replaying">
       </category>
       <view
-            name="Operation Sequence View"
+            name="Event Sequence View"
             icon="icons/sample.gif"
             category="edu.illinois.codingtracker.replaying"
             class="edu.oregonstate.cope.eclipse.replaying.OperationSequenceView"
