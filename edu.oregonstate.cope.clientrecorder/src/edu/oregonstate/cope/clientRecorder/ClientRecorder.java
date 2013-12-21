@@ -177,4 +177,11 @@ public class ClientRecorder {
 		
 		return obj;
 	}
+
+	public void recordRefactoring(String refactoringName, Map argumentMap) {		
+	}
+	
+	public void recordRefactoringUndo(String refactoringName, Map argumentsMap) {
+		
+	}
 }
