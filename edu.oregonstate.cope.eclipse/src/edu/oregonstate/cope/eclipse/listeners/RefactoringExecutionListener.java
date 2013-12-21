@@ -26,15 +26,15 @@ public class RefactoringExecutionListener implements
 	
 	@Override
 	public void executionNotification(RefactoringExecutionEvent event) {
-		if (event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_PERFORM) {
+		RefactoringDescriptor refactoringDescriptor = getRefactoringDescriptorFromEvent(event);
+		RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(refactoringName);
+		Map argumentMap = refactoringContribution.retrieveArgumentMap(refactoringDescriptor);
+		
+		if (event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_PERFORM || event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_REDO) {
 			isRefactoringInProgress = true;
 			refactoringName = getRefactoringID(event);
-
-			RefactoringDescriptor refactoringDescriptor = getRefactoringDescriptorFromEvent(event);
-			RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(refactoringName);
-			Map argumentMap = refactoringContribution.retrieveArgumentMap(refactoringDescriptor);
-			
 		}
+		
 		if (event.getEventType() == RefactoringExecutionEvent.PERFORMED) {
 			isRefactoringInProgress = false;
 			refactoringName = "";
