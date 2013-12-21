@@ -36,9 +36,14 @@ public class RefactoringExecutionListener implements
 		}
 	}
 
-	private String getRefactoringID(RefactoringExecutionEvent event) {
+	private RefactoringDescriptor getRefactoringDescriptorFromEvent(RefactoringExecutionEvent event) {
 		RefactoringDescriptorProxy refactoringDescriptorProxy = event.getDescriptor();
 		RefactoringDescriptor refactoringDescriptor = refactoringDescriptorProxy.requestDescriptor(new NullProgressMonitor());
+		return refactoringDescriptor;
+	}
+
+	private String getRefactoringID(RefactoringExecutionEvent event) {
+		RefactoringDescriptor refactoringDescriptor = getRefactoringDescriptorFromEvent(event);
 		String refactoringId = refactoringDescriptor.getID();
 		return refactoringId;
 	}
