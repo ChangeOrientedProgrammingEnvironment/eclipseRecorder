@@ -136,7 +136,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	 * Used only by the Installer.
 	 * TODO something is fishy here, this string should not leak outside
 	 */
-	public String _getInstallationConfigFileName() {
+	String _getInstallationConfigFileName() {
 		return RecorderFacade.instance().getInstallationConfigFilename();
 	}
 }
