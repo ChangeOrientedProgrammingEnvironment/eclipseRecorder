@@ -10,6 +10,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringDescriptorProxy;
 import org.eclipse.ltk.core.refactoring.history.IRefactoringExecutionListener;
 import org.eclipse.ltk.core.refactoring.history.RefactoringExecutionEvent;
 
+import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 /**
@@ -24,15 +25,23 @@ public class RefactoringExecutionListener implements
 	private static boolean isRefactoringInProgress = false;
 	private static String refactoringName = "";
 	
+	private ClientRecorder clientRecorder = COPEPlugin.getDefault().getClientRecorder();
+	
 	@Override
 	public void executionNotification(RefactoringExecutionEvent event) {
+		refactoringName = getRefactoringID(event);
 		RefactoringDescriptor refactoringDescriptor = getRefactoringDescriptorFromEvent(event);
 		RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(refactoringName);
 		Map argumentMap = refactoringContribution.retrieveArgumentMap(refactoringDescriptor);
 		
 		if (event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_PERFORM || event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_REDO) {
 			isRefactoringInProgress = true;
-			refactoringName = getRefactoringID(event);
+			clientRecorder.recordRefactoring(refactoringName, argumentMap);
+		}
+		
+		if (event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_UNDO) {
+			isRefactoringInProgress = true;
+			clientRecorder.recordRefactoringUndo(refactoringName, argumentMap);
 		}
 		
 		if (event.getEventType() == RefactoringExecutionEvent.PERFORMED) {
