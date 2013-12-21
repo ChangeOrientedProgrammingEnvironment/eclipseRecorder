@@ -21,6 +21,7 @@ public class ClientRecorder {
 
 	//JSON property names
 	protected static final String JSON_TEST_RESULT = "testResult";
+	protected static final Object JSON_TEST_ELAPSED_TIME = "testElapsedTime";
 	protected static final String JSON_CHANGE_ORIGIN = "changeOrigin";
 	protected static final String JSON_LENGTH = "len";
 	protected static final String JSON_OFFSET = "offset";
@@ -87,7 +88,7 @@ public class ClientRecorder {
 	}
 
 	public void recordTestRun(String fullyQualifiedTestMethod, String testResult, double elapsedTime) {
-		ChangePersister.instance().persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult));
+		ChangePersister.instance().persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult, elapsedTime));
 	}
 	
 	public void recordSnapshot(String snapshotPath) {
@@ -152,7 +153,7 @@ public class ClientRecorder {
 		return jsonObject;
 	}
 
-	protected JSONObject buildTestEventJSON(String fullyQualifiedTestMethod, String testResult) {
+	protected JSONObject buildTestEventJSON(String fullyQualifiedTestMethod, String testResult, double elapsedTime) {
 		if (fullyQualifiedTestMethod == null || testResult == null)
 			throw new RuntimeException("Arguments cannot be null");
 		if (fullyQualifiedTestMethod.isEmpty() || testResult.isEmpty())
@@ -161,6 +162,7 @@ public class ClientRecorder {
 		JSONObject obj = buildCommonJSONObj(EventType.testRun);
 		obj.put(JSON_ENTITY_ADDRESS, fullyQualifiedTestMethod);
 		obj.put(JSON_TEST_RESULT, testResult);
+		obj.put(JSON_TEST_ELAPSED_TIME, elapsedTime);
 
 		return obj;
 	}
