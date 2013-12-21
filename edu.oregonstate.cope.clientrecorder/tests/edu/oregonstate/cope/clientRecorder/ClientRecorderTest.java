@@ -146,23 +146,24 @@ public class ClientRecorderTest {
 
 	@Test(expected = RuntimeException.class)
 	public void testTestRunNull() throws Exception {
-		clientRecorder.buildTestEventJSON(null, null);
+		clientRecorder.buildTestEventJSON(null, null, 0);
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testTestRunEmpty() throws Exception {
-		clientRecorder.buildTestEventJSON("", "");
+		clientRecorder.buildTestEventJSON("", "", 0);
 	}
 
 	@Test
 	public void testTestRun() throws Exception {
-		JSONObject actual = clientRecorder.buildTestEventJSON("/workspace/package/TestFoo/testBar", "success");
+		JSONObject actual = clientRecorder.buildTestEventJSON("/workspace/package/TestFoo/testBar", "success", 2);
 		JSONObject expected = new JSONObject();
 
 		expected.put(JSON_EVENT_TYPE, EventType.testRun.toString());
 		expected.put(JSON_IDE, clientRecorder.getIDE());
 		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/TestFoo/testBar");
 		expected.put(JSON_TEST_RESULT, "success");
+		expected.put(JSON_TEST_ELAPSED_TIME, 2.0);
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, actual);
