@@ -8,8 +8,8 @@ import java.nio.file.StandardOpenOption;
 
 abstract class InstallerOperation {
 
-	private Path workspaceDirectory;
-	private Path permanentDirectory;
+	protected Path workspaceDirectory;
+	protected Path permanentDirectory;
 
 	public InstallerOperation(Path workspaceDirectory, Path permanentDirectory) {
 		this.permanentDirectory = permanentDirectory;
