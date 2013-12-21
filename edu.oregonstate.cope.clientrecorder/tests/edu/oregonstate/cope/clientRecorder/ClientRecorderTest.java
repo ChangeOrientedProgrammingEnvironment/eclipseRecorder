@@ -1,6 +1,7 @@
 package edu.oregonstate.cope.clientRecorder;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.junit.Before;
@@ -242,6 +243,23 @@ public class ClientRecorderTest {
 		expected.put(JSON_IDE, clientRecorder.getIDE());
 		expected.put(JSON_LAUNCH_ATTRIBUTES, launchAttributes);
 		expected.put(JSON_LAUNCH_TIMESTAMP, "123");
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
+	
+	@Test
+	public void testRefactoringDo() {
+		Map refactoringArguments = new HashMap();
+		refactoringArguments.put("arg1", "one");
+		refactoringArguments.put("arg", "two");
+		JSONObject actual = clientRecorder.buildRefactoringEvent(EventType.refactoringLaunch, "rename", refactoringArguments);
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_EVENT_TYPE, EventType.refactoringLaunch + "");
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSON_REFACTORING_ID, "rename");
+		expected.put(JSON_REFACTORING_ARGUMENTS, refactoringArguments);
 		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, actual);

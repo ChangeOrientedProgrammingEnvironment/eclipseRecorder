@@ -31,11 +31,13 @@ public class ClientRecorder {
 	protected static final String JSON_ENTITY_ADDRESS = "entityAddress";
 	protected static final String JSON_LAUNCH_ATTRIBUTES = "launchConfiguration";
 	protected static final String JSON_LAUNCH_TIMESTAMP = "launchTimestamp";
+	protected static final String JSON_REFACTORING_ID = "refactoringId";
+	protected static final String JSON_REFACTORING_ARGUMENTS = "refactoringArguments";
 
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo
 	};
 
 	public String getIDE() {
@@ -178,10 +180,19 @@ public class ClientRecorder {
 		return obj;
 	}
 
-	public void recordRefactoring(String refactoringName, Map argumentMap) {		
+	public void recordRefactoring(String refactoringName, Map argumentMap) {
+		ChangePersister.instance().persist(buildRefactoringEvent(EventType.refactoringLaunch, refactoringName, argumentMap));
 	}
 	
 	public void recordRefactoringUndo(String refactoringName, Map argumentsMap) {
+		ChangePersister.instance().persist(buildRefactoringEvent(EventType.refactoringUndo, refactoringName, argumentsMap));
+	}
+	
+	protected JSONObject buildRefactoringEvent(Enum eventType, String refactoringID, Map argumentsMap) {
+		JSONObject jsonObj = buildCommonJSONObj(eventType);
+		jsonObj.put(JSON_REFACTORING_ID, refactoringID);
+		jsonObj.put(JSON_REFACTORING_ARGUMENTS, argumentsMap);
 		
+		return jsonObj;
 	}
 }
