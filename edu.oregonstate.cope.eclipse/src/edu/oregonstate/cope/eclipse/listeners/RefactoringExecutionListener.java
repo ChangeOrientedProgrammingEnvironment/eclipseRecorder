@@ -34,13 +34,10 @@ public class RefactoringExecutionListener implements
 			RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(refactoringName);
 			Map argumentMap = refactoringContribution.retrieveArgumentMap(refactoringDescriptor);
 			
-			COPEPlugin.getDefault().getLogger().info(this, refactoringName + " refactoring started");
 		}
 		if (event.getEventType() == RefactoringExecutionEvent.PERFORMED) {
 			isRefactoringInProgress = false;
 			refactoringName = "";
-			
-			COPEPlugin.getDefault().getLogger().info(this, getRefactoringID(event) + " refactoring done");
 		}
 	}
 
