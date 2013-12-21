@@ -264,4 +264,21 @@ public class ClientRecorderTest {
 		
 		assertJSONEquals(expected, actual);
 	}
+	
+	@Test
+	public void testRefactoringUndo() {
+		Map refactoringArguments = new HashMap();
+		refactoringArguments.put("arg1", "one");
+		refactoringArguments.put("arg", "two");
+		JSONObject actual = clientRecorder.buildRefactoringEvent(EventType.refactoringUndo, "rename", refactoringArguments);
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_EVENT_TYPE, EventType.refactoringUndo + "");
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSON_REFACTORING_ID, "rename");
+		expected.put(JSON_REFACTORING_ARGUMENTS, refactoringArguments);
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
 }
