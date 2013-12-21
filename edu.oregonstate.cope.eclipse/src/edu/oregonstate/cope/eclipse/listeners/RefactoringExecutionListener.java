@@ -30,21 +30,22 @@ public class RefactoringExecutionListener implements
 	@Override
 	public void executionNotification(RefactoringExecutionEvent event) {
 		refactoringName = getRefactoringID(event);
+		int refactoringEventType = event.getEventType();
 		RefactoringDescriptor refactoringDescriptor = getRefactoringDescriptorFromEvent(event);
 		RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(refactoringName);
 		Map argumentMap = refactoringContribution.retrieveArgumentMap(refactoringDescriptor);
 		
-		if (event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_PERFORM || event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_REDO) {
+		if (refactoringEventType == RefactoringExecutionEvent.ABOUT_TO_PERFORM || refactoringEventType == RefactoringExecutionEvent.ABOUT_TO_REDO) {
 			isRefactoringInProgress = true;
 			clientRecorder.recordRefactoring(refactoringName, argumentMap);
 		}
 		
-		if (event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_UNDO) {
+		if (refactoringEventType == RefactoringExecutionEvent.ABOUT_TO_UNDO) {
 			isRefactoringInProgress = true;
 			clientRecorder.recordRefactoringUndo(refactoringName, argumentMap);
 		}
 		
-		if (event.getEventType() == RefactoringExecutionEvent.PERFORMED) {
+		if (refactoringEventType == RefactoringExecutionEvent.PERFORMED || refactoringEventType == RefactoringExecutionEvent.REDONE || refactoringEventType == RefactoringExecutionEvent.UNDONE) {
 			isRefactoringInProgress = false;
 			refactoringName = "";
 		}
