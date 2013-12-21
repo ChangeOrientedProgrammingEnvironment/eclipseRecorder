@@ -1,6 +1,10 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.ltk.core.refactoring.RefactoringContribution;
+import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptorProxy;
 import org.eclipse.ltk.core.refactoring.history.IRefactoringExecutionListener;
@@ -25,6 +29,10 @@ public class RefactoringExecutionListener implements
 		if (event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_PERFORM) {
 			isRefactoringInProgress = true;
 			refactoringName = getRefactoringID(event);
+
+			RefactoringDescriptor refactoringDescriptor = getRefactoringDescriptorFromEvent(event);
+			RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(refactoringName);
+			Map argumentMap = refactoringContribution.retrieveArgumentMap(refactoringDescriptor);
 			
 			COPEPlugin.getDefault().getLogger().info(this, getRefactoringID(event) + " refactoring started");
 		}
