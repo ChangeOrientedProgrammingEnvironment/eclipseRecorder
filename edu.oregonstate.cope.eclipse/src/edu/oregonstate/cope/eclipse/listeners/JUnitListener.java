@@ -21,6 +21,6 @@ public class JUnitListener extends TestRunListener {
 				.getClientRecorder();
 		clientRecorderInstance.recordTestRun(testCaseElement.getTestClassName()
 				+ "." + testCaseElement.getTestMethodName(), testCaseElement
-				.getTestResult(true).toString());
+				.getTestResult(true).toString(), 0);
 	}
 }

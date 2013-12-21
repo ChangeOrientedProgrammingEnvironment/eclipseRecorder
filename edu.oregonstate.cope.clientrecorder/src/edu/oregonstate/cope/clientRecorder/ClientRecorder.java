@@ -86,7 +86,7 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildIDEEventJSON(EventType.fileClose, fullyQualifiedFileAddress));
 	}
 
-	public void recordTestRun(String fullyQualifiedTestMethod, String testResult) {
+	public void recordTestRun(String fullyQualifiedTestMethod, String testResult, double elapsedTime) {
 		ChangePersister.instance().persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult));
 	}
 	
