@@ -10,6 +10,8 @@ import java.util.Set;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -64,8 +66,31 @@ public class SurveyPage extends WizardPage {
 		emailComposite.setLayout(new GridLayout(1, false));
 		Label emailQuestionText = new Label(emailComposite, SWT.NONE);
 		emailQuestionText.setText("If you choose to give us your email, we will send you a personalized version of the report\n" + " so you can see how your practices compare to the rest of the anonymous participants.\n " + "We know that spam is annoying, and we promise not to give out your email to anyone.");
-		emailInput = new Text(emailComposite, SWT.SINGLE | SWT.FILL | SWT.BORDER);
-
+		
+		
+		Composite emailLine = new Composite(emailComposite, SWT.NONE);
+		addGridLayout(emailLine);
+		Label emailPrompt = new Label(emailLine, SWT.NONE);
+		emailPrompt.setText("Email:");
+		
+		emailInput = new Text(emailLine, SWT.BORDER | SWT.SINGLE);
+		emailInput.setText("");
+		emailInput.addKeyListener(new KeyListener() {
+		      @Override
+		      public void keyPressed(KeyEvent e) {
+		      }
+		      @Override
+		      public void keyReleased(KeyEvent e) {
+		    	  if (isPageComplete()){
+						setPageComplete(true);
+		        }
+		      }
+		    });
+		    GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		    emailInput.setLayoutData(gd);
+		    // Required to avoid an error in the system
+		 	
+		
 		scrolledComposite.setContent(questions);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
@@ -110,6 +135,15 @@ public class SurveyPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
+		return areRadioButtonsComplete() && isTextComplete();
+	}
+	private boolean isTextComplete() {
+		if(emailInput.getText().isEmpty()){
+			return false;
+		}
+		return true;
+	}
+	private boolean areRadioButtonsComplete() {
 		Set<String> questions = qAndA.keySet();
 		for (String question : questions) {
 			boolean enabled = false;

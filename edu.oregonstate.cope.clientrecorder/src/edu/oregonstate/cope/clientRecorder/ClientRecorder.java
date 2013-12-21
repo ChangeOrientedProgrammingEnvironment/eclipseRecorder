@@ -1,5 +1,7 @@
 package edu.oregonstate.cope.clientRecorder;
 
+import java.util.Map;
+
 import org.json.simple.JSONObject;
 
 /**
@@ -27,11 +29,13 @@ public class ClientRecorder {
 	protected static final String JSON_IDE = "IDE";
 	protected static final String JSON_TEXT = "text";
 	protected static final String JSON_ENTITY_ADDRESS = "entityAddress";
+	protected static final String JSON_LAUNCH_ATTRIBUTES = "launchConfiguration";
+	protected static final String JSON_LAUNCH_TIMESTAMP = "launchTimestamp";
 
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd
 	};
 
 	public String getIDE() {
@@ -62,12 +66,16 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
 	}
 
-	public void recordDebugLaunch(String fullyQualifiedMainMethod) {
-		ChangePersister.instance().persist(buildIDEEventJSON(EventType.debugLaunch, fullyQualifiedMainMethod));
+	public void recordDebugLaunch(String launchTime, String fullyQualifiedMainMethod, Map launchAttributes) {
+		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.debugLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
 	}
 
-	public void recordNormalLaunch(String fullyQualifiedMainMethod) {
-		ChangePersister.instance().persist(buildIDEEventJSON(EventType.normalLaunch, fullyQualifiedMainMethod));
+	public void recordNormalLaunch(String launchTime, String fullyQualifiedMainMethod, Map launchAttributes) {
+		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.normalLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
+	}
+	
+	public void recordLaunchEnd(String launchTime) {
+		ChangePersister.instance().persist(buildLaunchEndEventJSON(EventType.launchEnd, launchTime));
 	}
 
 	public void recordFileOpen(String fullyQualifiedFileAddress) {
@@ -84,6 +92,10 @@ public class ClientRecorder {
 	
 	public void recordSnapshot(String snapshotPath) {
 		ChangePersister.instance().persist(buildSnapshotJSON(snapshotPath));
+	}
+	
+	public void recordFileSave(String filePath) {
+		ChangePersister.instance().persist(buildIDEEventJSON(EventType.fileSave, filePath));
 	}
 
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
@@ -125,6 +137,19 @@ public class ClientRecorder {
 		obj.put(JSON_ENTITY_ADDRESS, fullyQualifiedEntityAddress);
 
 		return obj;
+	}
+	
+	protected JSONObject buildLaunchEventJSON(Enum EventType, String launchTime, String fullyQualifiedEntityAddress, Map launchAttributes) {
+		JSONObject json = buildIDEEventJSON(EventType, fullyQualifiedEntityAddress);
+		json.put(JSON_LAUNCH_ATTRIBUTES, launchAttributes);
+		json.put(JSON_LAUNCH_TIMESTAMP, launchTime);
+		return json;
+	}
+	
+	protected JSONObject buildLaunchEndEventJSON(Enum eventType, String launchTime) {
+		JSONObject jsonObject = buildCommonJSONObj(eventType);
+		jsonObject.put(JSON_LAUNCH_TIMESTAMP, launchTime);
+		return jsonObject;
 	}
 
 	protected JSONObject buildTestEventJSON(String fullyQualifiedTestMethod, String testResult) {
