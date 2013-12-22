@@ -6,18 +6,19 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.PropertyResourceBundle;
 
-import javax.crypto.*;
-import javax.crypto.spec.*;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-import edu.oregonstate.cope.clientRecorder.RecorderFacade;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
-//import org.slf4j.*;
 
 public class FTPConnectionProperties extends AbstractUIPlugin {
 
