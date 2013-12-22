@@ -17,10 +17,11 @@ public class JUnitListener extends TestRunListener {
 
 	@Override
 	public void testCaseFinished(ITestCaseElement testCaseElement) {
+		double elapsedTimeInSeconds = testCaseElement.getElapsedTimeInSeconds();
 		ClientRecorder clientRecorderInstance = COPEPlugin.getDefault()
-				.getClientRecorderInstance();
+				.getClientRecorder();
 		clientRecorderInstance.recordTestRun(testCaseElement.getTestClassName()
 				+ "." + testCaseElement.getTestMethodName(), testCaseElement
-				.getTestResult(true).toString());
+				.getTestResult(true).toString(), elapsedTimeInSeconds);
 	}
 }

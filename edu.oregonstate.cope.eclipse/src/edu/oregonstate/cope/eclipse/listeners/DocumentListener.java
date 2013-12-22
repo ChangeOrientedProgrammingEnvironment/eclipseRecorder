@@ -16,7 +16,7 @@ public class DocumentListener implements IDocumentListener {
 
 	public DocumentListener() {
 		clientRecorderInstance = COPEPlugin.getDefault()
-				.getClientRecorderInstance();
+				.getClientRecorder();
 	}
 
 	@Override
@@ -31,12 +31,11 @@ public class DocumentListener implements IDocumentListener {
 		ITextFileBuffer textFileBuffer = textFileBufferManager
 				.getTextFileBuffer(event.fDocument);
 		IPath fileLocation = textFileBuffer.getLocation();
-		String changeType = ClientRecorder.USER_CHANGE;
+		String changeType = ClientRecorder.CHANGE_ORIGIN_USER;
 		if (RefactoringExecutionListener.isRefactoringInProgress())
-			changeType = ClientRecorder.REFACTORING_CHANGE;
+			changeType = ClientRecorder.CHANGE_ORIGIN_REFACTORING;
 
 		String filePath = fileLocation.toPortableString();
-		filePath = COPEPlugin.getDefault().getWorkspaceID() + "/" + filePath;
 		clientRecorderInstance.recordTextChange(event.fText, event.fOffset,
 				event.fLength, filePath, changeType);
 

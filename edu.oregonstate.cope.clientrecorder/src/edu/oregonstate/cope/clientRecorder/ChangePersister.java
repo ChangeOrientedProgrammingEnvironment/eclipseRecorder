@@ -4,31 +4,37 @@ import java.util.regex.Pattern;
 
 import org.json.simple.JSONObject;
 
+import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
+
 /**
- * Persists JSON objects. This class is a Singleton. A FileManager must be set
- * in order for the ChangePersister to function.
+ * Defines and implements JSON event persistence format. A {@link FileProvider} must be
+ * set in order for the ChangePersister to function.
+ * 
+ * <br>
+ * This class is a Singleton.
  */
 public class ChangePersister {
 
 	private static final String SEPARATOR = "\n$@$";
 	public static final Pattern ELEMENT_REGEX = Pattern.compile(Pattern.quote(SEPARATOR) + "(\\{.*?\\})");
 
-	private FileManager fileManager;
+	private FileProvider fileManager;
 
 	private static class Instance {
 		public static final ChangePersister instance = new ChangePersister();
 	}
 
 	private ChangePersister() {
-		fileManager = new FileManager();
 	}
 
-	public void init() {
+	// TODO This gets called on every persist. Maybe create a special
+	// FileProvider that knows how to initialize things on file swap
+	public void addInitEventIfAbsent() {
 		if (fileManager.isCurrentFileEmpty()) {
 			JSONObject markerObject = createInitJSON();
 
-			fileManager.write(ChangePersister.SEPARATOR);
-			fileManager.write(markerObject.toJSONString());
+			fileManager.appendToCurrentFile(ChangePersister.SEPARATOR);
+			fileManager.appendToCurrentFile(markerObject.toJSONString());
 		}
 	}
 
@@ -42,21 +48,19 @@ public class ChangePersister {
 		return Instance.instance;
 	}
 
-	public void persist(JSONObject jsonObject) {
+	public synchronized void persist(JSONObject jsonObject) {
 		if (jsonObject == null) {
 			throw new RuntimeException("Argument cannot be null");
 		}
 
-		fileManager.write(ChangePersister.SEPARATOR);
-		fileManager.write(jsonObject.toJSONString());
+		addInitEventIfAbsent();
+
+		fileManager.appendToCurrentFile(ChangePersister.SEPARATOR);
+		fileManager.appendToCurrentFile(jsonObject.toJSONString());
 	}
 
-	public void setFileManager(FileManager fileManager) {
+	public void setFileManager(FileProvider fileManager) {
 		this.fileManager = fileManager;
-		init();
-	}
-
-	public void setRootDirectory(String rootDirectory) {
-		fileManager.setRootDirectory(rootDirectory);
+		addInitEventIfAbsent();
 	}
 }

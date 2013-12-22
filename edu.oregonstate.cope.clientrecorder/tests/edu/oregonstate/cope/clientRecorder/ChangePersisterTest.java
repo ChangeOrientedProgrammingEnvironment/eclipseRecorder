@@ -2,7 +2,6 @@ package edu.oregonstate.cope.clientRecorder;
 
 import static junit.framework.Assert.assertEquals;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -12,25 +11,16 @@ import org.json.simple.JSONValue;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.oregonstate.cope.tests.util.StubFileProvider;
+
 public class ChangePersisterTest {
 
-	private StringWriter stringWriter;
+	private StubFileProvider fileManager;
 
 	@Before
 	public void setup() {
-		stringWriter = new StringWriter();
-
-		ChangePersister.instance().setFileManager(new FileManager() {
-			@Override
-			public void write(String string) {
-				stringWriter.write(string);
-			}
-
-			@Override
-			public boolean isCurrentFileEmpty() {
-				return stringWriter.toString().isEmpty();
-			}
-		});
+		fileManager = new StubFileProvider();
+		ChangePersister.instance().setFileManager(fileManager);
 
 		testInit();
 	}
@@ -38,8 +28,15 @@ public class ChangePersisterTest {
 	@Test
 	public void testInit() {
 		List<JSONObject> jarr = getJsonArray();
-		assertEquals(jarr.size(), 1);
+		assertEquals(1, jarr.size());
 		testMarkerJSON(jarr);
+	}
+
+	@Test
+	public void testInitFileAfterDelete() throws Exception {
+		testInit();
+		fileManager.deleteFiles();
+		testPersistOneRecord();
 	}
 
 	private void testMarkerJSON(List<JSONObject> jarr) {
@@ -49,7 +46,7 @@ public class ChangePersisterTest {
 	private List<JSONObject> getJsonArray() {
 		// return (JSONArray) JSONValue.parse(stringWriter.toString());
 		List<String> allMatches = new ArrayList<>();
-		Matcher m = ChangePersister.ELEMENT_REGEX.matcher(stringWriter.toString());
+		Matcher m = ChangePersister.ELEMENT_REGEX.matcher(fileManager.testGetContent());
 		while (m.find()) {
 			allMatches.add(m.group(1));
 		}
@@ -84,8 +81,8 @@ public class ChangePersisterTest {
 		ChangePersister.instance().persist(objToRecord);
 
 		List<JSONObject> jarr = getJsonArray();
-		assertEquals(jarr.size(), 2);
-		assertEquals(jarr.get(1).get("test"), "fileIO");
+		assertEquals(2, jarr.size());
+		assertEquals("fileIO", jarr.get(1).get("test"));
 
 		testMarkerJSON(jarr);
 	}

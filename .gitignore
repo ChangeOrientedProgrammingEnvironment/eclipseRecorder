@@ -5,3 +5,11 @@ bin
 /.idea
 clientRecorder.iml
 /edu.oregonstate.cope.clientrecorder/.idea/workspace.xml
+
+/edu.oregonstate.cope.eclipse.updatesite/plugins/
+/edu.oregonstate.cope.eclipse.updatesite/logs.zip
+/edu.oregonstate.cope.eclipse.updatesite/features/
+/edu.oregonstate.cope.eclipse.updatesite/content.jar
+/edu.oregonstate.cope.eclipse.updatesite/artifacts.jar
+
+/External\ Plug-in\ Libraries

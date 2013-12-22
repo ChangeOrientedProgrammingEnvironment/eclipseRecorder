@@ -1,11 +1,19 @@
 package edu.oregonstate.cope.eclipse;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
-import edu.oregonstate.cope.clientRecorder.ChangePersister;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.clientRecorder.Properties;
+import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.clientRecorder.Uninstaller;
+import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -21,7 +29,9 @@ public class COPEPlugin extends AbstractUIPlugin {
 	// The ID of the current workspace
 	static String workspaceID;
 
-	private ClientRecorder clientRecorder;
+	private RecorderFacade recorderFacade;
+
+	private SnapshotManager snapshotManager;
 
 	/**
 	 * The constructor
@@ -42,6 +52,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 		UIJob uiJob = new StartPluginUIJob(this, "Registering listeners");
 		uiJob.schedule();
+		snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
 	}
 
 	/*
@@ -52,6 +63,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
+		snapshotManager.takeSnapshotOfKnownProjects();
 		plugin = null;
 		super.stop(context);
 	}
@@ -65,23 +77,66 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public ClientRecorder getClientRecorderInstance() {
-		return clientRecorder;
+	public ClientRecorder getClientRecorder() {
+		return recorderFacade.getClientRecorder();
+	}
+
+	public Properties getWorkspaceProperties() {
+		return recorderFacade.getWorkspaceProperties();
+	}
+
+	public Properties getInstallationProperties() {
+		return recorderFacade.getInstallationProperties();
+	}
+
+	Uninstaller getUninstaller() {
+		return recorderFacade.getUninstaller();
+	}
+
+	public void initializeRecorder(String workspaceDirectory, String permanentDirectory, String workspaceID, String IDE) {
+		this.workspaceID = workspaceID;
+		recorderFacade = RecorderFacade.instance().initialize(workspaceDirectory, permanentDirectory, IDE);
+	}
+
+	protected File getWorkspaceIdFile() {
+		File pluginStoragePath = COPEPlugin.getLocalStorage();
+		return new File(pluginStoragePath.getAbsolutePath() + File.separator + "workspace_id");
 	}
 
 	public String getWorkspaceID() {
+		File workspaceIdFile = getWorkspaceIdFile();
+		String workspaceID = "";
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(workspaceIdFile));
+			workspaceID = reader.readLine();
+			reader.close();
+		} catch (IOException e) {
+		}
 		return workspaceID;
 	}
 
-	public void setClientRecorder(ClientRecorder clientRecorder) {
-		this.clientRecorder = clientRecorder;
+	public static File getLocalStorage() {
+		return COPEPlugin.plugin.getStateLocation().toFile();
 	}
 
-	public ClientRecorder clientRecorder() {
-		return clientRecorder;
+	public static File getBundleStorage() {
+		return COPEPlugin.getDefault().getBundle().getDataFile("");
 	}
 
-	public void setEventFilesRootDirectory(String rootDirectory) {
-		ChangePersister.instance().setRootDirectory(rootDirectory);
+	public COPELogger getLogger() {
+		return recorderFacade.getLogger();
+	}
+
+	public SnapshotManager getSnapshotManager() {
+		return snapshotManager;
+	}
+	
+	/**
+	 * Used only by the Installer.
+	 * TODO something is fishy here, this string should not leak outside
+	 */
+	String _getInstallationConfigFileName() {
+		return RecorderFacade.instance().getInstallationConfigFilename();
 	}
 }
