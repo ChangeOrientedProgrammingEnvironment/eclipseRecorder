@@ -84,7 +84,7 @@ class StartPluginUIJob extends UIJob {
 	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
 
-		new Installer(COPEPlugin.getLocalStorage().toPath().toAbsolutePath(), COPEPlugin.getBundleStorage().toPath().toAbsolutePath(), COPEPlugin.getDefault().getUninstaller(), COPEPlugin.getDefault()._getInstallationConfigFileName()).doInstall();
+		doInstall();
 
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
@@ -105,6 +105,14 @@ class StartPluginUIJob extends UIJob {
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
 		initializeFileSender();
+	}
+
+	private void doInstall() {
+		try {
+			new Installer(COPEPlugin.getLocalStorage().toPath().toAbsolutePath(), COPEPlugin.getBundleStorage().toPath().toAbsolutePath(), COPEPlugin.getDefault().getUninstaller(), COPEPlugin.getDefault()._getInstallationConfigFileName()).doInstall();
+		} catch (IOException e) {
+			copePlugin.getLogger().error(this, "Installer failed", e);
+		}
 	}
 
 	protected boolean isWorkspaceKnown() {

@@ -8,8 +8,8 @@ import java.nio.file.StandardOpenOption;
 
 abstract class InstallerOperation {
 
-	private Path workspaceDirectory;
-	private Path permanentDirectory;
+	protected Path workspaceDirectory;
+	protected Path permanentDirectory;
 
 	public InstallerOperation(Path workspaceDirectory, Path permanentDirectory) {
 		this.permanentDirectory = permanentDirectory;
@@ -21,18 +21,22 @@ abstract class InstallerOperation {
 		File permanentFile = permanentDirectory.resolve(fileName).toFile();
 
 		if (workspaceFile.exists() && permanentFile.exists()) {
+			// System.out.println(this.getClass() + " both files exist");
 			doBothFilesExists();
 		}
 
 		else if (!workspaceFile.exists() && permanentFile.exists()) {
+			// System.out.println(this.getClass() + " only permanent");
 			doOnlyPermanentFileExists(workspaceFile, permanentFile);
 		}
 
 		else if (workspaceFile.exists() && !permanentFile.exists()) {
+			// System.out.println(this.getClass() + " only workspace");
 			doOnlyWorkspaceFileExists(workspaceFile, permanentFile);
 		}
 
 		else if (!workspaceFile.exists() && !permanentFile.exists()) {
+			// System.out.println(this.getClass() + " neither files exist");
 			doNoFileExists(workspaceFile, permanentFile);
 		}
 	}

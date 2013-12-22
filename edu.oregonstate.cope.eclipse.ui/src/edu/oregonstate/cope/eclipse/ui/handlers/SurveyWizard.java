@@ -12,6 +12,7 @@ public class SurveyWizard extends Wizard {
 	protected Page2 two;
 
 	private JSONObject surveyAnswers;
+	private String email;
 
 	public SurveyWizard() {
 		super();
@@ -29,26 +30,34 @@ public class SurveyWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		surveyAnswers = surveyPage.getSurveyResults();
-		putRandomEmailIfAbsent();
+		String email = (String) surveyAnswers.get("email");
+		surveyAnswers.remove("email");
+		
+		this.email = getRandomEmailIfAbsent(email);
+		
 		return true;
 	}
 
 	@Override
 	public boolean performCancel() {
 		surveyAnswers = new JSONObject();
-		putRandomEmailIfAbsent();
+		this.email = getRandomEmailIfAbsent(null);
+		
 		return true;
 	}
 	
-	private void putRandomEmailIfAbsent() {
-		String email = (String) surveyAnswers.get("email");
-		if (email == null || email.isEmpty()) {
-			email = new BigInteger(96, new Random()).toString(32);
-			surveyAnswers.put("email", email);
-		}
+	private String getRandomEmailIfAbsent(String email) {
+		if (email == null || email.isEmpty())
+			return new BigInteger(96, new Random()).toString(32);
+		else
+			return email;
 	}
 
 	public String getSurveyResults() {
 		return surveyAnswers.toJSONString();
+	}
+	
+	public String getEmail(){
+		return email;
 	}
 }
