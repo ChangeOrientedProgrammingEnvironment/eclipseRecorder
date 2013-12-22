@@ -1,11 +1,16 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.ltk.core.refactoring.RefactoringContribution;
+import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptorProxy;
 import org.eclipse.ltk.core.refactoring.history.IRefactoringExecutionListener;
 import org.eclipse.ltk.core.refactoring.history.RefactoringExecutionEvent;
 
+import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 /**
@@ -20,25 +25,40 @@ public class RefactoringExecutionListener implements
 	private static boolean isRefactoringInProgress = false;
 	private static String refactoringName = "";
 	
+	private ClientRecorder clientRecorder = COPEPlugin.getDefault().getClientRecorder();
+	
 	@Override
 	public void executionNotification(RefactoringExecutionEvent event) {
-		if (event.getEventType() == RefactoringExecutionEvent.ABOUT_TO_PERFORM) {
+		refactoringName = getRefactoringID(event);
+		int refactoringEventType = event.getEventType();
+		RefactoringDescriptor refactoringDescriptor = getRefactoringDescriptorFromEvent(event);
+		RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(refactoringName);
+		Map argumentMap = refactoringContribution.retrieveArgumentMap(refactoringDescriptor);
+		
+		if (refactoringEventType == RefactoringExecutionEvent.ABOUT_TO_PERFORM || refactoringEventType == RefactoringExecutionEvent.ABOUT_TO_REDO) {
 			isRefactoringInProgress = true;
-			refactoringName = getRefactoringID(event);
-			
-			COPEPlugin.getDefault().getLogger().info(this, getRefactoringID(event) + " refactoring started");
+			clientRecorder.recordRefactoring(refactoringName, argumentMap);
 		}
-		if (event.getEventType() == RefactoringExecutionEvent.PERFORMED) {
+		
+		if (refactoringEventType == RefactoringExecutionEvent.ABOUT_TO_UNDO) {
+			isRefactoringInProgress = true;
+			clientRecorder.recordRefactoringUndo(refactoringName, argumentMap);
+		}
+		
+		if (refactoringEventType == RefactoringExecutionEvent.PERFORMED || refactoringEventType == RefactoringExecutionEvent.REDONE || refactoringEventType == RefactoringExecutionEvent.UNDONE) {
 			isRefactoringInProgress = false;
 			refactoringName = "";
-			
-			COPEPlugin.getDefault().getLogger().info(this, getRefactoringID(event) + " refactoring done");
 		}
 	}
 
-	private String getRefactoringID(RefactoringExecutionEvent event) {
+	private RefactoringDescriptor getRefactoringDescriptorFromEvent(RefactoringExecutionEvent event) {
 		RefactoringDescriptorProxy refactoringDescriptorProxy = event.getDescriptor();
 		RefactoringDescriptor refactoringDescriptor = refactoringDescriptorProxy.requestDescriptor(new NullProgressMonitor());
+		return refactoringDescriptor;
+	}
+
+	private String getRefactoringID(RefactoringExecutionEvent event) {
+		RefactoringDescriptor refactoringDescriptor = getRefactoringDescriptorFromEvent(event);
 		String refactoringId = refactoringDescriptor.getID();
 		return refactoringId;
 	}
