@@ -41,6 +41,7 @@ import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
+import edu.oregonstate.cope.eclipse.listeners.GitListener;
 import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
 import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
