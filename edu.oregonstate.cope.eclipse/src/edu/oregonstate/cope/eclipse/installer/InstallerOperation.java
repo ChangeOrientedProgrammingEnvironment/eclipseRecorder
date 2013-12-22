@@ -20,29 +20,25 @@ abstract class InstallerOperation {
 		File workspaceFile = workspaceDirectory.resolve(fileName).toFile();
 		File permanentFile = permanentDirectory.resolve(fileName).toFile();
 
-		if (filesExist(workspaceFile) && filesExist(permanentFile)) {
+		if (workspaceFile.exists() && permanentFile.exists()) {
 			// System.out.println(this.getClass() + " both files exist");
 			doBothFilesExists();
 		}
 
-		else if (!filesExist(workspaceFile) && filesExist(permanentFile)) {
+		else if (!workspaceFile.exists() && permanentFile.exists()) {
 			// System.out.println(this.getClass() + " only permanent");
 			doOnlyPermanentFileExists(workspaceFile, permanentFile);
 		}
 
-		else if (filesExist(workspaceFile) && !filesExist(permanentFile)) {
+		else if (workspaceFile.exists() && !permanentFile.exists()) {
 			// System.out.println(this.getClass() + " only workspace");
 			doOnlyWorkspaceFileExists(workspaceFile, permanentFile);
 		}
 
-		else if (!filesExist(workspaceFile) && !filesExist(permanentFile)) {
+		else if (!workspaceFile.exists() && !permanentFile.exists()) {
 			// System.out.println(this.getClass() + " neither files exist");
 			doNoFileExists(workspaceFile, permanentFile);
 		}
-	}
-
-	private boolean filesExist(File workspaceFile) {
-		return workspaceFile.exists();
 	}
 
 	protected void doOnlyWorkspaceFileExists(File workspaceFile, File permanentFile) throws IOException {
