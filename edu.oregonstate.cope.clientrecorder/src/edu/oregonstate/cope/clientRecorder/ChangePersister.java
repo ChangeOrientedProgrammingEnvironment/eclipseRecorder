@@ -7,7 +7,7 @@ import org.json.simple.JSONObject;
 import edu.oregonstate.cope.clientRecorder.fileOps.FileProvider;
 
 /**
- * Defines and implements JSON event persistence format. A FileManager must be
+ * Defines and implements JSON event persistence format. A {@link FileProvider} must be
  * set in order for the ChangePersister to function.
  * 
  * <br>

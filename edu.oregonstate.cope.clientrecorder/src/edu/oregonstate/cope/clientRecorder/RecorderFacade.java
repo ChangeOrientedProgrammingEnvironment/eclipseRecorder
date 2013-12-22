@@ -98,4 +98,8 @@ public class RecorderFacade {
 		return Instance._instance;
 	}
 
+	public String getInstallationConfigFilename() {
+		return INSTALLATION_CONFIG_FILENAME;
+	}
+
 }

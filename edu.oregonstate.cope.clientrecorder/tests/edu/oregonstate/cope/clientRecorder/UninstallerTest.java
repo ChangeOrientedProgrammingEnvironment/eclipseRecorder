@@ -26,11 +26,11 @@ public class UninstallerTest {
 		currentDate = Calendar.getInstance();
 	}
 	
-	private void assertInit(int days, Uninstaller uninstaller) {
+	private void assertInit(int timeOffset, int timeUnit, Uninstaller uninstaller) {
 		Calendar timeBase = uninstaller.getUninstallDate();
 		
 		Calendar expectedTimeBase = Calendar.getInstance();
-		expectedTimeBase.add(Calendar.DAY_OF_MONTH, days);
+		expectedTimeBase.add(timeUnit, timeOffset);
 		
 		assertEquals(expectedTimeBase.get(Calendar.YEAR), timeBase.get(Calendar.YEAR));
 		assertEquals(expectedTimeBase.get(Calendar.MONTH), timeBase.get(Calendar.MONTH));
@@ -50,28 +50,35 @@ public class UninstallerTest {
 	}
 	
 	@Test
-	public void testInit() {
-		uninstaller.initUninstall(3);
+	public void testInitInDays() {
+		uninstaller.initUninstallInDays(3);
 		
-		assertInit(3, uninstaller);
+		assertInit(3, Calendar.DAY_OF_MONTH, uninstaller);
+	}
+	
+	@Test
+	public void testInitInMonths() {
+		uninstaller.initUninstallInMonths(3);
+		
+		assertInit(3, Calendar.MONTH, uninstaller);
 	}
 
 	@Test
 	public void testPersistedInit() throws Exception {
-		uninstaller.initUninstall(3);
+		uninstaller.initUninstallInDays(3);
 		
 		Uninstaller newUninstaller = new Uninstaller(uninstaller.testGetProps());
 		
-		assertInit(3, newUninstaller);
+		assertInit(3, Calendar.DAY_OF_MONTH, newUninstaller);
 	}
 	
 	@Test
 	public void testInitTwice() throws Exception {
-		uninstaller.initUninstall(3);
-		assertInit(3, uninstaller);
+		uninstaller.initUninstallInDays(3);
+		assertInit(3, Calendar.DAY_OF_MONTH, uninstaller);
 		
-		uninstaller.initUninstall(5);
-		assertInit(5, uninstaller);
+		uninstaller.initUninstallInDays(5);
+		assertInit(5, Calendar.DAY_OF_MONTH, uninstaller);
 	}
 	
 	@Test
