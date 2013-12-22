@@ -43,7 +43,18 @@ public class Installer {
 			writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 			writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
 
-			writeContentsToFile(permanentDirectory.resolve(EMAIL_FILENAME), sw.getEmail());
+			handleEmail(sw.getEmail());
+		}
+
+		private void handleEmail(String email) throws IOException {
+			doFor(permanentDirectory, email);
+			doFor(workspaceDirectory, email);
+		}
+
+		private void doFor(Path parentDirectory, String email) throws IOException {
+			Path emailFile = parentDirectory.resolve(EMAIL_FILENAME);
+			Files.deleteIfExists(emailFile);
+			writeContentsToFile(emailFile, email);
 		}
 
 	}
