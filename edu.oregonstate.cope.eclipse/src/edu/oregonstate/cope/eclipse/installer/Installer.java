@@ -30,22 +30,19 @@ public class Installer {
 
 	private class SurveyOperation extends InstallerOperation {
 
-
 		public SurveyOperation(Path workspaceDirectory, Path permanentDirectory) {
 			super(workspaceDirectory, permanentDirectory);
 		}
 
 		@Override
 		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-			System.out.println("GIVE SURVEY");
-
 			SurveyWizard sw = new SurveyWizard();
 			WizardDialog wizardDialog = new WizardDialog(Display.getDefault().getActiveShell(), sw);
 			wizardDialog.open();
 
 			writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 			writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
-			
+
 			writeContentsToFile(permanentDirectory.resolve(EMAIL_FILENAME), sw.getEmail());
 		}
 
@@ -66,8 +63,8 @@ public class Installer {
 		}
 
 	}
-	
-	private class EmailInstallOperation extends InstallerOperation{
+
+	private class EmailInstallOperation extends InstallerOperation {
 
 		public EmailInstallOperation(Path workspaceDirectory,
 				Path permanentDirectory) {
@@ -77,7 +74,7 @@ public class Installer {
 		@Override
 		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
 		}
-		
+
 	}
 
 	public Installer(Path workspaceDirectory, Path permanentDirectory,
@@ -91,15 +88,9 @@ public class Installer {
 		System.err.println(permanentDirectory);
 	}
 
-	public void doInstall() {
-		try {
-			new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
-			new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
-			new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void doInstall() throws IOException {
+		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
+		new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
+		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
 	}
 }
