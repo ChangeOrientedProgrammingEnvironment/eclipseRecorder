@@ -21,6 +21,7 @@ import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 public class Installer {
 
 	private static final String SURVEY_FILENAME = "survey.txt";
+	private static final String EMAIL_FILENAME = "email.txt";
 
 	private Path workspaceDirectory;
 	private Path permanentDirectory;
@@ -28,6 +29,7 @@ public class Installer {
 	private String installationConfigFileName;
 
 	private class SurveyOperation extends InstallerOperation {
+
 
 		public SurveyOperation(Path workspaceDirectory, Path permanentDirectory) {
 			super(workspaceDirectory, permanentDirectory);
@@ -43,7 +45,10 @@ public class Installer {
 
 			writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 			writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
+			
+			writeContentsToFile(permanentDirectory.resolve(EMAIL_FILENAME), sw.getEmail());
 		}
+
 	}
 
 	private class ConfigInstallOperation extends InstallerOperation {
@@ -61,6 +66,19 @@ public class Installer {
 		}
 
 	}
+	
+	private class EmailInstallOperation extends InstallerOperation{
+
+		public EmailInstallOperation(Path workspaceDirectory,
+				Path permanentDirectory) {
+			super(workspaceDirectory, permanentDirectory);
+		}
+
+		@Override
+		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
+		}
+		
+	}
 
 	public Installer(Path workspaceDirectory, Path permanentDirectory,
 			Uninstaller uninstaller, String installationConfigFileName) {
@@ -77,6 +95,7 @@ public class Installer {
 		try {
 			new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
 			new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
+			new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
