@@ -21,12 +21,20 @@ public class PopulatedWorkspaceTest {
 
 	protected static IJavaProject javaProject;
 	protected static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
+	
+	protected static String getProjectPath() {
+		return "projects" + File.separator + getProjectName();
+	}
+	
+	protected static String getProjectName() {
+		return "librariesTest";
+	}
 
 	@SuppressWarnings("restriction")
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		ImportOperation importOperation = new ImportOperation(new Path("librariesTest"), 
-				new File(Paths.get("projects" + File.separator + "librariesTest").toAbsolutePath().toString()), 
+		ImportOperation importOperation = new ImportOperation(new Path(getProjectName()), 
+				new File(Paths.get(getProjectPath()).toAbsolutePath().toString()), 
 				FileSystemStructureProvider.INSTANCE, 
 				new IOverwriteQuery() {
 	
