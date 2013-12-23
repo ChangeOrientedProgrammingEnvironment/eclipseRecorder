@@ -15,24 +15,25 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 
 public class PopulatedWorkspaceTest {
 
 	protected static IJavaProject javaProject;
 	protected static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
 	
-	protected static String getProjectPath() {
+	protected String getProjectPath() {
 		return "projects" + File.separator + getProjectName();
 	}
-	
-	protected static String getProjectName() {
+
+	protected String getProjectName() {
 		return "librariesTest";
 	}
 
 	@SuppressWarnings("restriction")
-	@BeforeClass
-	public static void beforeClass() throws Exception {
+	@Before
+	public void beforeClass() throws Exception {
 		ImportOperation importOperation = new ImportOperation(new Path(getProjectName()), 
 				new File(Paths.get(getProjectPath()).toAbsolutePath().toString()), 
 				FileSystemStructureProvider.INSTANCE, 
@@ -56,6 +57,11 @@ public class PopulatedWorkspaceTest {
 		} else {
 			fail("Project does not have java nature");
 		}
+	}
+	
+	@After
+	public void after() throws Exception {
+		javaProject.getProject().delete(true, new NullProgressMonitor());
 	}
 
 	public PopulatedWorkspaceTest() {
