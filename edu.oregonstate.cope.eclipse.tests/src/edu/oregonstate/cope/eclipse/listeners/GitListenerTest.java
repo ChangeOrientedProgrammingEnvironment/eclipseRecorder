@@ -31,7 +31,7 @@ public class GitListenerTest extends PopulatedWorkspaceTest {
 	 
 	@Before
 	public void setUp() throws Exception {
-		testListener = new GitListener();
+		testListener = new GitListener(ResourcesPlugin.getWorkspace().getRoot().getProjects());
 		Repository.getGlobalListenerList().addRefsChangedListener(testListener);
 		
 		String projectPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().makeAbsolute().toOSString() + javaProject.getProject().getFullPath().toOSString();

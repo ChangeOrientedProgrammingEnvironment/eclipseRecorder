@@ -106,7 +106,7 @@ class StartPluginUIJob extends UIJob {
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
-		Repository.getGlobalListenerList().addRefsChangedListener(new GitListener());
+		Repository.getGlobalListenerList().addRefsChangedListener(new GitListener(ResourcesPlugin.getWorkspace().getRoot().getProjects()));
 
 		initializeFileSender();
 	}
