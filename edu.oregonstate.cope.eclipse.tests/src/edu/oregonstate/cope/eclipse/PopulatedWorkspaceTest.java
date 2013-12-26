@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
@@ -60,8 +61,11 @@ public class PopulatedWorkspaceTest {
 	}
 	
 	@After
-	public void after() throws Exception {
-		javaProject.getProject().delete(true, new NullProgressMonitor());
+	public void after() {
+		try {
+			javaProject.getProject().delete(true, new NullProgressMonitor());
+		} catch (CoreException e) {
+		}
 	}
 
 	public PopulatedWorkspaceTest() {
