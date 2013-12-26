@@ -40,7 +40,7 @@ public class GitListenerTest extends PopulatedWorkspaceTest {
 	}
 	 
 	@Test
-	public void testRepoIsPropperlyThere() throws Exception {
+	public void testRepoIsProperlyThere() throws Exception {
 		List<Ref> branches = gitRepo.branchList().call();
 		assertEquals(2,branches.size());
 	}
