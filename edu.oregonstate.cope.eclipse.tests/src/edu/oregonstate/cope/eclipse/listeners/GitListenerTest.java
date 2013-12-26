@@ -1,9 +1,8 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -46,7 +45,10 @@ public class GitListenerTest extends PopulatedWorkspaceTest {
 	}
 	
 	@Test
-	public void testDetectBranchChange() {
+	public void testDetectBranchChange() throws Exception {
+		gitRepo.checkout().setName("test").call();
+		String branch = testListener.getCurrentBranch();
+		assertEquals("test",branch);
 	}
 
 }
