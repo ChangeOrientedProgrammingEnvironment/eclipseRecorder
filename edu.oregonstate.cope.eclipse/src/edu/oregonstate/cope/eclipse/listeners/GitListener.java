@@ -1,18 +1,21 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.events.RefsChangedEvent;
 import org.eclipse.jgit.events.RefsChangedListener;
+import org.eclipse.jgit.lib.Repository;
 
 public class GitListener implements RefsChangedListener {
 	
-	private String currentBranch;
 	private Map<String, GitRepoStatus> repoStatus;
 	
 	public GitListener(IProject[] projects) {
-		
 		repoStatus = new HashMap<String, GitRepoStatus>();
 		for (IProject project : projects) {
 			String projectPath = project.getLocation().makeAbsolute().toPortableString();
