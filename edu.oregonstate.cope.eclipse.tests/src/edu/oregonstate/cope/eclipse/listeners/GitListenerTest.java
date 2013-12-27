@@ -47,8 +47,11 @@ public class GitListenerTest extends PopulatedWorkspaceTest {
 	@Test
 	public void testDetectBranchChange() throws Exception {
 		gitRepo.checkout().setName("test").call();
-		String branch = testListener.getCurrentBranch();
+		String branch = testListener.getCurrentBranch(getIndexFile());
 		assertEquals("test",branch);
 	}
 
+	private String getIndexFile() {
+		return gitRepo.getRepository().getIndexFile().getAbsolutePath();
+	}
 }

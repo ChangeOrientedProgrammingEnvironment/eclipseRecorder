@@ -63,7 +63,7 @@ public class GitListener implements RefsChangedListener {
 		}
 	}
 
-	public String getCurrentBranch() {
-		return currentBranch;
+	public String getCurrentBranch(String indexFile) {
+		return repoStatus.get(getRepoUnderGitFromIndexFilePath(indexFile)).getBranch();
 	}
 }
