@@ -1,6 +1,7 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.util.List;
@@ -42,6 +43,14 @@ public class GitListenerTest extends PopulatedWorkspaceTest {
 	public void testRepoIsProperlyThere() throws Exception {
 		List<Ref> branches = gitRepo.branchList().call();
 		assertEquals(2,branches.size());
+	}
+	
+	@Test
+	public void testCorrectGitListenerInitialization() {
+		GitRepoStatus repoStatus = testListener.getRepoStatus(getIndexFile());
+		assertNotNull(repoStatus);
+		assertEquals("master", repoStatus.getBranch());
+		assertEquals("26a049ef59cf72b5cbfce718d77a095ee9fd955a",repoStatus.getCommitSHA1());
 	}
 	
 	@Test
