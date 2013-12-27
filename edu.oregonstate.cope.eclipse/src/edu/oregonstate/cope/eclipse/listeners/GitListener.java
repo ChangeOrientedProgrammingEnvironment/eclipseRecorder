@@ -61,7 +61,10 @@ public class GitListener implements RefsChangedListener {
 	@Override
 	public void onRefsChanged(RefsChangedEvent event) {
 		try {
-			currentBranch = event.getRepository().getBranch();
+			String currentBranch = event.getRepository().getBranch();
+			String head = getHeadCommitSHA1(event.getRepository());
+			GitRepoStatus currentRepoStatus = new GitRepoStatus(currentBranch, head);
+			repoStatus.put(getRepoUnderGitFromIndexFilePath(event.getRepository().getIndexFile().getAbsolutePath()), currentRepoStatus);
 		} catch (IOException e) {
 		}
 	}
