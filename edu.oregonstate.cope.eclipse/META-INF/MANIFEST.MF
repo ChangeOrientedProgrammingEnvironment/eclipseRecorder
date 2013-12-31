@@ -16,13 +16,8 @@ Require-Bundle: org.eclipse.ui,
  edu.oregonstate.cope.clientrecorder;bundle-version="0.0.1",
  org.eclipse.ui.editors;bundle-version="3.8.100",
  org.eclipse.jdt.core;bundle-version="3.9.0",
- edu.oregonstate.cope.eclipse.ui
+ edu.oregonstate.cope.eclipse.ui,
+ edu.oregonstate.cope.thirdparty;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .,
- thirdParty/commons-codec-1.8.jar,
- thirdParty/commons-io-1.4.jar,
- thirdParty/commons-net-3.3.jar,
- thirdParty/commons-vfs2-2.0.jar,
- thirdParty/jsch-0.1.50.jar,
- thirdParty/quartz-1.8.6.jar
+Bundle-ClassPath: .
