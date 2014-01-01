@@ -28,7 +28,7 @@ public class CommandExecutionListener implements IExecutionListener {
 			saveInProgress  = true;
 	}
 
-	protected void recordCopy() {
+	private void recordCopy() {
 		ISelection selection = UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
