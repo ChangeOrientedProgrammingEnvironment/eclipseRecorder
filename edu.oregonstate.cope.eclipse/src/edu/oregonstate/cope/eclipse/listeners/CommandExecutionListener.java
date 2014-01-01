@@ -19,6 +19,8 @@ public class CommandExecutionListener implements IExecutionListener {
 	private static boolean saveInProgress = false;
 	private static boolean cutInProgress = false;
 	private static boolean pasteInProgress = false;
+	private static boolean undoInProgress = false;
+	private static boolean redoInProgress = false;
 
 	@Override
 	public void preExecute(String commandId, ExecutionEvent event) {
@@ -30,6 +32,10 @@ public class CommandExecutionListener implements IExecutionListener {
 		}
 		if (isPaste(commandId))
 			pasteInProgress = true;
+		if (isUndo(commandId))
+			undoInProgress = true;
+		if (isRedo(commandId))
+			redoInProgress = true;
 		if (isFileSave(commandId))
 			saveInProgress  = true;
 	}
@@ -44,6 +50,14 @@ public class CommandExecutionListener implements IExecutionListener {
 	
 	private boolean isPaste(String commandId) {
 		return commandId.equals(IWorkbenchCommandConstants.EDIT_PASTE);
+	}
+	
+	private boolean isUndo(String commandId) {
+		return commandId.equals(IWorkbenchCommandConstants.EDIT_UNDO);
+	}
+	
+	private boolean isRedo(String commandId) {
+		return commandId.equals(IWorkbenchCommandConstants.EDIT_REDO);
 	}
 
 	private void recordCopy() {
@@ -79,6 +93,10 @@ public class CommandExecutionListener implements IExecutionListener {
 			cutInProgress = false;
 		if (isPaste(commandId))
 			pasteInProgress = false;
+		if (isUndo(commandId))
+			undoInProgress = false;
+		if (isRedo(commandId))
+			redoInProgress = false;
 	}
 
 	@Override
@@ -89,6 +107,10 @@ public class CommandExecutionListener implements IExecutionListener {
 			cutInProgress = false;
 		if (isPaste(commandId))
 			pasteInProgress = false;
+		if (isUndo(commandId))
+			undoInProgress = false;
+		if (isRedo(commandId))
+			redoInProgress = false;
 	}
 
 	@Override
@@ -105,5 +127,13 @@ public class CommandExecutionListener implements IExecutionListener {
 	
 	public static boolean isPasteInProgress() {
 		return pasteInProgress;
+	}
+	
+	public static boolean isUndoInProgress() {
+		return undoInProgress;
+	}
+	
+	public static boolean isRedoInProgress() {
+		return redoInProgress;
 	}
 }
