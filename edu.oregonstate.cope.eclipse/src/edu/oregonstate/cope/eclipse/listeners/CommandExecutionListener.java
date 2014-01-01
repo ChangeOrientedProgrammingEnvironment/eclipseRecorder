@@ -21,11 +21,15 @@ public class CommandExecutionListener implements IExecutionListener {
 	@SuppressWarnings("restriction")
 	@Override
 	public void preExecute(String commandId, ExecutionEvent event) {
-		if (commandId.equalsIgnoreCase(IWorkbenchCommandConstants.EDIT_COPY)) {
+		if (isCopy(commandId)) {
 			recordCopy();
 		}
 		if (isFileSave(commandId))
 			saveInProgress  = true;
+	}
+
+	private boolean isCopy(String commandId) {
+		return commandId.equalsIgnoreCase(IWorkbenchCommandConstants.EDIT_COPY);
 	}
 
 	private void recordCopy() {
