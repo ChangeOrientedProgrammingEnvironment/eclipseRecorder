@@ -117,8 +117,7 @@ public class ResourceListener implements IResourceChangeListener {
 	}
 
 	private boolean isSavedAction() {
-		long currentTime = System.currentTimeMillis();
-		return currentTime - SaveCommandExecutionListener.getLastSaveAction() < 500;
+		return SaveCommandExecutionListener.isSaveInProgress();
 	}
 
 	private boolean isRefactoringInProgress() {
