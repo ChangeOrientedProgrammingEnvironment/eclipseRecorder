@@ -20,6 +20,8 @@ public class ClientRecorder {
 	public static final String CHANGE_ORIGIN_UI_EVENT = "ui-event";
 	public static final String CHANGE_ORIGIN_PASTE = "paste";
 	public static final String CHANGE_ORIGIN_CUT = "cut";
+	public static final String CHANGE_ORIGIN_UNDO = "undo";
+	public static final String CHANGE_ORIGIN_REDO = "redo";
 
 	//JSON property names
 	protected static final String JSON_TEST_RESULT = "testResult";
