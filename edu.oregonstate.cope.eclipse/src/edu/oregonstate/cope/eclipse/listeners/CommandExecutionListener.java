@@ -6,7 +6,7 @@ import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 
-public class SaveCommandExecutionListener implements IExecutionListener {
+public class CommandExecutionListener implements IExecutionListener {
 
 	private static boolean saveInProgress = false;
 

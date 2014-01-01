@@ -44,7 +44,7 @@ import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
 import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
-import edu.oregonstate.cope.eclipse.listeners.SaveCommandExecutionListener;
+import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
 import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
@@ -97,7 +97,7 @@ class StartPluginUIJob extends UIJob {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		workspace.addResourceChangeListener(new ResourceListener(), IResourceChangeEvent.PRE_REFRESH | IResourceChangeEvent.POST_CHANGE);
 		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(ICommandService.class);
-		commandService.addExecutionListener(new SaveCommandExecutionListener());
+		commandService.addExecutionListener(new CommandExecutionListener());
 
 		RefactoringHistoryService refactoringHistoryService = RefactoringHistoryService.getInstance();
 		refactoringHistoryService.addExecutionListener(new RefactoringExecutionListener());
