@@ -39,6 +39,10 @@ public class DocumentListener implements IDocumentListener {
 			changeType = ClientRecorder.CHANGE_ORIGIN_CUT;
 		else if (CommandExecutionListener.isPasteInProgress())
 			changeType = ClientRecorder.CHANGE_ORIGIN_PASTE;
+		else if (CommandExecutionListener.isUndoInProgress())
+			changeType = ClientRecorder.CHANGE_ORIGIN_UNDO;
+		else if (CommandExecutionListener.isRedoInProgress())
+			changeType = ClientRecorder.CHANGE_ORIGIN_REDO;
 
 		String filePath = fileLocation.toPortableString();
 		clientRecorderInstance.recordTextChange(event.fText, event.fOffset,
