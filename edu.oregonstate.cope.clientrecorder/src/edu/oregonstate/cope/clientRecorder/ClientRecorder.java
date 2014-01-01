@@ -104,7 +104,7 @@ public class ClientRecorder {
 	}
 	
 	public void recordCopy(String entityAddress, int offset, int lenght, String copiedText) {
-		ChangePersister.instance().persist(buildCutOrCopyEventJSON(EventType.copy, entityAddress, offset, lenght, copiedText));
+		ChangePersister.instance().persist(buildCopyJSON(EventType.copy, entityAddress, offset, lenght, copiedText));
 	}
 
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
@@ -204,7 +204,7 @@ public class ClientRecorder {
 		return jsonObj;
 	}
 	
-	protected JSONObject buildCutOrCopyEventJSON(EventType copy, String entityAddress, int offset, int lenght, String copiedText) {
+	protected JSONObject buildCopyJSON(EventType copy, String entityAddress, int offset, int lenght, String copiedText) {
 		JSONObject jsonObj = buildCommonJSONObj(copy);
 		jsonObj.put(JSON_ENTITY_ADDRESS, entityAddress);
 		jsonObj.put(JSON_OFFSET, offset);

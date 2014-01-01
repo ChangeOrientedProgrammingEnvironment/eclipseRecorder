@@ -285,7 +285,7 @@ public class ClientRecorderTest {
 	
 	@Test
 	public void testCopy() {
-		JSONObject actual = clientRecorder.buildCutOrCopyEventJSON(EventType.copy, "addr", 0, 12, "bla");
+		JSONObject actual = clientRecorder.buildCopyJSON(EventType.copy, "addr", 0, 12, "bla");
 		
 		JSONObject expected = new JSONObject();
 		expected.put(JSON_EVENT_TYPE, EventType.copy + "");
