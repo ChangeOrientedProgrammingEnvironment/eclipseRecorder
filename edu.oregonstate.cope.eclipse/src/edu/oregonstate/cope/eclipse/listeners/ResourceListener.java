@@ -64,22 +64,26 @@ public class ResourceListener implements IResourceChangeListener {
 	public void resourceChanged(IResourceChangeEvent event) {
 		System.out.println("" + System.currentTimeMillis() + event);
 		if (isSavedAction() || isRefactoringInProgress()) {
-			recordFileSave(event);
-		} else {}
+			recordFileSave(event.getDelta());
+		} else {
 			recordRefresh(event.getDelta());
+		}
 	}
 
-	/**
-	 * Records a save. It creates a new {@link SaveRecorder} and
-	 * launches it in a separate thread. I need this to ensure
-	 * a speedy resolution of the save, so I can catch following
-	 * events. This is needed when dealing with multiple save,
-	 * since each one is sent as a different event.
-	 * r
-	 * @param event the event being recorded
-	 */
-	private void recordFileSave(IResourceChangeEvent event) {
-		pool.execute(new SaveRecorder(event, recorder));
+	protected void recordFileSave(IResourceDelta delta) {
+		IResource affectedResource = delta.getResource();
+		if (affectedResource.getType() == IResource.FILE) {
+			String filePath = affectedResource.getFullPath().toPortableString();
+			if (filePath.endsWith(".class"))
+				return;
+			recorder.recordFileSave(filePath);
+			return;
+		}
+		
+		IResourceDelta[] affectedChildren = delta.getAffectedChildren();
+		for (IResourceDelta child : affectedChildren) {
+			recordFileSave(child);
+		}
 	}
 
 	private void recordRefresh(IResourceDelta delta) {
