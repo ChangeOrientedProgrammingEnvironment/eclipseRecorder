@@ -18,6 +18,7 @@ public class ClientRecorder {
 	public static final String CHANGE_ORIGIN_REFRESH = "refresh";
 	public static final String CHANGE_ORIGIN_REFACTORING = "refactoring";
 	public static final String CHANGE_ORIGIN_UI_EVENT = "ui-event";
+	public static final String CHANGE_ORIGIN_PASTE = "paste";
 
 	//JSON property names
 	protected static final String JSON_TEST_RESULT = "testResult";
@@ -38,7 +39,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, copy, cut
 	};
 
 	public String getIDE() {
