@@ -8,17 +8,6 @@ import org.eclipse.ui.IWorkbenchCommandConstants;
 
 public class SaveCommandExecutionListener implements IExecutionListener {
 
-	private static long lastSaveAction = 0;
-
-	/**
-	 * Returns the time (in milliseconds since The Epoch) of the last save
-	 * action.
-	 * 
-	 * @return
-	 */
-	public static long getLastSaveAction() {
-		return lastSaveAction;
-	}
 	private static boolean saveInProgress = false;
 
 	@Override
