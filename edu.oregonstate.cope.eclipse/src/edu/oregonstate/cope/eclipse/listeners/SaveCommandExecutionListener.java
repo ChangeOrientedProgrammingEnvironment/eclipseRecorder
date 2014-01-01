@@ -19,12 +19,13 @@ public class SaveCommandExecutionListener implements IExecutionListener {
 	public static long getLastSaveAction() {
 		return lastSaveAction;
 	}
+	private static boolean saveInProgress = false;
 
 	@Override
 	public void preExecute(String commandId, ExecutionEvent event) {
-		if (isFileSave(commandId)) {
-			lastSaveAction = System.currentTimeMillis();
-		}
+		System.out.println("Starting executing: " + commandId);
+		if (isFileSave(commandId))
+			saveInProgress  = true;
 	}
 
 	private boolean isFileSave(String commandId) {
@@ -33,14 +34,21 @@ public class SaveCommandExecutionListener implements IExecutionListener {
 
 	@Override
 	public void postExecuteSuccess(String commandId, Object returnValue) {
+		if (isFileSave(commandId))
+			saveInProgress = false;
 	}
 
 	@Override
-	public void postExecuteFailure(String commandId,
-			ExecutionException exception) {
+	public void postExecuteFailure(String commandId, ExecutionException exception) {
+		if (isFileSave(commandId))
+			saveInProgress = false;
 	}
 
 	@Override
 	public void notHandled(String commandId, NotHandledException exception) {
+	}
+
+	public static boolean isSaveInProgress() {
+		return saveInProgress;
 	}
 }
