@@ -101,6 +101,10 @@ public class ClientRecorder {
 	public void recordFileSave(String filePath) {
 		ChangePersister.instance().persist(buildIDEEventJSON(EventType.fileSave, filePath));
 	}
+	
+	public void recordCopy(String entityAddress, int offset, int lenght, String copiedText) {
+		ChangePersister.instance().persist(buildCutOrCopyEventJSON(EventType.copy, entityAddress, offset, lenght, copiedText));
+	}
 
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
 		JSONObject obj;
@@ -196,6 +200,15 @@ public class ClientRecorder {
 		jsonObj.put(JSON_REFACTORING_ID, refactoringID);
 		jsonObj.put(JSON_REFACTORING_ARGUMENTS, argumentsMap);
 		
+		return jsonObj;
+	}
+	
+	protected JSONObject buildCutOrCopyEventJSON(EventType copy, String entityAddress, int offset, int lenght, String copiedText) {
+		JSONObject jsonObj = buildCommonJSONObj(copy);
+		jsonObj.put(JSON_ENTITY_ADDRESS, entityAddress);
+		jsonObj.put(JSON_OFFSET, offset);
+		jsonObj.put(JSON_LENGTH, lenght);
+		jsonObj.put(JSON_TEXT, copiedText);
 		return jsonObj;
 	}
 }
