@@ -12,7 +12,6 @@ public class CommandExecutionListener implements IExecutionListener {
 
 	@Override
 	public void preExecute(String commandId, ExecutionEvent event) {
-		System.out.println("Starting executing: " + commandId);
 		if (isFileSave(commandId))
 			saveInProgress  = true;
 	}
