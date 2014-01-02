@@ -17,6 +17,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors;bundle-version="3.8.100",
  org.eclipse.jdt.core;bundle-version="3.9.0",
  edu.oregonstate.cope.eclipse.ui,
+ org.eclipse.text,
  edu.oregonstate.cope.thirdparty;bundle-version="0.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

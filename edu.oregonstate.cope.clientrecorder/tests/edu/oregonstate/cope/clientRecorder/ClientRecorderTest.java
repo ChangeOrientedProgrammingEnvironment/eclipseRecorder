@@ -282,4 +282,20 @@ public class ClientRecorderTest {
 		
 		assertJSONEquals(expected, actual);
 	}
+	
+	@Test
+	public void testCopy() {
+		JSONObject actual = clientRecorder.buildCopyJSON(EventType.copy, "addr", 0, 12, "bla");
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_EVENT_TYPE, EventType.copy + "");
+		expected.put(JSON_ENTITY_ADDRESS, "addr");
+		expected.put(JSON_LENGTH, 12);
+		expected.put(JSON_OFFSET, 0);
+		expected.put(JSON_TEXT, "bla");
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
 }

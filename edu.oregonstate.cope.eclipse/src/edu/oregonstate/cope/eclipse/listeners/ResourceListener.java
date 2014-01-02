@@ -78,7 +78,7 @@ public class ResourceListener implements IResourceChangeListener {
 	}
 
 	private boolean isSavedAction() {
-		return SaveCommandExecutionListener.isSaveInProgress();
+		return CommandExecutionListener.isSaveInProgress();
 	}
 
 	private boolean isRefactoringInProgress() {

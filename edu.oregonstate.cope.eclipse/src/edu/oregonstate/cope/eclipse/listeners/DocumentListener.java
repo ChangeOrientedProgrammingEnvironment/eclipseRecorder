@@ -32,8 +32,17 @@ public class DocumentListener implements IDocumentListener {
 				.getTextFileBuffer(event.fDocument);
 		IPath fileLocation = textFileBuffer.getLocation();
 		String changeType = ClientRecorder.CHANGE_ORIGIN_USER;
+		
 		if (RefactoringExecutionListener.isRefactoringInProgress())
 			changeType = ClientRecorder.CHANGE_ORIGIN_REFACTORING;
+		else if (CommandExecutionListener.isCutInProgress())
+			changeType = ClientRecorder.CHANGE_ORIGIN_CUT;
+		else if (CommandExecutionListener.isPasteInProgress())
+			changeType = ClientRecorder.CHANGE_ORIGIN_PASTE;
+		else if (CommandExecutionListener.isUndoInProgress())
+			changeType = ClientRecorder.CHANGE_ORIGIN_UNDO;
+		else if (CommandExecutionListener.isRedoInProgress())
+			changeType = ClientRecorder.CHANGE_ORIGIN_REDO;
 
 		String filePath = fileLocation.toPortableString();
 		clientRecorderInstance.recordTextChange(event.fText, event.fOffset,
