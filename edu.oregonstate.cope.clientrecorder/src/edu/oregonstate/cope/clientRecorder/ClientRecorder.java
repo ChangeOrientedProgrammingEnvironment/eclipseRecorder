@@ -18,6 +18,8 @@ public class ClientRecorder {
 	public static final String CHANGE_ORIGIN_REFRESH = "refresh";
 	public static final String CHANGE_ORIGIN_REFACTORING = "refactoring";
 	public static final String CHANGE_ORIGIN_UI_EVENT = "ui-event";
+	public static final String CHANGE_ORIGIN_PASTE = "paste";
+	public static final String CHANGE_ORIGIN_CUT = "cut";
 
 	//JSON property names
 	protected static final String JSON_TEST_RESULT = "testResult";
@@ -38,7 +40,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, copy
 	};
 
 	public String getIDE() {
@@ -99,6 +101,10 @@ public class ClientRecorder {
 	
 	public void recordFileSave(String filePath) {
 		ChangePersister.instance().persist(buildIDEEventJSON(EventType.fileSave, filePath));
+	}
+	
+	public void recordCopy(String entityAddress, int offset, int lenght, String copiedText) {
+		ChangePersister.instance().persist(buildCopyJSON(EventType.copy, entityAddress, offset, lenght, copiedText));
 	}
 
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
@@ -195,6 +201,15 @@ public class ClientRecorder {
 		jsonObj.put(JSON_REFACTORING_ID, refactoringID);
 		jsonObj.put(JSON_REFACTORING_ARGUMENTS, argumentsMap);
 		
+		return jsonObj;
+	}
+	
+	protected JSONObject buildCopyJSON(EventType copy, String entityAddress, int offset, int lenght, String copiedText) {
+		JSONObject jsonObj = buildCommonJSONObj(copy);
+		jsonObj.put(JSON_ENTITY_ADDRESS, entityAddress);
+		jsonObj.put(JSON_OFFSET, offset);
+		jsonObj.put(JSON_LENGTH, lenght);
+		jsonObj.put(JSON_TEXT, copiedText);
 		return jsonObj;
 	}
 }
