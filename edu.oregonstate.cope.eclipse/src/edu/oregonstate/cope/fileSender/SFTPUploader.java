@@ -51,7 +51,7 @@ public class SFTPUploader {
 	}
 	
 	public void createRemoteDir(String path) throws SftpException {
-		String[] folders = path.split( File.separator );
+		String[] folders = path.split( java.util.regex.Pattern.quote(File.separator) );
 		for ( String folder : folders ) {
 		    if ( folder.length() > 0 ) {
 		        try {
@@ -78,5 +78,4 @@ public class SFTPUploader {
 			}
 		}
 	}
-
 }

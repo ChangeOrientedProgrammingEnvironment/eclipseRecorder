@@ -1,5 +1,6 @@
 package edu.oregonstate.cope.clientRecorder.fileOps;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -15,7 +16,7 @@ import java.util.Calendar;
  */
 public class EventFilesProvider extends FileProvider {
 
-	protected static final String EVENTFILE_ROOTDIR = "eventFiles";
+	public static final String EVENTFILE_ROOTDIR = "eventFiles";
 
 	/**
 	 * Deletes all the event files. Does not delete the parent directory.
@@ -28,7 +29,7 @@ public class EventFilesProvider extends FileProvider {
 			Files.delete(path);
 		}
 	}
-
+	
 	@Override
 	protected String getFileName() {
 		Calendar cal = Calendar.getInstance();
@@ -41,4 +42,5 @@ public class EventFilesProvider extends FileProvider {
 	public void setRootDirectory(String rootDirectory) {
 		super.setLongerRootDirectory(rootDirectory, EVENTFILE_ROOTDIR);
 	}
+	
 }

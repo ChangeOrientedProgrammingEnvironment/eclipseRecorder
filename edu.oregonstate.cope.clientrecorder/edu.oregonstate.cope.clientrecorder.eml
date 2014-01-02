@@ -4,4 +4,13 @@
 	<lib name="json-simple-1.1.1.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/thirdParty/json-simple-1.1.1.jar!/"/>
 	</lib>
+	<lib name="logback-classic-1.0.13.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/thirdParty/logback-classic-1.0.13.jar!/"/>
+	</lib>
+	<lib name="logback-core-1.0.13.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/thirdParty/logback-core-1.0.13.jar!/"/>
+	</lib>
+	<lib name="slf4j-api-1.7.5.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/thirdParty/slf4j-api-1.7.5.jar!/"/>
+	</lib>
 </component>
