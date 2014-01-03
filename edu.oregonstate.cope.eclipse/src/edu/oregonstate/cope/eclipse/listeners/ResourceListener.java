@@ -54,13 +54,18 @@ public class ResourceListener implements IResourceChangeListener {
 			if (isClassFile(affectedFile)) {
 				return;
 			}
+			String affectedFilePath = affectedFile.getFullPath().toPortableString();
+			if (delta.getKind() == IResourceDelta.REMOVED) {
+				recorder.recordResourceDelete(affectedFilePath);
+				return;
+			}
 			InputStream inputStream;
 			try {
 				inputStream = affectedFile.getContents();
 				Scanner scanner = new Scanner(inputStream, affectedFile.getCharset());
 				String contents = scanner.useDelimiter("\\A").next();
 				scanner.close();
-				recorder.recordTextChange(contents, 0, 0,affectedFile.getFullPath().toPortableString(), ClientRecorder.CHANGE_ORIGIN_REFRESH);
+				recorder.recordTextChange(contents, 0, 0,affectedFilePath, ClientRecorder.CHANGE_ORIGIN_REFRESH);
 			} catch (CoreException e) {
 			}
 		}
