@@ -197,6 +197,10 @@ public class ClientRecorder {
 	public void recordRefactoringUndo(String refactoringName, Map argumentsMap) {
 		ChangePersister.instance().persist(buildRefactoringEvent(EventType.refactoringUndo, refactoringName, argumentsMap));
 	}
+
+	public void recordRefactoringEnd(String refactoringName, Map argumentsMap) {
+		ChangePersister.instance().persist(buildRefactoringEvent(EventType.refactoringEnd, refactoringName, argumentsMap));
+	}
 	
 	protected JSONObject buildRefactoringEvent(Enum eventType, String refactoringID, Map argumentsMap) {
 		JSONObject jsonObj = buildCommonJSONObj(eventType);
