@@ -42,7 +42,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, copy
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, copy, resourceAdded, resourceRemoved
 	};
 
 	public String getIDE() {
@@ -107,6 +107,14 @@ public class ClientRecorder {
 	
 	public void recordCopy(String entityAddress, int offset, int lenght, String copiedText) {
 		ChangePersister.instance().persist(buildCopyJSON(EventType.copy, entityAddress, offset, lenght, copiedText));
+	}
+	
+	public void recordResourceAdd(String entityAddress, String initialText) {
+		ChangePersister.instance().persist(buildResourceAddJSON(entityAddress, initialText));
+	}
+	
+	public void recordResourceDelete(String entityAddress) {
+		ChangePersister.instance().persist(buildResourceDeleteJSON(entityAddress));
 	}
 
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
@@ -214,4 +222,18 @@ public class ClientRecorder {
 		jsonObj.put(JSON_TEXT, copiedText);
 		return jsonObj;
 	}
+	
+	protected JSONObject buildResourceDeleteJSON(String entityAddress) {
+		JSONObject jsonObj = buildCommonJSONObj(EventType.resourceRemoved);
+		jsonObj.put(JSON_ENTITY_ADDRESS, entityAddress);
+		return jsonObj;
+	}
+	
+	protected JSONObject buildResourceAddJSON(String entityAddress, String initialText) {
+		JSONObject jsonObj = buildCommonJSONObj(EventType.resourceAdded);
+		jsonObj.put(JSON_ENTITY_ADDRESS, entityAddress);
+		jsonObj.put(JSON_TEXT, initialText);
+		return jsonObj;
+	}
+
 }
