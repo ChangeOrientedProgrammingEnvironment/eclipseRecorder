@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Libs
+Bundle-Name: COPE Record Third Party Libraries
 Bundle-SymbolicName: edu.oregonstate.cope.thirdparty
 Bundle-Version: 0.4.1.qualifier
 Bundle-ClassPath: json-simple-1.1.1.jar,
