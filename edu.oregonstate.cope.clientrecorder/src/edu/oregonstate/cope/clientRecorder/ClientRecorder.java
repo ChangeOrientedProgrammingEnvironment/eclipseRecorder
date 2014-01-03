@@ -109,6 +109,10 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildCopyJSON(EventType.copy, entityAddress, offset, lenght, copiedText));
 	}
 	
+	public void recordResourceAdd(String entityAddress, String initialText) {
+		ChangePersister.instance().persist(buildResourceAddJSON(entityAddress, initialText));
+	}
+	
 	public void recordResourceDelete(String entityAddress) {
 		ChangePersister.instance().persist(buildResourceDeleteJSON(entityAddress));
 	}
@@ -224,4 +228,12 @@ public class ClientRecorder {
 		jsonObj.put(JSON_ENTITY_ADDRESS, entityAddress);
 		return jsonObj;
 	}
+	
+	protected JSONObject buildResourceAddJSON(String entityAddress, String initialText) {
+		JSONObject jsonObj = buildCommonJSONObj(EventType.resourceAdded);
+		jsonObj.put(JSON_ENTITY_ADDRESS, entityAddress);
+		jsonObj.put(JSON_TEXT, initialText);
+		return jsonObj;
+	}
+
 }
