@@ -19,7 +19,6 @@ public class ResourceListener implements IResourceChangeListener {
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		System.out.println("" + System.currentTimeMillis() + event);
 		if (isSavedAction() || isRefactoringInProgress()) {
 			recordFileSave(event.getDelta());
 		} else {
