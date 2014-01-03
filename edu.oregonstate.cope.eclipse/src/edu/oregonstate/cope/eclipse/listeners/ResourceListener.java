@@ -53,19 +53,22 @@ public class ResourceListener implements IResourceChangeListener {
 
 	private void recordFileRefresh(IFile affectedFile) {
 		String filePath = affectedFile.getFullPath().toPortableString();
-		try {
-			String contents = getFileContentents(affectedFile);
-			recorder.recordTextChange(contents, 0, 0,filePath, ClientRecorder.CHANGE_ORIGIN_REFRESH);
-		} catch (CoreException e) {
-		}
+		String contents = getFileContentents(affectedFile);
+		recorder.recordTextChange(contents, 0, 0,filePath, ClientRecorder.CHANGE_ORIGIN_REFRESH);
 	}
 
-	private String getFileContentents(IFile affectedFile) throws CoreException {
-		InputStream inputStream = affectedFile.getContents();
-		Scanner scanner = new Scanner(inputStream, affectedFile.getCharset());
-		String contents = scanner.useDelimiter("\\A").next();
-		scanner.close();
-		return contents;
+	private String getFileContentents(IFile affectedFile) {
+		InputStream inputStream;
+		try {
+			inputStream = affectedFile.getContents();
+			Scanner scanner = new Scanner(inputStream, affectedFile.getCharset());
+			String contents = scanner.useDelimiter("\\A").next();
+			scanner.close();
+			return contents;
+		} catch (CoreException e) {
+			COPEPlugin.getDefault().getLogger().error(this, "Could not get contents of file", e);
+		}
+		return "";
 	}
 
 	private boolean isClassFile(IFile affectedFile) {
