@@ -23,7 +23,7 @@ public class ResourceListener implements IResourceChangeListener {
 		recordChangedDelta(delta);
 	}
 
-	protected void recordChangedDelta(IResourceDelta delta) {
+	private void recordChangedDelta(IResourceDelta delta) {
 		if (delta == null)
 			return;
 		
@@ -51,7 +51,7 @@ public class ResourceListener implements IResourceChangeListener {
 		}
 	}
 
-	protected void recordFileRefresh(IFile affectedFile) {
+	private void recordFileRefresh(IFile affectedFile) {
 		String filePath = affectedFile.getFullPath().toPortableString();
 		try {
 			String contents = getFileContentents(affectedFile);
