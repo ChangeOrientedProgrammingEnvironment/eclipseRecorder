@@ -298,4 +298,31 @@ public class ClientRecorderTest {
 		
 		assertJSONEquals(expected, actual);
 	}
+	
+	@Test
+	public void testResourceDelete() {
+		JSONObject actual = clientRecorder.buildResourceDeleteJSON("/some/resource.txt");
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_EVENT_TYPE, EventType.resourceRemoved + "");
+		expected.put(JSON_ENTITY_ADDRESS, "/some/resource.txt");
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
+	
+	@Test
+	public void testResourceAdd() {
+		JSONObject actual = clientRecorder.buildResourceAddJSON("/some/resource.txt", "abc");
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_EVENT_TYPE, EventType.resourceAdded + "");
+		expected.put(JSON_ENTITY_ADDRESS, "/some/resource.txt");
+		expected.put(JSON_TEXT, "abc");
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
 }
