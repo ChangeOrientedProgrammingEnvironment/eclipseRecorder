@@ -42,7 +42,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, copy
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, copy, resourceAdded, resourceRemoved
 	};
 
 	public String getIDE() {
