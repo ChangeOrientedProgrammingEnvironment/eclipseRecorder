@@ -42,7 +42,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, copy, resourceAdded, resourceRemoved
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, refactoringEnd, copy, resourceAdded, resourceRemoved
 	};
 
 	public String getIDE() {
@@ -204,6 +204,10 @@ public class ClientRecorder {
 	
 	public void recordRefactoringUndo(String refactoringName, Map argumentsMap) {
 		ChangePersister.instance().persist(buildRefactoringEvent(EventType.refactoringUndo, refactoringName, argumentsMap));
+	}
+
+	public void recordRefactoringEnd(String refactoringName, Map argumentsMap) {
+		ChangePersister.instance().persist(buildRefactoringEvent(EventType.refactoringEnd, refactoringName, argumentsMap));
 	}
 	
 	protected JSONObject buildRefactoringEvent(Enum eventType, String refactoringID, Map argumentsMap) {
