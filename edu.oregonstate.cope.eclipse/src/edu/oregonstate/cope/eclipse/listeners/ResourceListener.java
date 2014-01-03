@@ -37,6 +37,10 @@ public class ResourceListener implements IResourceChangeListener {
 				recorder.recordResourceDelete(filePath);
 				return;
 			}
+			if (delta.getKind() == IResourceDelta.ADDED) {
+				recorder.recordResourceAdd(filePath, getFileContentents(affectedFile));
+				return;
+			}
 			
 			if (isSavedAction() || isRefactoringInProgress())
 				recorder.recordFileSave(filePath);
