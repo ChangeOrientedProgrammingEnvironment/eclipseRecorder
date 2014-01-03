@@ -19,58 +19,47 @@ public class ResourceListener implements IResourceChangeListener {
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		if (isSavedAction() || isRefactoringInProgress()) {
-			recordFileSave(event.getDelta());
-		} else {
-			recordRefresh(event.getDelta());
-		}
+		IResourceDelta delta = event.getDelta();
+		recordChangedDelta(delta);
 	}
 
-	protected void recordFileSave(IResourceDelta delta) {
+	protected void recordChangedDelta(IResourceDelta delta) {
+		if (delta == null)
+			return;
+		
 		IResource affectedResource = delta.getResource();
 		if (affectedResource.getType() == IResource.FILE) {
-			String filePath = affectedResource.getFullPath().toPortableString();
-			if (filePath.endsWith(".class"))
+			IFile affectedFile = (IFile) affectedResource;
+			String filePath = affectedFile.getFullPath().toPortableString();
+			if (isClassFile(affectedFile))
 				return;
-			recorder.recordFileSave(filePath);
+			if (delta.getKind() == IResourceDelta.REMOVED) {
+				recorder.recordResourceDelete(filePath);
+				return;
+			}
+			
+			if (isSavedAction() || isRefactoringInProgress())
+				recorder.recordFileSave(filePath);
+			else
+				recordFileRefresh(affectedFile);
 			return;
 		}
 		
 		IResourceDelta[] affectedChildren = delta.getAffectedChildren();
 		for (IResourceDelta child : affectedChildren) {
-			recordFileSave(child);
+			recordChangedDelta(child);
 		}
 	}
 
-	private void recordRefresh(IResourceDelta delta) {
-		if (delta == null)
-			return ;
-		
-		IResource affectedResource = delta.getResource();
-		int type = affectedResource.getType();
-		if (type == IResource.FILE) {
-			IFile affectedFile = (IFile) affectedResource;
-			if (isClassFile(affectedFile)) {
-				return;
-			}
-			String affectedFilePath = affectedFile.getFullPath().toPortableString();
-			if (delta.getKind() == IResourceDelta.REMOVED) {
-				recorder.recordResourceDelete(affectedFilePath);
-				return;
-			}
-			InputStream inputStream;
-			try {
-				inputStream = affectedFile.getContents();
-				Scanner scanner = new Scanner(inputStream, affectedFile.getCharset());
-				String contents = scanner.useDelimiter("\\A").next();
-				scanner.close();
-				recorder.recordTextChange(contents, 0, 0,affectedFilePath, ClientRecorder.CHANGE_ORIGIN_REFRESH);
-			} catch (CoreException e) {
-			}
-		}
-		IResourceDelta[] children = delta.getAffectedChildren();
-		for (IResourceDelta child : children) {
-			recordRefresh(child);
+	protected void recordFileRefresh(IFile affectedFile) {
+		String filePath = affectedFile.getFullPath().toPortableString();
+		try {
+			InputStream inputStream = affectedFile.getContents();
+			Scanner scanner = new Scanner(inputStream, affectedFile.getCharset());
+			String contents = scanner.useDelimiter("\\A").next();
+			scanner.close();
+			recorder.recordTextChange(contents, 0, 0,filePath, ClientRecorder.CHANGE_ORIGIN_REFRESH);
+		} catch (CoreException e) {
 		}
 	}
 
