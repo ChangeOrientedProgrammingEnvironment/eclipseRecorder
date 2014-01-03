@@ -47,6 +47,7 @@ public class RefactoringExecutionListener implements
 		
 		if (refactoringEventType == RefactoringExecutionEvent.PERFORMED || refactoringEventType == RefactoringExecutionEvent.REDONE || refactoringEventType == RefactoringExecutionEvent.UNDONE) {
 			isRefactoringInProgress = false;
+			clientRecorder.recordRefactoringEnd(refactoringName, argumentMap);
 			refactoringName = "";
 		}
 	}
