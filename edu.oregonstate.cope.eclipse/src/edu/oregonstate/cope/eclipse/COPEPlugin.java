@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Version;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Properties;
@@ -122,6 +124,23 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	public static File getBundleStorage() {
 		return COPEPlugin.getDefault().getBundle().getDataFile("");
+	}
+	
+	public static File getVersionedLocalStorage() {
+		return getVersionedPath(getLocalStorage().toPath()).toFile();
+	}
+
+	public static File getVersionedBundleStorage() {
+		return getVersionedPath(getBundleStorage().toPath()).toFile();
+	}
+
+	private static Path getVersionedPath(Path path) {
+		String version = getPluginVersion().toString();
+		return path.resolve(version);
+	}
+
+	private static Version getPluginVersion() {
+		return COPEPlugin.plugin.getBundle().getVersion();
 	}
 
 	public COPELogger getLogger() {
