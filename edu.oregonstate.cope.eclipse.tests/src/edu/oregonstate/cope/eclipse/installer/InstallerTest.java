@@ -7,21 +7,22 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
+import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
+import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
 
-public class InstallerTest {
+public class InstallerTest extends PopulatedWorkspaceTest {
 
-	private static File[] rootFiles;
-	private static COPEPlugin plugin;
+	private File[] rootFiles;
+	private COPEPlugin plugin;
 
-	@BeforeClass
-	public static void setup() {
+	@Before 
+	public void setup() {
 		plugin = COPEPlugin.getDefault();
 		rootFiles = plugin.getLocalStorage().listFiles();
-		;
 	}
 
 	@Test
@@ -47,5 +48,21 @@ public class InstallerTest {
 			assertTrue(versionedFileChildren.contains("workspace_id"));
 			assertTrue(versionedFileChildren.contains("known-projects"));
 		}
+	}
+	
+	@Test
+	public void testSnapshotAtUpdate() throws Exception {
+		Properties properties = plugin.getWorkspaceProperties();
+		
+		new Installer().checkForPluginUpdate("v1", "v2");
+		
+		boolean zipExists = false;
+
+		for(File file : plugin.getLocalStorage().listFiles()){
+			if(file.toPath().endsWith(".zip"))
+				zipExists = true;
+		}
+		
+		assertTrue(zipExists);
 	}
 }
