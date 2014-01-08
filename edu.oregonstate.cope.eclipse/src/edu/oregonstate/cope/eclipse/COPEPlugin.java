@@ -60,6 +60,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 		snapshotManager = new SnapshotManager(COPEPlugin.getVersionedLocalStorage().getAbsolutePath());
 	}
 
+	public void takeSnapshotOfKnownProjects() {
+		snapshotManager.takeSnapshotOfKnownProjects();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
