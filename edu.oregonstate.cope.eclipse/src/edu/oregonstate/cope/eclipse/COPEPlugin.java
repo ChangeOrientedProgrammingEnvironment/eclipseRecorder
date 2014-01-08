@@ -15,7 +15,7 @@ import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
-import edu.oregonstate.cope.clientRecorder.util.COPELogger;
+import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -143,7 +143,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return COPEPlugin.plugin.getBundle().getVersion();
 	}
 
-	public COPELogger getLogger() {
+	public LoggerInterface getLogger() {
 		return recorderFacade.getLogger();
 	}
 
