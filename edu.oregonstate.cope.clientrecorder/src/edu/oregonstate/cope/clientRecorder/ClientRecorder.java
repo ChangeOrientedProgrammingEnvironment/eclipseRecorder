@@ -15,7 +15,6 @@ public class ClientRecorder {
 
 	//change origin types
 	public static final String CHANGE_ORIGIN_USER = "user";
-	public static final String CHANGE_ORIGIN_REFRESH = "refresh";
 	public static final String CHANGE_ORIGIN_REFACTORING = "refactoring";
 	public static final String CHANGE_ORIGIN_UI_EVENT = "ui-event";
 	public static final String CHANGE_ORIGIN_PASTE = "paste";
