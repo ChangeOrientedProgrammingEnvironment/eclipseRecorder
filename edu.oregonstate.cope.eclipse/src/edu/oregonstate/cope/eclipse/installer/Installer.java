@@ -22,7 +22,7 @@ import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
  */
 public class Installer {
 
-	private static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
+	protected static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
 	private static final String SURVEY_FILENAME = "survey.txt";
 	private static final String EMAIL_FILENAME = "email.txt";
 
@@ -91,12 +91,12 @@ public class Installer {
 
 	}
 
-	public Installer(Path workspaceDirectory, Path permanentDirectory,
-			Uninstaller uninstaller, String installationConfigFileName) {
-		this.workspaceDirectory = workspaceDirectory;
-		this.permanentDirectory = permanentDirectory;
-		this.uninstaller = uninstaller;
-		this.installationConfigFileName = installationConfigFileName;
+	public Installer() {
+
+		this.workspaceDirectory = COPEPlugin.getVersionedLocalStorage().toPath().toAbsolutePath();
+		this.permanentDirectory = COPEPlugin.getBundleStorage().toPath().toAbsolutePath();
+		this.uninstaller = COPEPlugin.getDefault().getUninstaller();
+		this.installationConfigFileName = COPEPlugin.getDefault()._getInstallationConfigFileName();
 
 		System.err.println(workspaceDirectory);
 		System.err.println(permanentDirectory);
@@ -107,17 +107,12 @@ public class Installer {
 		new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
 		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
 		
-		checkForPluginUpdate();
+		checkForPluginUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
 	}
 
-	private void checkForPluginUpdate() {
-		Properties workspaceProperties = COPEPlugin.getDefault().getWorkspaceProperties();
-
-		String lastPluginVersion = workspaceProperties.getProperty(LAST_PLUGIN_VERSION);
-		String currentPluginVersion = COPEPlugin.getDefault().getPluginVersion().toString();
-		
-		if(lastPluginVersion == null || !lastPluginVersion.equals(currentPluginVersion)){
-			workspaceProperties.addProperty(LAST_PLUGIN_VERSION, currentPluginVersion.toString());
+	protected void checkForPluginUpdate(String propertiesVersion, String currentPluginVersion) {
+		if(propertiesVersion == null || !propertiesVersion.equals(currentPluginVersion)){
+			COPEPlugin.getDefault().getWorkspaceProperties().addProperty(LAST_PLUGIN_VERSION, currentPluginVersion.toString());
 			performPluginUpdate();
 		}	
 	}

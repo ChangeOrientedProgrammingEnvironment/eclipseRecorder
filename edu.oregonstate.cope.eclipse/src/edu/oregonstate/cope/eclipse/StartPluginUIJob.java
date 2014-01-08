@@ -110,7 +110,7 @@ class StartPluginUIJob extends UIJob {
 
 	private void doInstall() {
 		try {
-			new Installer(COPEPlugin.getVersionedLocalStorage().toPath().toAbsolutePath(), COPEPlugin.getBundleStorage().toPath().toAbsolutePath(), COPEPlugin.getDefault().getUninstaller(), COPEPlugin.getDefault()._getInstallationConfigFileName()).doInstall();
+			new Installer().doInstall();
 		} catch (IOException e) {
 			copePlugin.getLogger().error(this, "Installer failed", e);
 		}
