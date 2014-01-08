@@ -20,7 +20,7 @@ import org.junit.BeforeClass;
 public class PopulatedWorkspaceTest {
 
 	protected static IJavaProject javaProject;
-	protected static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
+	protected static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getVersionedLocalStorage().getAbsolutePath());
 
 	@SuppressWarnings("restriction")
 	@BeforeClass

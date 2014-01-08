@@ -62,7 +62,7 @@ class StartPluginUIJob extends UIJob {
 
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-		COPEPlugin.getDefault().initializeRecorder(COPEPlugin.getLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), COPEPlugin.getDefault().getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
+		COPEPlugin.getDefault().initializeRecorder(COPEPlugin.getVersionedLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), COPEPlugin.getDefault().getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
 		Uninstaller uninstaller = COPEPlugin.getDefault().getUninstaller();
 
 		if (uninstaller.isUninstalled())
@@ -109,7 +109,7 @@ class StartPluginUIJob extends UIJob {
 
 	private void doInstall() {
 		try {
-			new Installer(COPEPlugin.getLocalStorage().toPath().toAbsolutePath(), COPEPlugin.getBundleStorage().toPath().toAbsolutePath(), COPEPlugin.getDefault().getUninstaller(), COPEPlugin.getDefault()._getInstallationConfigFileName()).doInstall();
+			new Installer(COPEPlugin.getVersionedLocalStorage().toPath().toAbsolutePath(), COPEPlugin.getBundleStorage().toPath().toAbsolutePath(), COPEPlugin.getDefault().getUninstaller(), COPEPlugin.getDefault()._getInstallationConfigFileName()).doInstall();
 		} catch (IOException e) {
 			copePlugin.getLogger().error(this, "Installer failed", e);
 		}
