@@ -1,5 +1,8 @@
 package edu.oregonstate.cope.clientRecorder;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder.EventType;
-import static edu.oregonstate.cope.clientRecorder.ClientRecorder.*;
-import static org.junit.Assert.*;
 
 //TODO refactor this test class. Too many hardcoded strings. Too much duplication with tested class.
 public class ClientRecorderTest {
