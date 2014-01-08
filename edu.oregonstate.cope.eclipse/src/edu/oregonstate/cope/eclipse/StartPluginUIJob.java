@@ -84,6 +84,7 @@ class StartPluginUIJob extends UIJob {
 	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
 
+		copePlugin.initializeSnapshotManager();
 		doInstall();
 
 		if (!isWorkspaceKnown()) {

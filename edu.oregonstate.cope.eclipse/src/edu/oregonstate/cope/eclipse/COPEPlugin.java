@@ -54,7 +54,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 		UIJob uiJob = new StartPluginUIJob(this, "Registering listeners");
 		uiJob.schedule();
-		snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
+	}
+
+	public void initializeSnapshotManager() {
+		snapshotManager = new SnapshotManager(COPEPlugin.getVersionedLocalStorage().getAbsolutePath());
 	}
 
 	/*
