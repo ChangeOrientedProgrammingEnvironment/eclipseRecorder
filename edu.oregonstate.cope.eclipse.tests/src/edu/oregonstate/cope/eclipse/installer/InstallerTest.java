@@ -7,22 +7,24 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
+import edu.oregonstate.cope.eclipse.SnapshotManager;
 
 public class InstallerTest extends PopulatedWorkspaceTest {
 
-	private File[] rootFiles;
-	private COPEPlugin plugin;
+	private static COPEPlugin plugin;
+	private static SnapshotManager snapshotManager;
 
-	@Before 
-	public void setup() {
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		PopulatedWorkspaceTest.beforeClass();
 		plugin = COPEPlugin.getDefault();
-		rootFiles = plugin.getLocalStorage().listFiles();
+		plugin.getSnapshotManager().knowProject(PopulatedWorkspaceTest.javaProject.getProject().getName());
 	}
 
 	@Test
@@ -38,7 +40,7 @@ public class InstallerTest extends PopulatedWorkspaceTest {
 
 	@Test
 	public void testEverythingIsInVersionedFiles() throws Exception {
-		for (File file : rootFiles) {
+		for (File file : plugin.getLocalStorage().listFiles()) {
 			assertTrue(file.isDirectory());
 			assertTrue(file.getName().matches("\\d+\\.\\d+\\.\\d+\\.qualifier"));
 
@@ -49,20 +51,21 @@ public class InstallerTest extends PopulatedWorkspaceTest {
 			assertTrue(versionedFileChildren.contains("known-projects"));
 		}
 	}
-	
+
+	@SuppressWarnings("static-access")
 	@Test
 	public void testSnapshotAtUpdate() throws Exception {
 		Properties properties = plugin.getWorkspaceProperties();
-		
+
 		new Installer().checkForPluginUpdate("v1", "v2");
-		
+
 		boolean zipExists = false;
 
-		for(File file : plugin.getLocalStorage().listFiles()){
-			if(file.toPath().endsWith(".zip"))
+		for (File file : plugin.getVersionedLocalStorage().listFiles()) {
+			if (file.toPath().toString().endsWith(".zip"))
 				zipExists = true;
 		}
-		
+
 		assertTrue(zipExists);
 	}
 }
