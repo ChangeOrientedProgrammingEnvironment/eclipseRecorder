@@ -65,6 +65,20 @@ public class ClientRecorderTest {
 		JSONObject obj = createChangeJSON("addedText", 3, 0, "/sampleFile", "changeOrigin");
 		assertJSONEquals(result1, obj);
 	}
+	
+	@Test
+	public void testRecordRefresh() {
+		JSONObject actual = clientRecorder.buildRefreshJSON("new file contents", "/proj/file1");
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSON_EVENT_TYPE, EventType.refresh + "");
+		expected.put(JSON_TEXT, "new file contents");
+		expected.put(JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSON_ENTITY_ADDRESS, "/proj/file1");
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
 
 	private JSONObject createChangeJSON(String text, int offset, int length, String sourceFile, String changeOrigin) {
 		JSONObject j = new JSONObject();

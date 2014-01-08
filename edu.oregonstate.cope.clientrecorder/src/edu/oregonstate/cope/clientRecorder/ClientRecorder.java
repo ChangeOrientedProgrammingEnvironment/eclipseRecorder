@@ -42,7 +42,7 @@ public class ClientRecorder {
 	private String IDE;
 
 	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, refactoringEnd, copy, resourceAdded, resourceRemoved
+		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, refresh, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, refactoringEnd, copy, resourceAdded, resourceRemoved
 	};
 
 	public String getIDE() {
@@ -71,6 +71,10 @@ public class ClientRecorder {
 	 */
 	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
 		ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
+	}
+	
+	public void recordRefresh(String text, String fileName) {
+		ChangePersister.instance().persist(buildRefreshJSON(text, fileName));;
 	}
 
 	public void recordDebugLaunch(String launchTime, String fullyQualifiedMainMethod, Map launchAttributes) {
@@ -144,6 +148,13 @@ public class ClientRecorder {
 		obj.put(JSON_CHANGE_ORIGIN, changeOrigin);
 
 		return obj;
+	}
+	
+	protected JSONObject buildRefreshJSON(String text, String fileName) {
+		JSONObject jsonObject = buildCommonJSONObj(EventType.refresh);
+		jsonObject.put(JSON_ENTITY_ADDRESS, fileName);
+		jsonObject.put(JSON_TEXT, text);
+		return jsonObject;
 	}
 
 	protected JSONObject buildIDEEventJSON(Enum EventType, String fullyQualifiedEntityAddress) {
