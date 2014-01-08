@@ -192,7 +192,7 @@ public class SnapshotManager {
 		}
 	}
 	
-	protected void takeSnapshotOfKnownProjects() {
+	protected void takeSnapshotOfSessionTouchedProjects() {
 		for (String project : sessionTouchedProjects) {
 			takeSnapshot(project);
 		}
