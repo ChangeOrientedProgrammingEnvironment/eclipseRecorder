@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 
+import edu.oregonstate.cope.clientRecorder.ChangeOrigin;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
@@ -31,18 +32,18 @@ public class DocumentListener implements IDocumentListener {
 		ITextFileBuffer textFileBuffer = textFileBufferManager
 				.getTextFileBuffer(event.fDocument);
 		IPath fileLocation = textFileBuffer.getLocation();
-		String changeType = ClientRecorder.CHANGE_ORIGIN_USER;
+		String changeType = ChangeOrigin.USER;
 		
 		if (RefactoringExecutionListener.isRefactoringInProgress())
-			changeType = ClientRecorder.CHANGE_ORIGIN_REFACTORING;
+			changeType = ChangeOrigin.REFACTORING;
 		else if (CommandExecutionListener.isCutInProgress())
-			changeType = ClientRecorder.CHANGE_ORIGIN_CUT;
+			changeType = ChangeOrigin.CUT;
 		else if (CommandExecutionListener.isPasteInProgress())
-			changeType = ClientRecorder.CHANGE_ORIGIN_PASTE;
+			changeType = ChangeOrigin.PASTE;
 		else if (CommandExecutionListener.isUndoInProgress())
-			changeType = ClientRecorder.CHANGE_ORIGIN_UNDO;
+			changeType = ChangeOrigin.UNDO;
 		else if (CommandExecutionListener.isRedoInProgress())
-			changeType = ClientRecorder.CHANGE_ORIGIN_REDO;
+			changeType = ChangeOrigin.REDO;
 
 		String filePath = fileLocation.toPortableString();
 		clientRecorderInstance.recordTextChange(event.fText, event.fOffset,
