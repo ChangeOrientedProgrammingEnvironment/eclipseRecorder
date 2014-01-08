@@ -13,36 +13,7 @@ public class ClientRecorder {
 
 	public static final String ECLIPSE_IDE = "eclipse";
 
-	//change origin types
-	public static final String CHANGE_ORIGIN_USER = "user";
-	public static final String CHANGE_ORIGIN_REFACTORING = "refactoring";
-	public static final String CHANGE_ORIGIN_UI_EVENT = "ui-event";
-	public static final String CHANGE_ORIGIN_PASTE = "paste";
-	public static final String CHANGE_ORIGIN_CUT = "cut";
-	public static final String CHANGE_ORIGIN_UNDO = "undo";
-	public static final String CHANGE_ORIGIN_REDO = "redo";
-
-	//JSON property names
-	protected static final String JSON_TEST_RESULT = "testResult";
-	protected static final Object JSON_TEST_ELAPSED_TIME = "testElapsedTime";
-	protected static final String JSON_CHANGE_ORIGIN = "changeOrigin";
-	protected static final String JSON_LENGTH = "len";
-	protected static final String JSON_OFFSET = "offset";
-	protected static final String JSON_TIMESTAMP = "timestamp";
-	protected static final String JSON_EVENT_TYPE = "eventType";
-	protected static final String JSON_IDE = "IDE";
-	protected static final String JSON_TEXT = "text";
-	protected static final String JSON_ENTITY_ADDRESS = "entityAddress";
-	protected static final String JSON_LAUNCH_ATTRIBUTES = "launchConfiguration";
-	protected static final String JSON_LAUNCH_TIMESTAMP = "launchTimestamp";
-	protected static final String JSON_REFACTORING_ID = "refactoringId";
-	protected static final String JSON_REFACTORING_ARGUMENTS = "refactoringArguments";
-
 	private String IDE;
-
-	protected enum EventType {
-		debugLaunch, normalLaunch, fileOpen, fileClose, textChange, refresh, testRun, snapshot, fileSave, launchEnd, refactoringLaunch, refactoringUndo, refactoringEnd, copy, resourceAdded, resourceRemoved
-	};
 
 	public String getIDE() {
 		return IDE;
@@ -77,23 +48,23 @@ public class ClientRecorder {
 	}
 
 	public void recordDebugLaunch(String launchTime, String fullyQualifiedMainMethod, Map launchAttributes) {
-		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.debugLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
+		ChangePersister.instance().persist(buildLaunchEventJSON(Events.debugLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
 	}
 
 	public void recordNormalLaunch(String launchTime, String fullyQualifiedMainMethod, Map launchAttributes) {
-		ChangePersister.instance().persist(buildLaunchEventJSON(EventType.normalLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
+		ChangePersister.instance().persist(buildLaunchEventJSON(Events.normalLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
 	}
 	
 	public void recordLaunchEnd(String launchTime) {
-		ChangePersister.instance().persist(buildLaunchEndEventJSON(EventType.launchEnd, launchTime));
+		ChangePersister.instance().persist(buildLaunchEndEventJSON(Events.launchEnd, launchTime));
 	}
 
 	public void recordFileOpen(String fullyQualifiedFileAddress) {
-		ChangePersister.instance().persist(buildIDEEventJSON(EventType.fileOpen, fullyQualifiedFileAddress));
+		ChangePersister.instance().persist(buildIDEEventJSON(Events.fileOpen, fullyQualifiedFileAddress));
 	}
 
 	public void recordFileClose(String fullyQualifiedFileAddress) {
-		ChangePersister.instance().persist(buildIDEEventJSON(EventType.fileClose, fullyQualifiedFileAddress));
+		ChangePersister.instance().persist(buildIDEEventJSON(Events.fileClose, fullyQualifiedFileAddress));
 	}
 
 	public void recordTestRun(String fullyQualifiedTestMethod, String testResult, double elapsedTime) {
@@ -105,11 +76,11 @@ public class ClientRecorder {
 	}
 	
 	public void recordFileSave(String filePath) {
-		ChangePersister.instance().persist(buildIDEEventJSON(EventType.fileSave, filePath));
+		ChangePersister.instance().persist(buildIDEEventJSON(Events.fileSave, filePath));
 	}
 	
 	public void recordCopy(String entityAddress, int offset, int lenght, String copiedText) {
-		ChangePersister.instance().persist(buildCopyJSON(EventType.copy, entityAddress, offset, lenght, copiedText));
+		ChangePersister.instance().persist(buildCopyJSON(Events.copy, entityAddress, offset, lenght, copiedText));
 	}
 	
 	public void recordResourceAdd(String entityAddress, String initialText) {
@@ -123,9 +94,9 @@ public class ClientRecorder {
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
 		JSONObject obj;
 		obj = new JSONObject();
-		obj.put(JSON_IDE, this.getIDE());
-		obj.put(JSON_EVENT_TYPE, eventType.toString());
-		obj.put(JSON_TIMESTAMP, (System.currentTimeMillis() / 1000) + "");
+		obj.put(JSONConstants.JSON_IDE, this.getIDE());
+		obj.put(JSONConstants.JSON_EVENT_TYPE, eventType.toString());
+		obj.put(JSONConstants.JSON_TIMESTAMP, (System.currentTimeMillis() / 1000) + "");
 
 		return obj;
 	}
@@ -139,20 +110,20 @@ public class ClientRecorder {
 		if (changeOrigin.isEmpty())
 			throw new RuntimeException("Change Origin cannot be empty");
 
-		JSONObject obj = buildCommonJSONObj(EventType.textChange);
-		obj.put(JSON_TEXT, text);
-		obj.put(JSON_OFFSET, offset);
-		obj.put(JSON_LENGTH, length);
-		obj.put(JSON_ENTITY_ADDRESS, sourceFile);
-		obj.put(JSON_CHANGE_ORIGIN, changeOrigin);
+		JSONObject obj = buildCommonJSONObj(Events.textChange);
+		obj.put(JSONConstants.JSON_TEXT, text);
+		obj.put(JSONConstants.JSON_OFFSET, offset);
+		obj.put(JSONConstants.JSON_LENGTH, length);
+		obj.put(JSONConstants.JSON_ENTITY_ADDRESS, sourceFile);
+		obj.put(JSONConstants.JSON_CHANGE_ORIGIN, changeOrigin);
 
 		return obj;
 	}
 	
 	protected JSONObject buildRefreshJSON(String text, String fileName) {
-		JSONObject jsonObject = buildCommonJSONObj(EventType.refresh);
-		jsonObject.put(JSON_ENTITY_ADDRESS, fileName);
-		jsonObject.put(JSON_TEXT, text);
+		JSONObject jsonObject = buildCommonJSONObj(Events.refresh);
+		jsonObject.put(JSONConstants.JSON_ENTITY_ADDRESS, fileName);
+		jsonObject.put(JSONConstants.JSON_TEXT, text);
 		return jsonObject;
 	}
 
@@ -163,21 +134,21 @@ public class ClientRecorder {
 
 		JSONObject obj;
 		obj = buildCommonJSONObj(EventType);
-		obj.put(JSON_ENTITY_ADDRESS, fullyQualifiedEntityAddress);
+		obj.put(JSONConstants.JSON_ENTITY_ADDRESS, fullyQualifiedEntityAddress);
 
 		return obj;
 	}
 	
 	protected JSONObject buildLaunchEventJSON(Enum EventType, String launchTime, String fullyQualifiedEntityAddress, Map launchAttributes) {
 		JSONObject json = buildIDEEventJSON(EventType, fullyQualifiedEntityAddress);
-		json.put(JSON_LAUNCH_ATTRIBUTES, launchAttributes);
-		json.put(JSON_LAUNCH_TIMESTAMP, launchTime);
+		json.put(JSONConstants.JSON_LAUNCH_ATTRIBUTES, launchAttributes);
+		json.put(JSONConstants.JSON_LAUNCH_TIMESTAMP, launchTime);
 		return json;
 	}
 	
 	protected JSONObject buildLaunchEndEventJSON(Enum eventType, String launchTime) {
 		JSONObject jsonObject = buildCommonJSONObj(eventType);
-		jsonObject.put(JSON_LAUNCH_TIMESTAMP, launchTime);
+		jsonObject.put(JSONConstants.JSON_LAUNCH_TIMESTAMP, launchTime);
 		return jsonObject;
 	}
 
@@ -187,10 +158,10 @@ public class ClientRecorder {
 		if (fullyQualifiedTestMethod.isEmpty() || testResult.isEmpty())
 			throw new RuntimeException("Arguments cannot be empty");
 
-		JSONObject obj = buildCommonJSONObj(EventType.testRun);
-		obj.put(JSON_ENTITY_ADDRESS, fullyQualifiedTestMethod);
-		obj.put(JSON_TEST_RESULT, testResult);
-		obj.put(JSON_TEST_ELAPSED_TIME, elapsedTime);
+		JSONObject obj = buildCommonJSONObj(Events.testRun);
+		obj.put(JSONConstants.JSON_ENTITY_ADDRESS, fullyQualifiedTestMethod);
+		obj.put(JSONConstants.JSON_TEST_RESULT, testResult);
+		obj.put(JSONConstants.JSON_TEST_ELAPSED_TIME, elapsedTime);
 
 		return obj;
 	}
@@ -202,51 +173,51 @@ public class ClientRecorder {
 		if(snapshotPath.isEmpty())
 			throw new RuntimeException("Arguments cannot be empty");
 		
-		JSONObject obj = buildCommonJSONObj(EventType.snapshot);
-		obj.put(JSON_ENTITY_ADDRESS, snapshotPath);
+		JSONObject obj = buildCommonJSONObj(Events.snapshot);
+		obj.put(JSONConstants.JSON_ENTITY_ADDRESS, snapshotPath);
 		
 		return obj;
 	}
 
 	public void recordRefactoring(String refactoringName, Map argumentMap) {
-		ChangePersister.instance().persist(buildRefactoringEvent(EventType.refactoringLaunch, refactoringName, argumentMap));
+		ChangePersister.instance().persist(buildRefactoringEvent(Events.refactoringLaunch, refactoringName, argumentMap));
 	}
 	
 	public void recordRefactoringUndo(String refactoringName, Map argumentsMap) {
-		ChangePersister.instance().persist(buildRefactoringEvent(EventType.refactoringUndo, refactoringName, argumentsMap));
+		ChangePersister.instance().persist(buildRefactoringEvent(Events.refactoringUndo, refactoringName, argumentsMap));
 	}
 
 	public void recordRefactoringEnd(String refactoringName, Map argumentsMap) {
-		ChangePersister.instance().persist(buildRefactoringEvent(EventType.refactoringEnd, refactoringName, argumentsMap));
+		ChangePersister.instance().persist(buildRefactoringEvent(Events.refactoringEnd, refactoringName, argumentsMap));
 	}
 	
 	protected JSONObject buildRefactoringEvent(Enum eventType, String refactoringID, Map argumentsMap) {
 		JSONObject jsonObj = buildCommonJSONObj(eventType);
-		jsonObj.put(JSON_REFACTORING_ID, refactoringID);
-		jsonObj.put(JSON_REFACTORING_ARGUMENTS, argumentsMap);
+		jsonObj.put(JSONConstants.JSON_REFACTORING_ID, refactoringID);
+		jsonObj.put(JSONConstants.JSON_REFACTORING_ARGUMENTS, argumentsMap);
 		
 		return jsonObj;
 	}
 	
-	protected JSONObject buildCopyJSON(EventType copy, String entityAddress, int offset, int lenght, String copiedText) {
+	protected JSONObject buildCopyJSON(Events copy, String entityAddress, int offset, int lenght, String copiedText) {
 		JSONObject jsonObj = buildCommonJSONObj(copy);
-		jsonObj.put(JSON_ENTITY_ADDRESS, entityAddress);
-		jsonObj.put(JSON_OFFSET, offset);
-		jsonObj.put(JSON_LENGTH, lenght);
-		jsonObj.put(JSON_TEXT, copiedText);
+		jsonObj.put(JSONConstants.JSON_ENTITY_ADDRESS, entityAddress);
+		jsonObj.put(JSONConstants.JSON_OFFSET, offset);
+		jsonObj.put(JSONConstants.JSON_LENGTH, lenght);
+		jsonObj.put(JSONConstants.JSON_TEXT, copiedText);
 		return jsonObj;
 	}
 	
 	protected JSONObject buildResourceDeleteJSON(String entityAddress) {
-		JSONObject jsonObj = buildCommonJSONObj(EventType.resourceRemoved);
-		jsonObj.put(JSON_ENTITY_ADDRESS, entityAddress);
+		JSONObject jsonObj = buildCommonJSONObj(Events.resourceRemoved);
+		jsonObj.put(JSONConstants.JSON_ENTITY_ADDRESS, entityAddress);
 		return jsonObj;
 	}
 	
 	protected JSONObject buildResourceAddJSON(String entityAddress, String initialText) {
-		JSONObject jsonObj = buildCommonJSONObj(EventType.resourceAdded);
-		jsonObj.put(JSON_ENTITY_ADDRESS, entityAddress);
-		jsonObj.put(JSON_TEXT, initialText);
+		JSONObject jsonObj = buildCommonJSONObj(Events.resourceAdded);
+		jsonObj.put(JSONConstants.JSON_ENTITY_ADDRESS, entityAddress);
+		jsonObj.put(JSONConstants.JSON_TEXT, initialText);
 		return jsonObj;
 	}
 
