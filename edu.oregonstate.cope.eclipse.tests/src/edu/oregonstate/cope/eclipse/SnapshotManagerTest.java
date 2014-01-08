@@ -70,7 +70,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 	public void testTouchProjectInSession() throws Exception {
 		String projectName = javaProject.getProject().getName();
 		snapshotManager.isProjectKnown(projectName);
-		snapshotManager.takeSnapshotOfKnownProjects();
+		snapshotManager.takeSnapshotOfSessionTouchedProjects();
 		File fileDir = COPEPlugin.getLocalStorage();
 		assertTrue(fileDir.isDirectory());
 		File[] listFiles = listZipFilesInDir(fileDir);
