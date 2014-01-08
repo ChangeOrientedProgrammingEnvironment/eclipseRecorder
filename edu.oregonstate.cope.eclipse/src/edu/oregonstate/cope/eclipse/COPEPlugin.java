@@ -142,7 +142,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return path.resolve(version);
 	}
 
-	private static Version getPluginVersion() {
+	public static Version getPluginVersion() {
 		return COPEPlugin.plugin.getBundle().getVersion();
 	}
 
