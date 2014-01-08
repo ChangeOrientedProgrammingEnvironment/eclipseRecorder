@@ -123,7 +123,6 @@ public class Installer {
 	}
 
 	private void performPluginUpdate() {
-		//do a snapshot of the whole workspace?
-		
+		COPEPlugin.getDefault().takeSnapshotOfKnownProjects();
 	}
 }
