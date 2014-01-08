@@ -58,7 +58,7 @@ public class ResourceListener implements IResourceChangeListener {
 	private void recordFileRefresh(IFile affectedFile) {
 		String filePath = affectedFile.getFullPath().toPortableString();
 		String contents = getFileContentents(affectedFile);
-		recorder.recordTextChange(contents, 0, 0,filePath, ClientRecorder.CHANGE_ORIGIN_REFRESH);
+		recorder.recordRefresh(contents, filePath);
 	}
 
 	private String getFileContentents(IFile affectedFile) {
