@@ -10,8 +10,6 @@ import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.oregonstate.cope.clientRecorder.ClientRecorder.EventType;
-
 //TODO refactor this test class. Too many hardcoded strings. Too much duplication with tested class.
 public class ClientRecorderTest {
 
@@ -102,10 +100,10 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testDebugLaunch() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.debugLaunch, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(EventType.debugLaunch, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
 		expected.put(JSONConstants.JSON_IDE, "IDEA");
-		expected.put(JSONConstants.JSON_EVENT_TYPE, ClientRecorder.EventType.debugLaunch.toString());
+		expected.put(JSONConstants.JSON_EVENT_TYPE, EventType.debugLaunch.toString());
 		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
@@ -114,10 +112,10 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testStdLaunch() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.normalLaunch, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(EventType.normalLaunch, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
 		expected.put(JSONConstants.JSON_IDE, "IDEA");
-		expected.put(JSONConstants.JSON_EVENT_TYPE, ClientRecorder.EventType.normalLaunch.toString());
+		expected.put(JSONConstants.JSON_EVENT_TYPE, EventType.normalLaunch.toString());
 		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
@@ -138,10 +136,10 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testFileOpen() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.fileOpen, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(EventType.fileOpen, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
 		expected.put(JSONConstants.JSON_IDE, "IDEA");
-		expected.put(JSONConstants.JSON_EVENT_TYPE, ClientRecorder.EventType.fileOpen.toString());
+		expected.put(JSONConstants.JSON_EVENT_TYPE, EventType.fileOpen.toString());
 		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
@@ -150,10 +148,10 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testFileClose() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.fileClose, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(EventType.fileClose, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
 		expected.put(JSONConstants.JSON_IDE, "IDEA");
-		expected.put(JSONConstants.JSON_EVENT_TYPE, ClientRecorder.EventType.fileClose.toString());
+		expected.put(JSONConstants.JSON_EVENT_TYPE, EventType.fileClose.toString());
 		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
