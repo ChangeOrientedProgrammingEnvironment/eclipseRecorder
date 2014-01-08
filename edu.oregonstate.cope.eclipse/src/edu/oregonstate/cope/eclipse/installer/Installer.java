@@ -8,7 +8,9 @@ import java.nio.file.Path;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 
+import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
+import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 /**
@@ -20,6 +22,7 @@ import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
  */
 public class Installer {
 
+	private static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
 	private static final String SURVEY_FILENAME = "survey.txt";
 	private static final String EMAIL_FILENAME = "email.txt";
 
@@ -103,5 +106,24 @@ public class Installer {
 		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
 		new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
 		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
+		
+		checkForPluginUpdate();
+	}
+
+	private void checkForPluginUpdate() {
+		Properties workspaceProperties = COPEPlugin.getDefault().getWorkspaceProperties();
+
+		String lastPluginVersion = workspaceProperties.getProperty(LAST_PLUGIN_VERSION);
+		String currentPluginVersion = COPEPlugin.getDefault().getPluginVersion().toString();
+		
+		if(lastPluginVersion == null || !lastPluginVersion.equals(currentPluginVersion)){
+			workspaceProperties.addProperty(LAST_PLUGIN_VERSION, currentPluginVersion.toString());
+			performPluginUpdate();
+		}	
+	}
+
+	private void performPluginUpdate() {
+		//do a snapshot of the whole workspace?
+		
 	}
 }
