@@ -2,7 +2,7 @@
 <feature
       id="edu.oregonstate.cope.eclipse.feature"
       label="COPE Client Recorder"
-      version="0.5.0.qualifier">
+      version="0.5.1.qualifier">
 
    <description url="http://cope.eecs.oregonstate.edu/">
       The ClientRecorder plugin for Eclipse records source code changes
