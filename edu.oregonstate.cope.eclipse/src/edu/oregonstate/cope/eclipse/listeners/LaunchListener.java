@@ -41,9 +41,9 @@ public class LaunchListener implements ILaunchListener {
 		String launchTime = launch.getAttribute(DebugPlugin.ATTR_LAUNCH_TIMESTAMP);
 		try {
 			if (launchMode.equals(ILaunchManager.RUN_MODE))
-				clientRecorder.recordNormalLaunch(launchTime, mainType, launchConfiguration.getAttributes());
+				clientRecorder.recordNormalLaunch(launchTime, mainType, launchConfiguration.getMemento(), launchConfiguration.getAttributes());
 			if (launchMode.equals(ILaunchManager.DEBUG_MODE))
-				clientRecorder.recordDebugLaunch(launchTime, mainType, launchConfiguration.getAttributes());
+				clientRecorder.recordDebugLaunch(launchTime, mainType, launchConfiguration.getMemento(), launchConfiguration.getAttributes());
 		} catch (CoreException e) {
 			COPEPlugin.getDefault().getLogger().error(this, "Error retrievieng the launch config", e);
 		}

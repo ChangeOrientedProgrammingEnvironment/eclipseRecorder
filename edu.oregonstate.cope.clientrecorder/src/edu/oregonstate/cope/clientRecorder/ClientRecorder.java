@@ -47,12 +47,12 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildRefreshJSON(text, fileName));;
 	}
 
-	public void recordDebugLaunch(String launchTime, String fullyQualifiedMainMethod, Map launchAttributes) {
-		ChangePersister.instance().persist(buildLaunchEventJSON(Events.debugLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
+	public void recordDebugLaunch(String launchTime, String fullyQualifiedMainMethod, String launchConfiguration, Map launchAttributes) {
+		ChangePersister.instance().persist(buildLaunchEventJSON(Events.debugLaunch, launchTime, fullyQualifiedMainMethod, launchConfiguration, launchAttributes));
 	}
 
-	public void recordNormalLaunch(String launchTime, String fullyQualifiedMainMethod, Map launchAttributes) {
-		ChangePersister.instance().persist(buildLaunchEventJSON(Events.normalLaunch, launchTime, fullyQualifiedMainMethod, launchAttributes));
+	public void recordNormalLaunch(String launchTime, String fullyQualifiedMainMethod, String launchConfiguration, Map launchAttributes) {
+		ChangePersister.instance().persist(buildLaunchEventJSON(Events.normalLaunch, launchTime, fullyQualifiedMainMethod, launchConfiguration, launchAttributes));
 	}
 	
 	public void recordLaunchEnd(String launchTime) {
@@ -139,10 +139,11 @@ public class ClientRecorder {
 		return obj;
 	}
 	
-	protected JSONObject buildLaunchEventJSON(Enum EventType, String launchTime, String fullyQualifiedEntityAddress, Map launchAttributes) {
+	protected JSONObject buildLaunchEventJSON(Enum EventType, String launchTime, String fullyQualifiedEntityAddress, String launchConfiguration, Map launchAttributes) {
 		JSONObject json = buildIDEEventJSON(EventType, fullyQualifiedEntityAddress);
 		json.put(JSONConstants.JSON_LAUNCH_ATTRIBUTES, launchAttributes);
 		json.put(JSONConstants.JSON_LAUNCH_TIMESTAMP, launchTime);
+		json.put(JSONConstants.JSON_LAUNCH_CONFIGURATION, launchConfiguration);
 		return json;
 	}
 	
