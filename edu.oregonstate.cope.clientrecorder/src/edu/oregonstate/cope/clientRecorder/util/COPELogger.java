@@ -11,14 +11,22 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
 
-public class COPELogger {
+public class COPELogger implements LoggerInterface {
 
 	private static final String FILE_APPENDER = "fileAppender";
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.util.LoggerInterface#enableFileLogging(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void enableFileLogging(String parentDir, String logFileName) {
 		setLoggingFile(parentDir + File.separator + logFileName);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.util.LoggerInterface#disableConsoleLogging()
+	 */
+	@Override
 	public void disableConsoleLogging() {
 		Logger logger = getRootLogger();
 		logger.getAppender("console").stop();
@@ -30,25 +38,45 @@ public class COPELogger {
 		logger.detachAppender(FILE_APPENDER);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.util.LoggerInterface#logOnlyErrors()
+	 */
+	@Override
 	public void logOnlyErrors() {
 		Logger logger = getRootLogger();
 		logger.setLevel(Level.ERROR);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.util.LoggerInterface#logEverything()
+	 */
+	@Override
 	public void logEverything() {
 		Logger logger = getRootLogger();
 		logger.setLevel(Level.ALL);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.util.LoggerInterface#error(java.lang.Object, java.lang.String, java.lang.Throwable)
+	 */
+	@Override
 	public void error(Object obj, String message, Throwable t) {
 		getLogger(obj).error(message, t);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.util.LoggerInterface#error(java.lang.Object, java.lang.String)
+	 */
+	@Override
 	public void error(Object obj, String message) {
 		getLogger(obj).error(message, message);
 
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.util.LoggerInterface#info(java.lang.Object, java.lang.String)
+	 */
+	@Override
 	public void info(Object obj, String message) {
 		getLogger(obj).info(message);
 	}
@@ -92,6 +120,10 @@ public class COPELogger {
 		return logger;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.util.LoggerInterface#warning(java.lang.Object, java.lang.String)
+	 */
+	@Override
 	public void warning(Object obj, String msg) {
 		getLogger(obj).warn(msg);
 	}

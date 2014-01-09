@@ -8,7 +8,9 @@ import java.nio.file.Path;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 
+import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
+import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 /**
@@ -20,6 +22,7 @@ import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
  */
 public class Installer {
 
+	protected static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
 	private static final String SURVEY_FILENAME = "survey.txt";
 	private static final String EMAIL_FILENAME = "email.txt";
 
@@ -88,20 +91,30 @@ public class Installer {
 
 	}
 
-	public Installer(Path workspaceDirectory, Path permanentDirectory,
-			Uninstaller uninstaller, String installationConfigFileName) {
-		this.workspaceDirectory = workspaceDirectory;
-		this.permanentDirectory = permanentDirectory;
-		this.uninstaller = uninstaller;
-		this.installationConfigFileName = installationConfigFileName;
+	public Installer() {
 
-		System.err.println(workspaceDirectory);
-		System.err.println(permanentDirectory);
+		this.workspaceDirectory = COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath();
+		this.permanentDirectory = COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath();
+		this.uninstaller = COPEPlugin.getDefault().getUninstaller();
+		this.installationConfigFileName = COPEPlugin.getDefault()._getInstallationConfigFileName();
 	}
 
 	public void doInstall() throws IOException {
 		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
 		new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
 		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
+		
+		checkForPluginUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
+	}
+
+	protected void checkForPluginUpdate(String propertiesVersion, String currentPluginVersion) {
+		if(propertiesVersion == null || !propertiesVersion.equals(currentPluginVersion)){
+			COPEPlugin.getDefault().getWorkspaceProperties().addProperty(LAST_PLUGIN_VERSION, currentPluginVersion.toString());
+			performPluginUpdate();
+		}	
+	}
+
+	private void performPluginUpdate() {
+		COPEPlugin.getDefault().takeSnapshotOfKnownProjects();
 	}
 }

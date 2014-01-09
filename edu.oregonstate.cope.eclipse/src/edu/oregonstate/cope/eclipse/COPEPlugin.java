@@ -4,16 +4,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Version;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
-import edu.oregonstate.cope.clientRecorder.util.COPELogger;
+import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -27,7 +29,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	static COPEPlugin plugin;
 
 	// The ID of the current workspace
-	static String workspaceID;
+	String workspaceID;
 
 	private RecorderFacade recorderFacade;
 
@@ -52,7 +54,14 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 		UIJob uiJob = new StartPluginUIJob(this, "Registering listeners");
 		uiJob.schedule();
-		snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
+	}
+
+	public void initializeSnapshotManager() {
+		snapshotManager = new SnapshotManager(getVersionedLocalStorage().getAbsolutePath());
+	}
+
+	public void takeSnapshotOfKnownProjects() {
+		snapshotManager.takeSnapshotOfKnownProjects();
 	}
 
 	/*
@@ -89,7 +98,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return recorderFacade.getInstallationProperties();
 	}
 
-	Uninstaller getUninstaller() {
+	public Uninstaller getUninstaller() {
 		return recorderFacade.getUninstaller();
 	}
 
@@ -99,7 +108,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	}
 
 	protected File getWorkspaceIdFile() {
-		File pluginStoragePath = COPEPlugin.getLocalStorage();
+		File pluginStoragePath = getVersionedLocalStorage();
 		return new File(pluginStoragePath.getAbsolutePath() + File.separator + "workspace_id");
 	}
 
@@ -116,15 +125,32 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return workspaceID;
 	}
 
-	public static File getLocalStorage() {
+	public File getLocalStorage() {
 		return COPEPlugin.plugin.getStateLocation().toFile();
 	}
 
-	public static File getBundleStorage() {
+	public File getBundleStorage() {
 		return COPEPlugin.getDefault().getBundle().getDataFile("");
 	}
+	
+	public File getVersionedLocalStorage() {
+		return getVersionedPath(getLocalStorage().toPath()).toFile();
+	}
 
-	public COPELogger getLogger() {
+	public File getVersionedBundleStorage() {
+		return getVersionedPath(getBundleStorage().toPath()).toFile();
+	}
+
+	private Path getVersionedPath(Path path) {
+		String version = getPluginVersion().toString();
+		return path.resolve(version);
+	}
+
+	public Version getPluginVersion() {
+		return COPEPlugin.plugin.getBundle().getVersion();
+	}
+
+	public LoggerInterface getLogger() {
 		return recorderFacade.getLogger();
 	}
 
@@ -136,7 +162,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	 * Used only by the Installer.
 	 * TODO something is fishy here, this string should not leak outside
 	 */
-	String _getInstallationConfigFileName() {
+	public String _getInstallationConfigFileName() {
 		return RecorderFacade.instance().getInstallationConfigFilename();
 	}
 }

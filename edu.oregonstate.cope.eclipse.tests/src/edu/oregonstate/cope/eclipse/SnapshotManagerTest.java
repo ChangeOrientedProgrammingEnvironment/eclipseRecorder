@@ -34,15 +34,15 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		File file = new File(COPEPlugin.getLocalStorage(), "known-projects");
+		File file = new File(COPEPlugin.getDefault().getVersionedLocalStorage(), "known-projects");
 		file.createNewFile();
 		Files.write(file.toPath(), "known1\nknown2\n".getBytes(), StandardOpenOption.WRITE);
-		snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
+		snapshotManager = new SnapshotManager(COPEPlugin.getDefault().getVersionedLocalStorage().getAbsolutePath());
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		File[] zipFiles = listZipFilesInDir(COPEPlugin.getLocalStorage());
+		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getVersionedLocalStorage());
 		for (File zipFile : zipFiles) {
 			zipFile.delete();
 		}
@@ -63,7 +63,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 	public void testKnowProject() throws Exception {
 		snapshotManager.knowProject("known3");
 		assertTrue(snapshotManager.isProjectKnown("known3"));
-		assertEquals("known1\nknown2\nlibrariesTest\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getLocalStorage().getAbsolutePath(), "known-projects"))));
+		assertEquals("known1\nknown2\nlibrariesTest\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getDefault().getVersionedLocalStorage().getAbsolutePath(), "known-projects"))));
 	}
 	
 	@Test
@@ -71,7 +71,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		String projectName = javaProject.getProject().getName();
 		snapshotManager.isProjectKnown(projectName);
 		snapshotManager.takeSnapshotOfSessionTouchedProjects();
-		File fileDir = COPEPlugin.getLocalStorage();
+		File fileDir = COPEPlugin.getDefault().getVersionedLocalStorage();
 		assertTrue(fileDir.isDirectory());
 		File[] listFiles = listZipFilesInDir(fileDir);
 		assertEquals(1,listFiles.length);

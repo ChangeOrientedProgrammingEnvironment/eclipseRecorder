@@ -64,7 +64,7 @@ public class SnapshotManager {
 			sessionTouchedProjects.add(projectName);
 	}
 
-	protected void knowProject(String string) {
+	public void knowProject(String string) {
 		knownProjects.add(string);
 		try {
 			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
