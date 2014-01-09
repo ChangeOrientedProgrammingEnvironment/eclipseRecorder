@@ -249,16 +249,17 @@ public class ClientRecorderTest {
 		HashMap launchAttributes = new HashMap();
 		launchAttributes.put("attr1", "something");
 		launchAttributes.put("attr2", "something else");
-		JSONObject actual = clientRecorder.buildLaunchEventJSON(Events.normalLaunch, "123", "something", "config", launchAttributes);
+		JSONObject actual = clientRecorder.buildLaunchEventJSON(Events.normalLaunch, "123", "launch-name", "contents", "config", launchAttributes);
 		
 		JSONObject expected = new JSONObject();
+		addTimeStamp(expected);
 		expected.put(JSONConstants.JSON_EVENT_TYPE,Events.normalLaunch + "");
-		expected.put(JSONConstants.JSON_ENTITY_ADDRESS,"something");
+		expected.put(JSONConstants.JSON_LAUNCH_TIMESTAMP, "123");
+		expected.put(JSONConstants.JSON_LAUNCH_NAME, "launch-name");
+		expected.put(JSONConstants.JSON_LAUNCH_FILE, "contents");
 		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
 		expected.put(JSONConstants.JSON_LAUNCH_ATTRIBUTES, launchAttributes);
 		expected.put(JSONConstants.JSON_LAUNCH_CONFIGURATION, "config");
-		expected.put(JSONConstants.JSON_LAUNCH_TIMESTAMP, "123");
-		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, actual);
 	}

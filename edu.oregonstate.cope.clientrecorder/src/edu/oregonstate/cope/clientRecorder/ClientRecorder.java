@@ -47,12 +47,12 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildRefreshJSON(text, fileName));;
 	}
 
-	public void recordDebugLaunch(String launchTime, String fullyQualifiedMainMethod, String launchConfiguration, Map launchAttributes) {
-		ChangePersister.instance().persist(buildLaunchEventJSON(Events.debugLaunch, launchTime, fullyQualifiedMainMethod, launchConfiguration, launchAttributes));
+	public void recordDebugLaunch(String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
+		ChangePersister.instance().persist(buildLaunchEventJSON(Events.debugLaunch, launchTime, launchName, launchFile, launchConfiguration, launchAttributes));
 	}
 
-	public void recordNormalLaunch(String launchTime, String fullyQualifiedMainMethod, String launchConfiguration, Map launchAttributes) {
-		ChangePersister.instance().persist(buildLaunchEventJSON(Events.normalLaunch, launchTime, fullyQualifiedMainMethod, launchConfiguration, launchAttributes));
+	public void recordNormalLaunch(String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
+		ChangePersister.instance().persist(buildLaunchEventJSON(Events.normalLaunch, launchTime, launchName, launchFile, launchConfiguration, launchAttributes));
 	}
 	
 	public void recordLaunchEnd(String launchTime) {
@@ -139,9 +139,11 @@ public class ClientRecorder {
 		return obj;
 	}
 	
-	protected JSONObject buildLaunchEventJSON(Enum EventType, String launchTime, String fullyQualifiedEntityAddress, String launchConfiguration, Map launchAttributes) {
-		JSONObject json = buildIDEEventJSON(EventType, fullyQualifiedEntityAddress);
+	protected JSONObject buildLaunchEventJSON(Enum EventType, String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
+		JSONObject json = buildCommonJSONObj(EventType);
 		json.put(JSONConstants.JSON_LAUNCH_ATTRIBUTES, launchAttributes);
+		json.put(JSONConstants.JSON_LAUNCH_NAME, launchName);
+		json.put(JSONConstants.JSON_LAUNCH_FILE, launchFile);
 		json.put(JSONConstants.JSON_LAUNCH_TIMESTAMP, launchTime);
 		json.put(JSONConstants.JSON_LAUNCH_CONFIGURATION, launchConfiguration);
 		return json;

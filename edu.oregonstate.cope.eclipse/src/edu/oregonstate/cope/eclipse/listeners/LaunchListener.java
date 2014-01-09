@@ -47,16 +47,17 @@ public class LaunchListener implements ILaunchListener {
 		String launchName = "";
 		String launchFile = "";
 		try {
-			if (launchMode.equals(ILaunchManager.RUN_MODE))
-				clientRecorder.recordNormalLaunch(launchTime, mainType, launchConfiguration.getMemento(), launchConfiguration.getAttributes());
 			if (launchConfiguration.isLocal()) {
 				launchName = launchConfiguration.getName();
 				launchFile = new String(getLaunchFileContents(launchName));
 			} else {
 				
 			}
+			if (launchMode.equals(ILaunchManager.RUN_MODE)) {
+				clientRecorder.recordNormalLaunch(launchTime, launchName, launchFile, launchConfiguration.getMemento(), launchConfiguration.getAttributes());
+			}
 			if (launchMode.equals(ILaunchManager.DEBUG_MODE))
-				clientRecorder.recordDebugLaunch(launchTime, mainType, launchConfiguration.getMemento(), launchConfiguration.getAttributes());
+				clientRecorder.recordDebugLaunch(launchTime, launchName, launchFile, launchConfiguration.getMemento(), launchConfiguration.getAttributes());
 		} catch (CoreException e) {
 			COPEPlugin.getDefault().getLogger().error(this, "Error retrievieng the launch config", e);
 		} catch (IOException e) {
