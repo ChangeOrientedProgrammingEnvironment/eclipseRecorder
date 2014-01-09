@@ -62,7 +62,7 @@ class StartPluginUIJob extends UIJob {
 
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-		COPEPlugin.getDefault().initializeRecorder(COPEPlugin.getVersionedLocalStorage().getAbsolutePath(), COPEPlugin.getBundleStorage().getAbsolutePath(), COPEPlugin.getDefault().getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
+		COPEPlugin.getDefault().initializeRecorder(COPEPlugin.getDefault().getVersionedLocalStorage().getAbsolutePath(), COPEPlugin.getDefault().getBundleStorage().getAbsolutePath(), COPEPlugin.getDefault().getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
 		Uninstaller uninstaller = COPEPlugin.getDefault().getUninstaller();
 
 		if (uninstaller.isUninstalled())

@@ -23,7 +23,7 @@ public class FileSenderJob implements Job
 				FTPConnectionProperties.getUsername(), 
 				FTPConnectionProperties.getPassword()
 			);
-			String localPath = COPEPlugin.getLocalStorage().getAbsolutePath();
+			String localPath = COPEPlugin.getDefault().getLocalStorage().getAbsolutePath();
 			// using eclipse workspace ID as a remote dir to store data
 			String remotePath = "COPE" + File.separator + COPEPlugin.getDefault().getWorkspaceID();
 			

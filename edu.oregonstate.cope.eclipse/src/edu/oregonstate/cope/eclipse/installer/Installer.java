@@ -93,8 +93,8 @@ public class Installer {
 
 	public Installer() {
 
-		this.workspaceDirectory = COPEPlugin.getVersionedLocalStorage().toPath().toAbsolutePath();
-		this.permanentDirectory = COPEPlugin.getBundleStorage().toPath().toAbsolutePath();
+		this.workspaceDirectory = COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath();
+		this.permanentDirectory = COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath();
 		this.uninstaller = COPEPlugin.getDefault().getUninstaller();
 		this.installationConfigFileName = COPEPlugin.getDefault()._getInstallationConfigFileName();
 	}

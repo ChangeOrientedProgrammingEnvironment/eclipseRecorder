@@ -29,7 +29,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	static COPEPlugin plugin;
 
 	// The ID of the current workspace
-	static String workspaceID;
+	String workspaceID;
 
 	private RecorderFacade recorderFacade;
 
@@ -57,7 +57,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	}
 
 	public void initializeSnapshotManager() {
-		snapshotManager = new SnapshotManager(COPEPlugin.getVersionedLocalStorage().getAbsolutePath());
+		snapshotManager = new SnapshotManager(getVersionedLocalStorage().getAbsolutePath());
 	}
 
 	public void takeSnapshotOfKnownProjects() {
@@ -108,7 +108,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	}
 
 	protected File getWorkspaceIdFile() {
-		File pluginStoragePath = COPEPlugin.getVersionedLocalStorage();
+		File pluginStoragePath = getVersionedLocalStorage();
 		return new File(pluginStoragePath.getAbsolutePath() + File.separator + "workspace_id");
 	}
 
@@ -125,28 +125,28 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return workspaceID;
 	}
 
-	public static File getLocalStorage() {
+	public File getLocalStorage() {
 		return COPEPlugin.plugin.getStateLocation().toFile();
 	}
 
-	public static File getBundleStorage() {
+	public File getBundleStorage() {
 		return COPEPlugin.getDefault().getBundle().getDataFile("");
 	}
 	
-	public static File getVersionedLocalStorage() {
+	public File getVersionedLocalStorage() {
 		return getVersionedPath(getLocalStorage().toPath()).toFile();
 	}
 
-	public static File getVersionedBundleStorage() {
+	public File getVersionedBundleStorage() {
 		return getVersionedPath(getBundleStorage().toPath()).toFile();
 	}
 
-	private static Path getVersionedPath(Path path) {
+	private Path getVersionedPath(Path path) {
 		String version = getPluginVersion().toString();
 		return path.resolve(version);
 	}
 
-	public static Version getPluginVersion() {
+	public Version getPluginVersion() {
 		return COPEPlugin.plugin.getBundle().getVersion();
 	}
 
