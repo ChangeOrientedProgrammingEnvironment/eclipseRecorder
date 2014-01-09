@@ -97,9 +97,6 @@ public class Installer {
 		this.permanentDirectory = COPEPlugin.getBundleStorage().toPath().toAbsolutePath();
 		this.uninstaller = COPEPlugin.getDefault().getUninstaller();
 		this.installationConfigFileName = COPEPlugin.getDefault()._getInstallationConfigFileName();
-
-		System.err.println(workspaceDirectory);
-		System.err.println(permanentDirectory);
 	}
 
 	public void doInstall() throws IOException {
