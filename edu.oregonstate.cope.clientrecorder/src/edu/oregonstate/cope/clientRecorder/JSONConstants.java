@@ -14,6 +14,8 @@ public interface JSONConstants {
 	public static final String JSON_TEXT = "text";
 	public static final String JSON_ENTITY_ADDRESS = "entityAddress";
 	public static final String JSON_LAUNCH_ATTRIBUTES = "launchAttributes";
+	public static final String JSON_LAUNCH_NAME = "launchName";
+	public static final String JSON_LAUNCH_FILE = "launchFile";
 	public static final String JSON_LAUNCH_CONFIGURATION = "launchConfiguration";
 	public static final String JSON_LAUNCH_TIMESTAMP = "launchTimestamp";
 	public static final String JSON_REFACTORING_ID = "refactoringId";
