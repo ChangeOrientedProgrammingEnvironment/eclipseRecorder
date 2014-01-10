@@ -1,5 +1,10 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -39,14 +44,37 @@ public class LaunchListener implements ILaunchListener {
 		String mainType = getMainType(launchConfiguration);
 		String launchMode = launch.getLaunchMode();
 		String launchTime = launch.getAttribute(DebugPlugin.ATTR_LAUNCH_TIMESTAMP);
+		String launchName = "";
+		String launchFile = "";
 		try {
-			if (launchMode.equals(ILaunchManager.RUN_MODE))
-				clientRecorder.recordNormalLaunch(launchTime, mainType, launchConfiguration.getAttributes());
+			if (launchConfiguration.isLocal()) {
+				launchName = launchConfiguration.getName();
+				launchFile = new String(getLaunchFileContents(launchName));
+			} else {
+				
+			}
+			if (launchMode.equals(ILaunchManager.RUN_MODE)) {
+				clientRecorder.recordNormalLaunch(launchTime, launchName, launchFile, launchConfiguration.getMemento(), launchConfiguration.getAttributes());
+			}
 			if (launchMode.equals(ILaunchManager.DEBUG_MODE))
-				clientRecorder.recordDebugLaunch(launchTime, mainType, launchConfiguration.getAttributes());
+				clientRecorder.recordDebugLaunch(launchTime, launchName, launchFile, launchConfiguration.getMemento(), launchConfiguration.getAttributes());
 		} catch (CoreException e) {
 			COPEPlugin.getDefault().getLogger().error(this, "Error retrievieng the launch config", e);
+		} catch (IOException e) {
+			COPEPlugin.getDefault().getLogger().error(this, "Could not read .launch file", e);
 		}
+	}
+
+	private byte[] getLaunchFileContents(String launchName) throws IOException {
+		return Files.readAllBytes(Paths.get(getWorkspaceLocation(), getLaunchFileRelativeToWorkspace(launchName)));
+	}
+
+	private String getWorkspaceLocation() {
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().makeAbsolute().toPortableString();
+	}
+
+	private String getLaunchFileRelativeToWorkspace(String launchName) {
+		return ".metadata/.plugins/org.eclipse.debug.core/.launches/" + launchName + ".launch";
 	}
 	
 	private boolean isTestLauch(ILaunchConfiguration launchConfiguration) {
