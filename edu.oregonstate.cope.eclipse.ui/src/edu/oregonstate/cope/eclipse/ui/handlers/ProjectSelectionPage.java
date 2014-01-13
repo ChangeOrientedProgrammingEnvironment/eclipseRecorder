@@ -1,6 +1,8 @@
 package edu.oregonstate.cope.eclipse.ui.handlers;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -10,6 +12,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 public class ProjectSelectionPage extends Dialog {
 
@@ -37,5 +42,27 @@ public class ProjectSelectionPage extends Dialog {
 		Button selectNone = new Button(buttonsParent, SWT.NONE);
 		selectNone.setText("Select none");
 		return composite;
+		
+		Composite projectList = new Composite(composite, SWT.BORDER);
+		projectList.setLayout(new GridLayout(1, true));
+		projectList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		Table table = new Table(projectList, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL);
+		table.setLayout(new GridLayout(1,true));
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		table.setHeaderVisible(false);
+		TableColumn tableColumn = new TableColumn(table, SWT.NONE);
+		tableColumn.setText("Project");
+		
+		List<TableItem> tableItems = new ArrayList<TableItem>();
+		for (String project : projects) {
+			TableItem tableItem = new TableItem(table, SWT.NONE);
+			tableItem.setText(project);
+			tableItem.setChecked(true);
+			tableItems.add(tableItem);
+		}
+		
+		tableColumn.pack();
+		
 	}
 }
