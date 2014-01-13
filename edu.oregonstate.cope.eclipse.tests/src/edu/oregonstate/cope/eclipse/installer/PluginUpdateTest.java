@@ -15,7 +15,7 @@ import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
 import edu.oregonstate.cope.eclipse.SnapshotManager;
 
-public class InstallerTest extends PopulatedWorkspaceTest {
+public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 	private static COPEPlugin plugin;
 	private static SnapshotManager snapshotManager;
