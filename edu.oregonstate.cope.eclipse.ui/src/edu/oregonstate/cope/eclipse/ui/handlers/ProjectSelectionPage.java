@@ -41,7 +41,6 @@ public class ProjectSelectionPage extends Dialog {
 		selectAll.setText("Select all");
 		Button selectNone = new Button(buttonsParent, SWT.NONE);
 		selectNone.setText("Select none");
-		return composite;
 		
 		Composite projectList = new Composite(composite, SWT.BORDER);
 		projectList.setLayout(new GridLayout(1, true));
@@ -64,5 +63,6 @@ public class ProjectSelectionPage extends Dialog {
 		
 		tableColumn.pack();
 		
+		return super.createContents(parent);
 	}
 }
