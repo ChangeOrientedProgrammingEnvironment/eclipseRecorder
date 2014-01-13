@@ -5,10 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
-
-import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
@@ -73,7 +69,6 @@ public class Installer {
 
 			Files.copy(permanentFile.toPath(), workspaceFile.toPath());
 		}
-
 	}
 
 	private class EmailInstallOperation extends InstallerOperation {
@@ -86,7 +81,6 @@ public class Installer {
 		@Override
 		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
 		}
-
 	}
 
 	public Installer() {
@@ -101,15 +95,15 @@ public class Installer {
 		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
 		new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
 		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
-		
+
 		checkForPluginUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
 	}
 
 	protected void checkForPluginUpdate(String propertiesVersion, String currentPluginVersion) {
-		if(propertiesVersion == null || !propertiesVersion.equals(currentPluginVersion)){
+		if (propertiesVersion == null || !propertiesVersion.equals(currentPluginVersion)) {
 			COPEPlugin.getDefault().getWorkspaceProperties().addProperty(LAST_PLUGIN_VERSION, currentPluginVersion.toString());
 			performPluginUpdate();
-		}	
+		}
 	}
 
 	private void performPluginUpdate() {

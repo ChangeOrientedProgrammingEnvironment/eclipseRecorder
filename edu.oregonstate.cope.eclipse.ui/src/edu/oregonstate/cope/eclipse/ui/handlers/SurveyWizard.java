@@ -20,13 +20,13 @@ public class SurveyWizard extends Wizard {
 		super();
 		setNeedsProgressMonitor(true);
 	}
-	
-	public static SurveyWizard takeRealSurvey(){
+
+	public static SurveyWizard takeRealSurvey() {
 		SurveyWizard sw = new SurveyWizard();
 		WizardDialog wizardDialog = new WizardDialog(Display.getDefault().getActiveShell(), sw);
-		
+
 		wizardDialog.open();
-		
+
 		return sw;
 	}
 
@@ -43,9 +43,9 @@ public class SurveyWizard extends Wizard {
 		surveyAnswers = surveyPage.getSurveyResults();
 		String email = (String) surveyAnswers.get("email");
 		surveyAnswers.remove("email");
-		
+
 		this.email = getRandomEmailIfAbsent(email);
-		
+
 		return true;
 	}
 
@@ -53,10 +53,10 @@ public class SurveyWizard extends Wizard {
 	public boolean performCancel() {
 		surveyAnswers = new JSONObject();
 		this.email = getRandomEmailIfAbsent(null);
-		
+
 		return true;
 	}
-	
+
 	private String getRandomEmailIfAbsent(String email) {
 		if (email == null || email.isEmpty())
 			return new BigInteger(96, new Random()).toString(32);
@@ -67,8 +67,8 @@ public class SurveyWizard extends Wizard {
 	public String getSurveyResults() {
 		return surveyAnswers.toJSONString();
 	}
-	
-	public String getEmail(){
+
+	public String getEmail() {
 		return email;
 	}
 }
