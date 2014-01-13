@@ -47,7 +47,7 @@ import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
-import edu.oregonstate.cope.eclipse.ui.handlers.ProjectSelectionPage;
+import edu.oregonstate.cope.eclipse.ui.handlers.ProjectSelectionDialog;
 import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
@@ -91,7 +91,7 @@ class StartPluginUIJob extends UIJob {
 		doInstall();
 
 		if (!isWorkspaceKnown()) {
-			new ProjectSelectionPage(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), getListOfWorkspaceProjects()).open();
+			new ProjectSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), getListOfWorkspaceProjects()).open();
 			getToKnowWorkspace();
 		}
 
@@ -109,7 +109,7 @@ class StartPluginUIJob extends UIJob {
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
-		initializeFileSender();
+//		initializeFileSender();
 	}
 
 	private void doInstall() {

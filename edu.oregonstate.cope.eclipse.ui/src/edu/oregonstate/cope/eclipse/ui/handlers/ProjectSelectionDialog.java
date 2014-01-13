@@ -16,11 +16,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-public class ProjectSelectionPage extends Dialog {
+public class ProjectSelectionDialog extends Dialog {
 
 	private List<String> projects;
 
-	public ProjectSelectionPage(Shell parentShell, List<String> projects) {
+	public ProjectSelectionDialog(Shell parentShell, List<String> projects) {
 		super(parentShell);
 		this.projects = projects;
 	}
