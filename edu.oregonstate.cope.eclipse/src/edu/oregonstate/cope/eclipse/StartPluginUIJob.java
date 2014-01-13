@@ -91,7 +91,7 @@ class StartPluginUIJob extends UIJob {
 		doInstall();
 
 		if (!isWorkspaceKnown()) {
-			new ProjectSelectionPage(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()).open();
+			new ProjectSelectionPage(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), getListOfWorkspaceProjects()).open();
 			getToKnowWorkspace();
 		}
 

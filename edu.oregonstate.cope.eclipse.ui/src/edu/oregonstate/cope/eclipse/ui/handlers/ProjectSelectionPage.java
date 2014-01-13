@@ -1,5 +1,6 @@
 package edu.oregonstate.cope.eclipse.ui.handlers;
 
+import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -12,8 +13,11 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ProjectSelectionPage extends Dialog {
 
-	public ProjectSelectionPage(Shell parentShell) {
+	private List<String> projects;
+
+	public ProjectSelectionPage(Shell parentShell, List<String> projects) {
 		super(parentShell);
+		this.projects = projects;
 	}
 
 	@Override
