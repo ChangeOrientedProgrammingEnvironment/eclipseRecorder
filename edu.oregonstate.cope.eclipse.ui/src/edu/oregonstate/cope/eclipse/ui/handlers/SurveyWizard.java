@@ -8,7 +8,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.json.simple.JSONObject;
 
-public class SurveyWizard extends Wizard {
+public class SurveyWizard extends Wizard implements SurveyProvider {
 
 	protected SurveyPage surveyPage;
 	protected Page2 two;
@@ -21,7 +21,7 @@ public class SurveyWizard extends Wizard {
 		setNeedsProgressMonitor(true);
 	}
 
-	public static SurveyWizard takeRealSurvey() {
+	public static SurveyProvider takeRealSurvey() {
 		SurveyWizard sw = new SurveyWizard();
 		WizardDialog wizardDialog = new WizardDialog(Display.getDefault().getActiveShell(), sw);
 
@@ -64,10 +64,18 @@ public class SurveyWizard extends Wizard {
 			return email;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.eclipse.ui.handlers.SurveyProvider#getSurveyResults()
+	 */
+	@Override
 	public String getSurveyResults() {
 		return surveyAnswers.toJSONString();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.eclipse.ui.handlers.SurveyProvider#getEmail()
+	 */
+	@Override
 	public String getEmail() {
 		return email;
 	}
