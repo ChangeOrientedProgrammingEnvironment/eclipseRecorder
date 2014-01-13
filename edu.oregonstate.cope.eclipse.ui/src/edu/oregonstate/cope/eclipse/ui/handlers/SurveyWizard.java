@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.Random;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
 import org.json.simple.JSONObject;
 
 public class SurveyWizard extends Wizard {
@@ -17,6 +19,15 @@ public class SurveyWizard extends Wizard {
 	public SurveyWizard() {
 		super();
 		setNeedsProgressMonitor(true);
+	}
+	
+	public static SurveyWizard takeRealSurvey(){
+		SurveyWizard sw = new SurveyWizard();
+		WizardDialog wizardDialog = new WizardDialog(Display.getDefault().getActiveShell(), sw);
+		
+		wizardDialog.open();
+		
+		return sw;
 	}
 
 	@Override

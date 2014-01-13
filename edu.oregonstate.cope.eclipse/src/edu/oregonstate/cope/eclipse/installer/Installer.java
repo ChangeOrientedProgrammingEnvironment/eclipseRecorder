@@ -39,9 +39,7 @@ public class Installer {
 
 		@Override
 		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-			SurveyWizard sw = new SurveyWizard();
-			WizardDialog wizardDialog = new WizardDialog(Display.getDefault().getActiveShell(), sw);
-			wizardDialog.open();
+			SurveyWizard sw = SurveyWizard.takeRealSurvey();
 
 			writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 			writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
