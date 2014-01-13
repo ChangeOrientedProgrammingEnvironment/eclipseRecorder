@@ -29,6 +29,21 @@ public class SurveyWizard extends Wizard implements SurveyProvider {
 
 		return sw;
 	}
+	
+	public static SurveyProvider takeFakeSurvey(){
+		return new SurveyProvider() {
+			
+			@Override
+			public String getSurveyResults() {
+				return "test survey";
+			}
+			
+			@Override
+			public String getEmail() {
+				return "test email";
+			}
+		};
+	}
 
 	@Override
 	public void addPages() {

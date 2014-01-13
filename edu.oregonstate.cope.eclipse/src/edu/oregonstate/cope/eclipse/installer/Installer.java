@@ -7,6 +7,7 @@ import java.nio.file.Path;
 
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
+import edu.oregonstate.cope.eclipse.ui.handlers.SurveyProvider;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 /**
@@ -35,7 +36,8 @@ public class Installer {
 
 		@Override
 		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-			SurveyWizard sw = SurveyWizard.takeRealSurvey();
+			SurveyProvider sw = SurveyWizard.takeRealSurvey();
+			//SurveyProvider sw = SurveyWizard.takeFakeSurvey();
 
 			writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 			writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
