@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -184,5 +186,15 @@ class StartPluginUIJob extends UIJob {
 		} catch (SchedulerException e) {
 			copePlugin.getLogger().error(this, e.getMessage(), e);
 		}
+	}
+	
+	private List<String> getListOfWorkspaceProjects() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		List<String> projectNames = new ArrayList<String>();
+		for (IProject project : projects) {
+			projectNames.add(project.getName());
+		}
+		
+		return projectNames;
 	}
 }
