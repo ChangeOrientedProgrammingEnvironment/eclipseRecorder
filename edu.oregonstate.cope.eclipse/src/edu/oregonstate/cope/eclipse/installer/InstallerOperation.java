@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-abstract class InstallerOperation {
+public abstract class InstallerOperation {
 
 	protected Path workspaceDirectory;
 	protected Path permanentDirectory;
