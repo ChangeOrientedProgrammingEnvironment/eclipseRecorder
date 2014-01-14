@@ -47,14 +47,19 @@ public class PluginInstallationTest {
 		fileSet.add(root.resolve(COPEPlugin.getDefault()._getInstallationConfigFileName()));
 	}
 
-	private void assertAllFilesExist() {
+	private void assertAllFilesAreOK() throws IOException {
 		for (Path path : workspaceFiles) {
 			System.out.println(path);
-			assertTrue(Files.exists(path));
+			assertFileIsOk(path);
 		}
 		for (Path path : permanentFiles) {
-			assertTrue(Files.exists(path));
+			assertFileIsOk(path);
 		}
+	}
+
+	private void assertFileIsOk(Path path) throws IOException {
+		assertTrue(Files.exists(path));
+		assertFalse(Files.readAllBytes(path).toString().trim().isEmpty());
 	}
 
 	private void assertNoFilesExist() {
@@ -68,7 +73,7 @@ public class PluginInstallationTest {
 
 	@Test
 	public void testInstallationFileEffects() throws Exception {
-		assertAllFilesExist();
+		assertAllFilesAreOK();
 		
 		deleteWorkspaceFiles();
 		deletePermanentFiles();
@@ -77,7 +82,7 @@ public class PluginInstallationTest {
 
 		installer.doInstall();
 
-		assertAllFilesExist();
+		assertAllFilesAreOK();
 
 		// --------------------------
 
@@ -85,7 +90,7 @@ public class PluginInstallationTest {
 
 		installer.doInstall();
 
-		assertAllFilesExist();
+		assertAllFilesAreOK();
 
 		// --------------------------
 
@@ -93,12 +98,12 @@ public class PluginInstallationTest {
 
 		installer.doInstall();
 
-		assertAllFilesExist();
+		assertAllFilesAreOK();
 
 		// --------------------------
 
 		installer.doInstall();
 
-		assertAllFilesExist();
+		assertAllFilesAreOK();
 	}
 }
