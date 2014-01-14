@@ -15,6 +15,8 @@ import edu.oregonstate.cope.eclipse.ui.handlers.SurveyProvider;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 public class SurveyOperation extends InstallerOperation {
+	
+	private static final String SURVEY_FILENAME = "survey.txt";
 
 	public SurveyOperation() {
 		super(COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath(), 
@@ -40,6 +42,11 @@ public class SurveyOperation extends InstallerOperation {
 		Path emailFile = parentDirectory.resolve(Installer.EMAIL_FILENAME);
 		Files.deleteIfExists(emailFile);
 		writeContentsToFile(emailFile, email);
+	}
+
+	@Override
+	protected String getFileName() {
+		return SURVEY_FILENAME;
 	}
 
 }

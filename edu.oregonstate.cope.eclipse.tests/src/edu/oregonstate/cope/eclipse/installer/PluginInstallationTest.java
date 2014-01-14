@@ -49,6 +49,7 @@ public class PluginInstallationTest {
 
 	private void assertAllFilesExist() {
 		for (Path path : workspaceFiles) {
+			System.out.println(path);
 			assertTrue(Files.exists(path));
 		}
 		for (Path path : permanentFiles) {

@@ -30,7 +30,7 @@ public class Installer {
 			try {
 				Object executableExtension = extension.createExecutableExtension("InstallerOperation");
 				if (executableExtension instanceof InstallerOperation)
-					((InstallerOperation)executableExtension).perform(SURVEY_FILENAME);
+					((InstallerOperation)executableExtension).perform();
 			} catch (CoreException e) {
 				System.out.println(e);
 			}

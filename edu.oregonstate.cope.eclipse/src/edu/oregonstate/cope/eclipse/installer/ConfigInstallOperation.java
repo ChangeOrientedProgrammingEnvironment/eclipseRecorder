@@ -27,4 +27,9 @@ public class ConfigInstallOperation extends InstallerOperation {
 		Files.copy(permanentFile.toPath(), workspaceFile.toPath());
 	}
 
+	@Override
+	protected String getFileName() {
+		return COPEPlugin.getDefault()._getInstallationConfigFileName();
+	}
+
 }
