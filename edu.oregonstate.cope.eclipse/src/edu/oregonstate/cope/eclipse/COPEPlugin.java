@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
@@ -25,6 +27,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.oregonstate.edu.eclipse"; //$NON-NLS-1$
 
+	private static final String PREFERENCES_IGNORED_PROJECTS = "ignoredProjects";
+
 	// The shared instance
 	static COPEPlugin plugin;
 
@@ -34,6 +38,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 	private RecorderFacade recorderFacade;
 
 	private SnapshotManager snapshotManager;
+	
+	private List<String> ignoredProjects;
 
 	/**
 	 * The constructor
@@ -164,5 +170,28 @@ public class COPEPlugin extends AbstractUIPlugin {
 	 */
 	public String _getInstallationConfigFileName() {
 		return RecorderFacade.instance().getInstallationConfigFilename();
+	}
+	
+	public List<String> getIgnoreProjectsList() {
+		return ignoredProjects;
+	}
+	
+	protected void setIgnoredProjectsList(List<String> ignoredProjects) {
+		StringBuffer value = new StringBuffer();
+		for (String project : ignoredProjects) {
+			value.append(project);
+			value.append(";");
+		}
+		COPEPlugin.getDefault().getWorkspaceProperties().addProperty(PREFERENCES_IGNORED_PROJECTS, value.toString());
+		this.ignoredProjects = ignoredProjects;
+	}
+
+	public void readIgnoredProjects() {
+		String ignoredProjectsString = getWorkspaceProperties().getProperty(PREFERENCES_IGNORED_PROJECTS);
+		String[] projectNames = ignoredProjectsString.split(";");
+		ignoredProjects = new ArrayList<>();
+		for (String project : projectNames) {
+			ignoredProjects.add(project);
+		}
 	}
 }
