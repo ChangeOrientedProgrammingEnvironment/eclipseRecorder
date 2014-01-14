@@ -13,5 +13,21 @@
             class="edu.oregonstate.cope.eclipse.listeners.JUnitListener">
       </testRunListener>
    </extension>
+   <extension
+         id="edu.oregonstate.cope.eclipse.emailinstalloperation"
+         name="Email Install Operation"
+         point="edu.oregonstate.cope.eclipse.installeroperation">
+      <provider
+            InstallerOperation="edu.oregonstate.cope.eclipse.installer.EmailInstallOperation">
+      </provider>
+   </extension>
+   <extension
+         id="edu.oregonstate.cope.configinstalloperation"
+         name="Config Install Operation"
+         point="edu.oregonstate.cope.eclipse.installeroperation">
+      <provider
+            InstallerOperation="edu.oregonstate.cope.eclipse.installer.ConfigInstallOperation">
+      </provider>
+   </extension>
 
 </plugin>
