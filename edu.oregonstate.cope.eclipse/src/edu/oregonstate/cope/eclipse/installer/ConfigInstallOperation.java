@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
-class ConfigInstallOperation extends InstallerOperation {
+public class ConfigInstallOperation extends InstallerOperation {
 
 	/**
 	 * 

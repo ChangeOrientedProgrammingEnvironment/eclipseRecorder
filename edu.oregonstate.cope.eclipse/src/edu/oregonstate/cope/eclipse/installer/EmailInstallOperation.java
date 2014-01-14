@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
-class EmailInstallOperation extends InstallerOperation {
+public class EmailInstallOperation extends InstallerOperation {
 
 	public EmailInstallOperation() {
 		super(COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath(), 
