@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.TableItem;
 public class ProjectSelectionDialog extends Dialog {
 
 	private List<String> projects;
+	private List<TableItem> tableItems;
 
 	public ProjectSelectionDialog(Shell parentShell, List<String> projects) {
 		super(parentShell);
@@ -53,7 +54,7 @@ public class ProjectSelectionDialog extends Dialog {
 		TableColumn tableColumn = new TableColumn(table, SWT.NONE);
 		tableColumn.setText("Project");
 		
-		List<TableItem> tableItems = new ArrayList<TableItem>();
+		tableItems = new ArrayList<TableItem>();
 		for (String project : projects) {
 			TableItem tableItem = new TableItem(table, SWT.NONE);
 			tableItem.setText(project);
