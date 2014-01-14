@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
+
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
@@ -21,6 +25,8 @@ public class Installer {
 	public static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
 	public static final String SURVEY_FILENAME = "survey.txt";
 	public final static String EMAIL_FILENAME = "email.txt";
+	
+	public static final String INSTALLER_EXTENSION_ID = "edu.oregonstate.cope.eclipse.installeroperation";
 
 	private Path workspaceDirectory;
 	private Path permanentDirectory;
@@ -65,6 +71,17 @@ public class Installer {
 	}
 
 	public void doInstall() throws IOException {
+		IConfigurationElement[] extensions = Platform.getExtensionRegistry().getConfigurationElementsFor(INSTALLER_EXTENSION_ID);
+		for (IConfigurationElement extension : extensions) {
+			try {
+				Object executableExtension = extension.createExecutableExtension("InstallerOperation");
+				if (executableExtension instanceof InstallerOperation)
+					((InstallerOperation)executableExtension).perform(SURVEY_FILENAME);
+			} catch (CoreException e) {
+				System.out.println(e);
+			}
+		}
+		
 //		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
 		new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
 		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
