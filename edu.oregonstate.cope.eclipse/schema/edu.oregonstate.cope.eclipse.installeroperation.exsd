@@ -10,13 +10,16 @@
       </documentation>
    </annotation>
 
-  <element name="extension">
+   <element name="extension">
       <annotation>
          <appinfo>
             <meta.element />
          </appinfo>
       </annotation>
       <complexType>
+         <choice>
+            <element ref="provider" minOccurs="1" maxOccurs="unbounded"/>
+         </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -24,14 +27,14 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="id" type="string">
+         <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="name" type="string">
+         <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
                   
