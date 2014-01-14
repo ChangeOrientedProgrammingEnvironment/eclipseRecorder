@@ -62,6 +62,11 @@ public class InstallerOperationTest {
 			writeToFile(permanentFile.toPath());
 		}
 
+		@Override
+		protected String getFileName() {
+			return FILE;
+		}
+
 	}
 
 	private void writeToFile(Path path) throws IOException {
@@ -98,7 +103,7 @@ public class InstallerOperationTest {
 		writeToFile(PERMANENT_FILE_PATH);
 		writeToFile(WORKSPACE_FILE_PATH);
 
-		testOperation.perform(FILE);
+		testOperation.perform();
 
 		assertFileExists(PERMANENT_FILE_PATH);
 		assertFileExists(WORKSPACE_FILE_PATH);
@@ -109,7 +114,7 @@ public class InstallerOperationTest {
 	public void testOnlyPermanent() throws IOException {
 		writeToFile(PERMANENT_FILE_PATH);
 
-		testOperation.perform(FILE);
+		testOperation.perform();
 
 		assertFileExists(PERMANENT_FILE_PATH);
 		assertFileExists(WORKSPACE_FILE_PATH);
@@ -120,7 +125,7 @@ public class InstallerOperationTest {
 	public void testOnlyWorkspace() throws IOException {
 		writeToFile(WORKSPACE_FILE_PATH);
 
-		testOperation.perform(FILE);
+		testOperation.perform();
 
 		assertFileExists(PERMANENT_FILE_PATH);
 		assertFileExists(WORKSPACE_FILE_PATH);
@@ -129,7 +134,7 @@ public class InstallerOperationTest {
 
 	@Test
 	public void testNoFileExists() throws IOException {
-		testOperation.perform(FILE);
+		testOperation.perform();
 
 		assertFileExists(PERMANENT_FILE_PATH);
 		assertFileExists(WORKSPACE_FILE_PATH);

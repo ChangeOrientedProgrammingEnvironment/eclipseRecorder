@@ -45,7 +45,6 @@ import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
-import edu.oregonstate.cope.eclipse.ui.handlers.ProjectSelectionDialog;
 import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
@@ -113,20 +112,20 @@ class StartPluginUIJob extends UIJob {
 	}
 
 	private void initializeIgnoredProjects() {
-		ProjectSelectionDialog projectSelectionDialog = new ProjectSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), copePlugin.getListOfWorkspaceProjects());
-		projectSelectionDialog.open();
-		List<String> ignoredProjects = projectSelectionDialog.getIgnoredProjects();
-		StringBuffer value = new StringBuffer();
-		for (String project : ignoredProjects) {
-			value.append(project);
-			value.append(";");
-		}
-		COPEPlugin.getDefault().getWorkspaceProperties().addProperty("ignoredProjects", value.toString());
+//		ProjectSelectionDialog projectSelectionDialog = new ProjectSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), copePlugin.getListOfWorkspaceProjects());
+//		projectSelectionDialog.open();
+//		List<String> ignoredProjects = projectSelectionDialog.getIgnoredProjects();
+//		StringBuffer value = new StringBuffer();
+//		for (String project : ignoredProjects) {
+//			value.append(project);
+//			value.append(";");
+//		}
+//		COPEPlugin.getDefault().getWorkspaceProperties().addProperty("ignoredProjects", value.toString());
 	}
 
 	private void doInstall() {
 		try {
-			new Installer().doInstall();
+			new Installer().run();
 		} catch (IOException e) {
 			copePlugin.getLogger().error(this, "Installer failed", e);
 		}
