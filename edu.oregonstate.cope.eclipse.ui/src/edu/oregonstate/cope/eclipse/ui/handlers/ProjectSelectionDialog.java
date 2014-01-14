@@ -22,6 +22,7 @@ public class ProjectSelectionDialog extends Dialog {
 
 	private List<String> projects;
 	private List<TableItem> tableItems;
+	private List<String> ignoredProjects;
 
 	public ProjectSelectionDialog(Shell parentShell, List<String> projects) {
 		super(parentShell);
@@ -100,13 +101,18 @@ public class ProjectSelectionDialog extends Dialog {
 		
 		return super.createContents(parent);
 	}
-
-	public List<String> getIgnoredProjects() {
-		List<String> ignoredProjects = new ArrayList<String>();
+	
+	@Override
+	protected void okPressed() {
+		ignoredProjects = new ArrayList<String>();
 		for (TableItem item : tableItems) {
 			if(!item.getChecked())
 				ignoredProjects.add(item.getText());
 		}
+		super.okPressed();
+	}
+
+	public List<String> getIgnoredProjects() {
 		return ignoredProjects;
 	}
 }

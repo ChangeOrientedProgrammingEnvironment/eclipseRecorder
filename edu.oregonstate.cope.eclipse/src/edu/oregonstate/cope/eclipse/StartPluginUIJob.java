@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
@@ -154,6 +153,7 @@ class StartPluginUIJob extends UIJob {
 	private void registerDocumentListenersForOpenEditors() {
 		SnapshotManager snapshotManager = COPEPlugin.getDefault().getSnapshotManager();
 		IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		List<String> ignoredProjects = COPEPlugin.getDefault().getIgnoreProjectsList();
 		IEditorReference[] editorReferences = activeWindow.getActivePage().getEditorReferences();
 		for (IEditorReference editorReference : editorReferences) {
 			IDocument document = getDocumentForEditor(editorReference);
@@ -161,6 +161,8 @@ class StartPluginUIJob extends UIJob {
 				continue;
 			document.addDocumentListener(new DocumentListener());
 			IProject project = getProjectFromEditor(editorReference);
+			if (ignoredProjects.contains(project.getName()))
+				continue;
 			if (!snapshotManager.isProjectKnown(project))
 				snapshotManager.takeSnapshot(project);
 		}
