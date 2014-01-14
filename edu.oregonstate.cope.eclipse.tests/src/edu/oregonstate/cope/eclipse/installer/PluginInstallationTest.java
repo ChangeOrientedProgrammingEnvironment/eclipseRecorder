@@ -67,6 +67,8 @@ public class PluginInstallationTest {
 
 	@Test
 	public void testInstallationFileEffects() throws Exception {
+		assertAllFilesExist();
+		
 		deleteWorkspaceFiles();
 		deletePermanentFiles();
 
