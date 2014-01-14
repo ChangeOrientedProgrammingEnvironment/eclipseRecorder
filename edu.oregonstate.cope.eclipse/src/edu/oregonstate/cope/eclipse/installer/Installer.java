@@ -5,12 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
-
-import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
+import edu.oregonstate.cope.eclipse.ui.handlers.SurveyProvider;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 /**
@@ -23,13 +20,13 @@ import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 public class Installer {
 
 	protected static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
-	private static final String SURVEY_FILENAME = "survey.txt";
-	private static final String EMAIL_FILENAME = "email.txt";
+	protected static final String SURVEY_FILENAME = "survey.txt";
+	protected static final String EMAIL_FILENAME = "email.txt";
 
 	private Path workspaceDirectory;
 	private Path permanentDirectory;
 	private Uninstaller uninstaller;
-	private String installationConfigFileName;
+	protected String installationConfigFileName;
 
 	private class SurveyOperation extends InstallerOperation {
 
@@ -39,9 +36,8 @@ public class Installer {
 
 		@Override
 		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-			SurveyWizard sw = new SurveyWizard();
-			WizardDialog wizardDialog = new WizardDialog(Display.getDefault().getActiveShell(), sw);
-			wizardDialog.open();
+			SurveyProvider sw = SurveyWizard.takeRealSurvey();
+			//SurveyProvider sw = SurveyWizard.takeFakeSurvey();
 
 			writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 			writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
@@ -75,7 +71,6 @@ public class Installer {
 
 			Files.copy(permanentFile.toPath(), workspaceFile.toPath());
 		}
-
 	}
 
 	private class EmailInstallOperation extends InstallerOperation {
@@ -88,7 +83,6 @@ public class Installer {
 		@Override
 		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
 		}
-
 	}
 
 	public Installer() {
@@ -98,20 +92,23 @@ public class Installer {
 		this.uninstaller = COPEPlugin.getDefault().getUninstaller();
 		this.installationConfigFileName = COPEPlugin.getDefault()._getInstallationConfigFileName();
 	}
+	
+	public void run() throws IOException {
+		doInstall();
+		doUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
+	}
 
-	public void doInstall() throws IOException {
+	protected void doInstall() throws IOException {
 		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
 		new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
 		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
-		
-		checkForPluginUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
 	}
 
-	protected void checkForPluginUpdate(String propertiesVersion, String currentPluginVersion) {
-		if(propertiesVersion == null || !propertiesVersion.equals(currentPluginVersion)){
+	protected void doUpdate(String propertiesVersion, String currentPluginVersion) {
+		if (propertiesVersion == null || !propertiesVersion.equals(currentPluginVersion)) {
 			COPEPlugin.getDefault().getWorkspaceProperties().addProperty(LAST_PLUGIN_VERSION, currentPluginVersion.toString());
 			performPluginUpdate();
-		}	
+		}
 	}
 
 	private void performPluginUpdate() {
