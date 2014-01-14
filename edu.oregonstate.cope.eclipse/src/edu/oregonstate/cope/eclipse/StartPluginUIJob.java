@@ -94,7 +94,9 @@ class StartPluginUIJob extends UIJob {
 			initializeIgnoredProjects();
 			getToKnowWorkspace();
 		}
-
+		
+		copePlugin.readIgnoredProjects();
+		
 		monitor.worked(1);
 
 		registerDocumentListenersForOpenEditors();
