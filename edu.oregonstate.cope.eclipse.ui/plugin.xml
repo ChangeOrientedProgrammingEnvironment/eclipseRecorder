@@ -6,14 +6,19 @@
          id="edu.oregonstate.cope.eclipse.ui.surveyinstalloperation"
          name="Survey Install Operation"
          point="edu.oregonstate.cope.eclipse.installeroperation">
-      <provider
-            InstallerOperation="edu.oregonstate.cope.eclipse.ui.SurveyOperation">
-      </provider>
    </extension>
- <page
+	 <page
             class="edu.oregonstate.cope.eclipse.ui.COPEPreferencePage"
             id="edu.oregonstate.cope.eclipse.ui.projectPreference"
             name="COPE recorder">
       </page>
+  <extension
+        id="edu.oregonstate.cope.ui.surveyinstalloperation"
+        name="Survey Install Operation"
+        point="edu.oregonstate.cope.eclipse.installeroperation">
+     <provider
+           InstallerOperation="edu.oregonstate.cope.eclipse.ui.SurveyOperation">
+     </provider>
+  </extension>
 
 </plugin>
