@@ -3,14 +3,14 @@
 <schema targetNamespace="edu.oregonstate.cope.eclipse" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="edu.oregonstate.cope.eclipse" id="edu.oregonstate.cope.eclipse.startsurvey" name="Start Survey"/>
+         <meta.schema plugin="edu.oregonstate.cope.eclipse" id="edu.oregonstate.cope.eclipse.installeroperation" name="Installer Operation"/>
       </appinfo>
       <documentation>
-         Extension point for providing the plugin start survey.
+         Provider for an install operation.
       </documentation>
    </annotation>
 
-   <element name="extension">
+  <element name="extension">
       <annotation>
          <appinfo>
             <meta.element />
