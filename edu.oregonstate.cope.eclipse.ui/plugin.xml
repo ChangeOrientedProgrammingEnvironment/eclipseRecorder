@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="edu.oregonstate.cope.eclipse.ui.PreferencePage"
+            class="edu.oregonstate.cope.eclipse.ui.COPEPreferencePage"
             id="edu.oregonstate.cope.eclipse.ui.projectPreference"
             name="COPE recorder">
       </page>
