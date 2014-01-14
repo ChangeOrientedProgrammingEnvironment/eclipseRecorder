@@ -13,8 +13,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -37,6 +40,7 @@ import org.quartz.SchedulerException;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
+import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
@@ -49,6 +53,9 @@ import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
 class StartPluginUIJob extends UIJob {
+	
+	private static final String WORKSPACE_INIT_EXTENSION_ID = "edu.oregonstate.cope.eclipse.workspaceinitoperation";
+	
 	/**
 	 * 
 	 */
@@ -88,8 +95,8 @@ class StartPluginUIJob extends UIJob {
 		doInstall();
 
 		if (!isWorkspaceKnown()) {
-			initializeIgnoredProjects();
 			getToKnowWorkspace();
+			initializeWorkspace();
 		}
 		
 		copePlugin.readIgnoredProjects();
@@ -111,16 +118,17 @@ class StartPluginUIJob extends UIJob {
 		initializeFileSender();
 	}
 
-	private void initializeIgnoredProjects() {
-//		ProjectSelectionDialog projectSelectionDialog = new ProjectSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), copePlugin.getListOfWorkspaceProjects());
-//		projectSelectionDialog.open();
-//		List<String> ignoredProjects = projectSelectionDialog.getIgnoredProjects();
-//		StringBuffer value = new StringBuffer();
-//		for (String project : ignoredProjects) {
-//			value.append(project);
-//			value.append(";");
-//		}
-//		COPEPlugin.getDefault().getWorkspaceProperties().addProperty("ignoredProjects", value.toString());
+	private void initializeWorkspace() {
+		IConfigurationElement[] extensions = Platform.getExtensionRegistry().getConfigurationElementsFor(WORKSPACE_INIT_EXTENSION_ID);
+		for (IConfigurationElement extension : extensions) {
+			try {
+				Object executableExtension = extension.createExecutableExtension("InitializeWorkspaceOperation");
+				if (executableExtension instanceof InitializeWorkspaceOperation)
+					((InitializeWorkspaceOperation)executableExtension).doInit();
+			} catch (CoreException e) {
+				COPEPlugin.getDefault().getLogger().error(this, "Could not load Workspace Init extension", e);
+			}
+		}
 	}
 
 	private void doInstall() {
