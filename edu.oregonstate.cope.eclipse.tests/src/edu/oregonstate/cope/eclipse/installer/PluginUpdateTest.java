@@ -57,7 +57,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	public void testSnapshotAtUpdate() throws Exception {
 		Properties properties = plugin.getWorkspaceProperties();
 
-		new Installer().checkForPluginUpdate("v1", "v2");
+		new Installer().doUpdate("v1", "v2");
 
 		boolean zipExists = false;
 

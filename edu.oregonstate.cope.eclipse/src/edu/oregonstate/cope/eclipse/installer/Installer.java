@@ -92,16 +92,19 @@ public class Installer {
 		this.uninstaller = COPEPlugin.getDefault().getUninstaller();
 		this.installationConfigFileName = COPEPlugin.getDefault()._getInstallationConfigFileName();
 	}
+	
+	public void run() throws IOException {
+		doInstall();
+		doUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
+	}
 
-	public void doInstall() throws IOException {
+	protected void doInstall() throws IOException {
 		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
 		new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
 		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
-
-		checkForPluginUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
 	}
 
-	protected void checkForPluginUpdate(String propertiesVersion, String currentPluginVersion) {
+	protected void doUpdate(String propertiesVersion, String currentPluginVersion) {
 		if (propertiesVersion == null || !propertiesVersion.equals(currentPluginVersion)) {
 			COPEPlugin.getDefault().getWorkspaceProperties().addProperty(LAST_PLUGIN_VERSION, currentPluginVersion.toString());
 			performPluginUpdate();
