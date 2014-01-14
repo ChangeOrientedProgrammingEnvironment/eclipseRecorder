@@ -1,15 +1,12 @@
 package edu.oregonstate.cope.eclipse.installer;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 
-import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
@@ -30,37 +27,8 @@ public class Installer {
 
 	private Path workspaceDirectory;
 	private Path permanentDirectory;
-	private Uninstaller uninstaller;
+	Uninstaller uninstaller;
 	private String installationConfigFileName;
-
-	private class ConfigInstallOperation extends InstallerOperation {
-
-		public ConfigInstallOperation(Path workspaceDirectory,
-				Path permanentDirectory) {
-			super(workspaceDirectory, permanentDirectory);
-		}
-
-		@Override
-		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-			uninstaller.initUninstallInMonths(3);
-
-			Files.copy(permanentFile.toPath(), workspaceFile.toPath());
-		}
-
-	}
-
-	private class EmailInstallOperation extends InstallerOperation {
-
-		public EmailInstallOperation(Path workspaceDirectory,
-				Path permanentDirectory) {
-			super(workspaceDirectory, permanentDirectory);
-		}
-
-		@Override
-		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-		}
-
-	}
 
 	public Installer() {
 
@@ -83,7 +51,7 @@ public class Installer {
 		}
 		
 //		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
-		new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
+		new ConfigInstallOperation(this, workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
 		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
 		
 		checkForPluginUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
