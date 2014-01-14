@@ -20,13 +20,13 @@ import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 public class Installer {
 
 	protected static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
-	private static final String SURVEY_FILENAME = "survey.txt";
-	private static final String EMAIL_FILENAME = "email.txt";
+	protected static final String SURVEY_FILENAME = "survey.txt";
+	protected static final String EMAIL_FILENAME = "email.txt";
 
 	private Path workspaceDirectory;
 	private Path permanentDirectory;
 	private Uninstaller uninstaller;
-	private String installationConfigFileName;
+	protected String installationConfigFileName;
 
 	private class SurveyOperation extends InstallerOperation {
 
