@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -40,8 +42,40 @@ public class ProjectSelectionDialog extends Dialog {
 		buttonsParent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		Button selectAll = new Button(buttonsParent, SWT.NONE);
 		selectAll.setText("Select all");
+		selectAll.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseUp(MouseEvent e) {
+				for(TableItem item : tableItems)
+					item.setChecked(true);
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+		});
 		Button selectNone = new Button(buttonsParent, SWT.NONE);
 		selectNone.setText("Select none");
+		selectNone.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseUp(MouseEvent e) {
+				for(TableItem item : tableItems)
+					item.setChecked(false);
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+		});
 		
 		Composite projectList = new Composite(composite, SWT.BORDER);
 		projectList.setLayout(new GridLayout(1, true));
