@@ -3,24 +3,26 @@ package edu.oregonstate.cope.eclipse.installer;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
+
+import edu.oregonstate.cope.clientRecorder.Uninstaller;
+import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 class ConfigInstallOperation extends InstallerOperation {
 
 	/**
 	 * 
 	 */
-	private Installer installer;
+	private Uninstaller uninstaller;
 
-	public ConfigInstallOperation(Installer installer, Path workspaceDirectory,
-			Path permanentDirectory) {
-		super(workspaceDirectory, permanentDirectory);
-		this.installer = installer;
+	public ConfigInstallOperation() {
+		super(COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath(), 
+				COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath());
+		uninstaller = COPEPlugin.getDefault().getUninstaller();
 	}
 
 	@Override
 	protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-		this.installer.uninstaller.initUninstallInMonths(3);
+		uninstaller.initUninstallInMonths(3);
 
 		Files.copy(permanentFile.toPath(), workspaceFile.toPath());
 	}
