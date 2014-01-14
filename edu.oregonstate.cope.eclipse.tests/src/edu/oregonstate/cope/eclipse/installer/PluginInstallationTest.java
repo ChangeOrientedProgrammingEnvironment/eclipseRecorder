@@ -1,5 +1,6 @@
 package edu.oregonstate.cope.eclipse.installer;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -47,13 +48,20 @@ public class PluginInstallationTest {
 	}
 
 	private void assertAllFilesExist() {
-		assertFileSetExists(workspaceFiles);
-		assertFileSetExists(permanentFiles);
+		for (Path path : workspaceFiles) {
+			assertTrue(Files.exists(path));
+		}
+		for (Path path : permanentFiles) {
+			assertTrue(Files.exists(path));
+		}
 	}
 
-	private void assertFileSetExists(HashSet<Path> fileSet) {
-		for (Path path : fileSet) {
-			assertTrue(Files.exists(path));
+	private void assertNoFilesExist() {
+		for (Path path : workspaceFiles) {
+			assertFalse(Files.exists(path));
+		}
+		for (Path path : permanentFiles) {
+			assertFalse(Files.exists(path));
 		}
 	}
 
@@ -61,6 +69,8 @@ public class PluginInstallationTest {
 	public void testInstallationFileEffects() throws Exception {
 		deleteWorkspaceFiles();
 		deletePermanentFiles();
+
+		assertNoFilesExist();
 
 		installer.doInstall();
 
