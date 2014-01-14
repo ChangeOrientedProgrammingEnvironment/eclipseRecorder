@@ -8,14 +8,16 @@ import java.nio.file.Path;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 
+import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.installer.InstallerOperation;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 public class SurveyOperation extends InstallerOperation {
 
-	public SurveyOperation(Path workspaceDirectory, Path permanentDirectory) {
-		super(workspaceDirectory, permanentDirectory);
+	public SurveyOperation() {
+		super(COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath(), 
+				COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath());
 	}
 
 	@Override
