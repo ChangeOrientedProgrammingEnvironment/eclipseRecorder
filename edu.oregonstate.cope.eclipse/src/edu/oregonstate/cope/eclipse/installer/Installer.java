@@ -5,13 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
-
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
-import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 /**
  * Runs plugin installation mode. This is implemented by storing files both in
@@ -22,45 +18,14 @@ import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
  */
 public class Installer {
 
-	protected static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
-	private static final String SURVEY_FILENAME = "survey.txt";
-	private static final String EMAIL_FILENAME = "email.txt";
+	public static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
+	public static final String SURVEY_FILENAME = "survey.txt";
+	public final static String EMAIL_FILENAME = "email.txt";
 
 	private Path workspaceDirectory;
 	private Path permanentDirectory;
 	private Uninstaller uninstaller;
 	private String installationConfigFileName;
-
-	private class SurveyOperation extends InstallerOperation {
-
-		public SurveyOperation(Path workspaceDirectory, Path permanentDirectory) {
-			super(workspaceDirectory, permanentDirectory);
-		}
-
-		@Override
-		protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-			SurveyWizard sw = new SurveyWizard();
-			WizardDialog wizardDialog = new WizardDialog(Display.getDefault().getActiveShell(), sw);
-			wizardDialog.open();
-
-			writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
-			writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
-
-			handleEmail(sw.getEmail());
-		}
-
-		private void handleEmail(String email) throws IOException {
-			doFor(permanentDirectory, email);
-			doFor(workspaceDirectory, email);
-		}
-
-		private void doFor(Path parentDirectory, String email) throws IOException {
-			Path emailFile = parentDirectory.resolve(EMAIL_FILENAME);
-			Files.deleteIfExists(emailFile);
-			writeContentsToFile(emailFile, email);
-		}
-
-	}
 
 	private class ConfigInstallOperation extends InstallerOperation {
 
@@ -100,7 +65,7 @@ public class Installer {
 	}
 
 	public void doInstall() throws IOException {
-		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
+//		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
 		new ConfigInstallOperation(workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
 		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
 		
