@@ -24,9 +24,6 @@
         id="edu.oregonstate.cope.ui.ignoredprojectnit"
         point="edu.oregonstate.cope.eclipse.workspaceinitoperation">
      <provider
-           InitializeWorkspaceOperation="edu.oregonstate.cope.eclipse.ui.InitializeWorkspaceOperation1">
-     </provider>
-     <provider
            InitializeWorkspaceOperation="edu.oregonstate.cope.eclipse.ui.IgnoredProjectStart">
      </provider>
   </extension>
