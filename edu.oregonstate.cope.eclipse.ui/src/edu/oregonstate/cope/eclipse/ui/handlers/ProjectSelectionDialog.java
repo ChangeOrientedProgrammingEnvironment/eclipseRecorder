@@ -100,4 +100,13 @@ public class ProjectSelectionDialog extends Dialog {
 		
 		return super.createContents(parent);
 	}
+
+	public List<String> getIgnoredProjects() {
+		List<String> ignoredProjects = new ArrayList<String>();
+		for (TableItem item : tableItems) {
+			if(!item.getChecked())
+				ignoredProjects.add(item.getText());
+		}
+		return ignoredProjects;
+	}
 }
