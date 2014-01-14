@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="edu.oregonstate.cope.eclipse.installeroperation" name="Installer Operation" schema="schema/edu.oregonstate.cope.eclipse.installeroperation.exsd"/>
+   <extension-point id="edu.oregonstate.cope.eclipse.workspaceinitoperation" name="Workspace Init Operation" schema="schema/edu.oregonstate.cope.eclipse.workspaceinitoperation.exsd"/>
    <extension
          point="org.eclipse.ui.startup">
       <startup
