@@ -15,7 +15,7 @@ import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
 import edu.oregonstate.cope.eclipse.SnapshotManager;
 
-public class InstallerTest extends PopulatedWorkspaceTest {
+public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 	private static COPEPlugin plugin;
 	private static SnapshotManager snapshotManager;
@@ -57,7 +57,7 @@ public class InstallerTest extends PopulatedWorkspaceTest {
 	public void testSnapshotAtUpdate() throws Exception {
 		Properties properties = plugin.getWorkspaceProperties();
 
-		new Installer().checkForPluginUpdate("v1", "v2");
+		new Installer().doUpdate("v1", "v2");
 
 		boolean zipExists = false;
 
