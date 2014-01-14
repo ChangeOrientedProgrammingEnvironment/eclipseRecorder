@@ -14,7 +14,6 @@ import edu.oregonstate.cope.eclipse.ui.ProjectSelectionComposite;
 public class ProjectSelectionDialog extends Dialog {
 
 	private List<String> projects;
-	private List<TableItem> tableItems;
 	private List<String> ignoredProjects;
 	private ProjectSelectionComposite selectionComposite;
 
