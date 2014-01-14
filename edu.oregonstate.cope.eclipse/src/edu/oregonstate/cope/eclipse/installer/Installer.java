@@ -35,16 +35,8 @@ public class Installer {
 				System.out.println(e);
 			}
 		}
-		
-		checkForPluginUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
 	}
 	
-	protected void checkForPluginUpdate(String propertiesVersion, String currentPluginVersion) {
-		if(propertiesVersion == null || !propertiesVersion.equals(currentPluginVersion)){
-			COPEPlugin.getDefault().getWorkspaceProperties().addProperty(LAST_PLUGIN_VERSION, currentPluginVersion.toString());
-			performPluginUpdate();
-		}	
-	}
 	
 	public void run() throws IOException {
 		doInstall();
