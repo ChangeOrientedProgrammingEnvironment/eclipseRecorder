@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -204,5 +205,15 @@ public class COPEPlugin extends AbstractUIPlugin {
 		IFile file = ((FileEditorInput) editorInput).getFile();
 		project = file.getProject();
 		return project;
+	}
+
+	public List<String> getListOfWorkspaceProjects() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		List<String> projectNames = new ArrayList<String>();
+		for (IProject project : projects) {
+			projectNames.add(project.getName());
+		}
+		
+		return projectNames;
 	}
 }
