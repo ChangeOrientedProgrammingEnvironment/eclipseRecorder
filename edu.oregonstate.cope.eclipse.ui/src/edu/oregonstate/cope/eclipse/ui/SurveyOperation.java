@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.installer.InstallerOperation;
+import edu.oregonstate.cope.eclipse.ui.handlers.SurveyProvider;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 public class SurveyOperation extends InstallerOperation {
@@ -22,9 +23,7 @@ public class SurveyOperation extends InstallerOperation {
 
 	@Override
 	protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-		SurveyWizard sw = new SurveyWizard();
-		WizardDialog wizardDialog = new WizardDialog(Display.getDefault().getActiveShell(), sw);
-		wizardDialog.open();
+		SurveyProvider sw = SurveyWizard.takeRealSurvey();
 
 		writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 		writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
