@@ -18,8 +18,8 @@ import org.eclipse.swt.widgets.TableItem;
 public class ProjectSelectionComposite extends Composite {
 
 	private List<TableItem> tableItems;
-
-	public ProjectSelectionComposite(Composite parent, int style, List<String> projects) {
+	
+	public ProjectSelectionComposite(Composite parent, int style, List<String> projects, List<String> ignoredProjects) {
 		super(parent, style);
 		
 		Composite composite = this;
@@ -89,6 +89,10 @@ public class ProjectSelectionComposite extends Composite {
 		}
 		
 		tableColumn.pack();
+	}
+
+	public ProjectSelectionComposite(Composite parent, int style, List<String> projects) {
+		this(parent, style, projects, new ArrayList<String>());
 	}
 	
 	public List<String> getIgnoredProjects() {

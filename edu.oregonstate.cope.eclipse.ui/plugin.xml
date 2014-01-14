@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="edu.oregonstate.cope.eclipse.ui.PreferencePage"
+            id="edu.oregonstate.cope.eclipse.ui.projectPreference"
+            name="COPE recorder">
+      </page>
+   </extension>
 
 
 </plugin>
