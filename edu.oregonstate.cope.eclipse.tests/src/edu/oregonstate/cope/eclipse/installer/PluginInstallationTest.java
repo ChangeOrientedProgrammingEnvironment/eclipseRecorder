@@ -44,11 +44,12 @@ public class PluginInstallationTest {
 	private void addToFileSet(HashSet<Path> fileSet, Path root) {
 		fileSet.add(root.resolve(Installer.SURVEY_FILENAME));
 		fileSet.add(root.resolve(Installer.EMAIL_FILENAME));
-		fileSet.add(root.resolve(installer.installationConfigFileName));
+		fileSet.add(root.resolve(COPEPlugin.getDefault()._getInstallationConfigFileName()));
 	}
 
 	private void assertAllFilesExist() {
 		for (Path path : workspaceFiles) {
+			System.out.println(path);
 			assertTrue(Files.exists(path));
 		}
 		for (Path path : permanentFiles) {

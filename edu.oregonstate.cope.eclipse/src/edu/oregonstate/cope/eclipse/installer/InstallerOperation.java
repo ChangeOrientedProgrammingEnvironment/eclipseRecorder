@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-abstract class InstallerOperation {
+public abstract class InstallerOperation {
 
 	protected Path workspaceDirectory;
 	protected Path permanentDirectory;
@@ -16,7 +16,8 @@ abstract class InstallerOperation {
 		this.workspaceDirectory = workspaceDirectory;
 	}
 
-	public void perform(String fileName) throws IOException {
+	public void perform() throws IOException {
+		String fileName = getFileName();
 		File workspaceFile = workspaceDirectory.resolve(fileName).toFile();
 		File permanentFile = permanentDirectory.resolve(fileName).toFile();
 
@@ -53,6 +54,8 @@ abstract class InstallerOperation {
 	}
 
 	protected abstract void doNoFileExists(File workspaceFile, File permanentFile) throws IOException;
+	
+	protected abstract String getFileName();
 
 	protected void writeContentsToFile(Path filePath, String fileContents) throws IOException {
 		Files.write(filePath, fileContents.getBytes(), StandardOpenOption.CREATE);

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension
+         id="edu.oregonstate.cope.eclipse.ui.surveyinstalloperation"
+         name="Survey Install Operation"
+         point="edu.oregonstate.cope.eclipse.installeroperation">
+      <provider
+            InstallerOperation="edu.oregonstate.cope.eclipse.ui.SurveyOperation">
+      </provider>
+   </extension>
 
 
 </plugin>
