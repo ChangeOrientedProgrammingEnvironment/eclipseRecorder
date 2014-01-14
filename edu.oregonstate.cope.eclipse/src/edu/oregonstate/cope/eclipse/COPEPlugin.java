@@ -8,6 +8,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
@@ -193,5 +197,12 @@ public class COPEPlugin extends AbstractUIPlugin {
 		for (String project : projectNames) {
 			ignoredProjects.add(project);
 		}
+	}
+
+	public IProject getProjectForEditor(IEditorInput editorInput) {
+		IProject project;
+		IFile file = ((FileEditorInput) editorInput).getFile();
+		project = file.getProject();
+		return project;
 	}
 }

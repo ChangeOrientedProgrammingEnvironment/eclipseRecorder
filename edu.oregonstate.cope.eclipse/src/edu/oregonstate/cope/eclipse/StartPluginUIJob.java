@@ -172,8 +172,7 @@ class StartPluginUIJob extends UIJob {
 		try {
 			editorInput = editorReference.getEditorInput();
 			if (editorInput instanceof FileEditorInput) {
-				IFile file = ((FileEditorInput) editorInput).getFile();
-				project = file.getProject();
+				project = copePlugin.getProjectForEditor(editorInput);
 			}
 		} catch (PartInitException e) {
 			copePlugin.getLogger().error(this, e.getMessage(), e);
