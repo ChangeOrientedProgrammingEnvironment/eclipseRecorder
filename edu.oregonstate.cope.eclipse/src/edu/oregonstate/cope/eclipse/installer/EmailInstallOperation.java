@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import edu.oregonstate.cope.eclipse.COPEPlugin;
+
 class EmailInstallOperation extends InstallerOperation {
 
-	public EmailInstallOperation(Path workspaceDirectory,
-			Path permanentDirectory) {
-		super(workspaceDirectory, permanentDirectory);
+	public EmailInstallOperation() {
+		super(COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath(), 
+				COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath());
 	}
 
 	@Override
