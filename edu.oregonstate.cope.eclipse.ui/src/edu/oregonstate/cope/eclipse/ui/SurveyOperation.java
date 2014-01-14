@@ -26,6 +26,7 @@ public class SurveyOperation extends InstallerOperation {
 	@Override
 	protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
 		SurveyProvider sw = SurveyWizard.takeRealSurvey();
+//		SurveyProvider sw = SurveyWizard.takeFakeSurvey();
 
 		writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 		writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
