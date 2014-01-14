@@ -25,19 +25,6 @@ public class Installer {
 	
 	public static final String INSTALLER_EXTENSION_ID = "edu.oregonstate.cope.eclipse.installeroperation";
 
-	private Path workspaceDirectory;
-	private Path permanentDirectory;
-	Uninstaller uninstaller;
-	private String installationConfigFileName;
-
-	public Installer() {
-
-		this.workspaceDirectory = COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath();
-		this.permanentDirectory = COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath();
-		this.uninstaller = COPEPlugin.getDefault().getUninstaller();
-		this.installationConfigFileName = COPEPlugin.getDefault()._getInstallationConfigFileName();
-	}
-
 	public void doInstall() throws IOException {
 		IConfigurationElement[] extensions = Platform.getExtensionRegistry().getConfigurationElementsFor(INSTALLER_EXTENSION_ID);
 		for (IConfigurationElement extension : extensions) {
@@ -49,10 +36,6 @@ public class Installer {
 				System.out.println(e);
 			}
 		}
-		
-//		new SurveyOperation(workspaceDirectory, permanentDirectory).perform(SURVEY_FILENAME);
-		new ConfigInstallOperation(this, workspaceDirectory, permanentDirectory).perform(installationConfigFileName);
-		new EmailInstallOperation(workspaceDirectory, permanentDirectory).perform(EMAIL_FILENAME);
 		
 		checkForPluginUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
 	}
