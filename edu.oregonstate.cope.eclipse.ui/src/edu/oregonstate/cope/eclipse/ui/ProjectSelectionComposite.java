@@ -84,7 +84,10 @@ public class ProjectSelectionComposite extends Composite {
 		for (String project : projects) {
 			TableItem tableItem = new TableItem(table, SWT.NONE);
 			tableItem.setText(project);
-			tableItem.setChecked(true);
+			if (ignoredProjects.contains(project))
+				tableItem.setChecked(false);
+			else
+				tableItem.setChecked(true);
 			tableItems.add(tableItem);
 		}
 		
