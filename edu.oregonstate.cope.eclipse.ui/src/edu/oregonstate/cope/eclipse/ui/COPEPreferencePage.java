@@ -12,11 +12,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import edu.oregonstate.cope.eclipse.COPEPlugin;
+
 public class COPEPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+
+	private ProjectSelectionComposite composite;
 
 	@Override
 	protected Control createContents(Composite parent) {
-		ProjectSelectionComposite composite = new ProjectSelectionComposite(parent, SWT.NONE, getListOfWorkspaceProjects());
+		composite = new ProjectSelectionComposite(parent, SWT.NONE, getListOfWorkspaceProjects(), COPEPlugin.getDefault().getIgnoreProjectsList());
 		return composite;
 	}
 	
