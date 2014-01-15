@@ -3,15 +3,15 @@
 <plugin>
    <extension
          point="org.eclipse.ui.preferencePages">
+      <page
+            class="edu.oregonstate.cope.eclipse.ui.COPEPreferencePage"
+            id="edu.oregonstate.cope.eclipse.ui.prefenrencePage"
+            name="COPE recorder">
+      </page>
          id="edu.oregonstate.cope.eclipse.ui.surveyinstalloperation"
          name="Survey Install Operation"
          point="edu.oregonstate.cope.eclipse.installeroperation">
    </extension>
-	 <page
-            class="edu.oregonstate.cope.eclipse.ui.COPEPreferencePage"
-            id="edu.oregonstate.cope.eclipse.ui.projectPreference"
-            name="COPE recorder">
-      </page>
   <extension
         id="edu.oregonstate.cope.ui.surveyinstalloperation"
         name="Survey Install Operation"
