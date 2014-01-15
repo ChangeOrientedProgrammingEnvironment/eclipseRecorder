@@ -5,16 +5,19 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -37,6 +40,7 @@ import org.quartz.SchedulerException;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
+import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
@@ -49,6 +53,9 @@ import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
 class StartPluginUIJob extends UIJob {
+	
+	private static final String WORKSPACE_INIT_EXTENSION_ID = "edu.oregonstate.cope.eclipse.workspaceinitoperation";
+	
 	/**
 	 * 
 	 */
@@ -89,8 +96,11 @@ class StartPluginUIJob extends UIJob {
 
 		if (!isWorkspaceKnown()) {
 			getToKnowWorkspace();
+			initializeWorkspace();
 		}
-
+		
+		copePlugin.readIgnoredProjects();
+		
 		monitor.worked(1);
 
 		registerDocumentListenersForOpenEditors();
@@ -106,6 +116,19 @@ class StartPluginUIJob extends UIJob {
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
 		initializeFileSender();
+	}
+
+	private void initializeWorkspace() {
+		IConfigurationElement[] extensions = Platform.getExtensionRegistry().getConfigurationElementsFor(WORKSPACE_INIT_EXTENSION_ID);
+		for (IConfigurationElement extension : extensions) {
+			try {
+				Object executableExtension = extension.createExecutableExtension("InitializeWorkspaceOperation");
+				if (executableExtension instanceof InitializeWorkspaceOperation)
+					((InitializeWorkspaceOperation)executableExtension).doInit();
+			} catch (CoreException e) {
+				COPEPlugin.getDefault().getLogger().error(this, "Could not load Workspace Init extension", e);
+			}
+		}
 	}
 
 	private void doInstall() {
@@ -136,6 +159,7 @@ class StartPluginUIJob extends UIJob {
 	private void registerDocumentListenersForOpenEditors() {
 		SnapshotManager snapshotManager = COPEPlugin.getDefault().getSnapshotManager();
 		IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		List<String> ignoredProjects = COPEPlugin.getDefault().getIgnoreProjectsList();
 		IEditorReference[] editorReferences = activeWindow.getActivePage().getEditorReferences();
 		for (IEditorReference editorReference : editorReferences) {
 			IDocument document = getDocumentForEditor(editorReference);
@@ -143,6 +167,8 @@ class StartPluginUIJob extends UIJob {
 				continue;
 			document.addDocumentListener(new DocumentListener());
 			IProject project = getProjectFromEditor(editorReference);
+			if (ignoredProjects.contains(project.getName()))
+				continue;
 			if (!snapshotManager.isProjectKnown(project))
 				snapshotManager.takeSnapshot(project);
 		}
@@ -154,8 +180,7 @@ class StartPluginUIJob extends UIJob {
 		try {
 			editorInput = editorReference.getEditorInput();
 			if (editorInput instanceof FileEditorInput) {
-				IFile file = ((FileEditorInput) editorInput).getFile();
-				project = file.getProject();
+				project = copePlugin.getProjectForEditor(editorInput);
 			}
 		} catch (PartInitException e) {
 			copePlugin.getLogger().error(this, e.getMessage(), e);

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -28,6 +29,8 @@ public class ResourceListener implements IResourceChangeListener {
 			return;
 		
 		IResource affectedResource = delta.getResource();
+		if (isProjectIgnored(affectedResource))
+				return;
 		if (affectedResource.getType() == IResource.FILE) {
 			IFile affectedFile = (IFile) affectedResource;
 			String filePath = affectedFile.getFullPath().toPortableString();
@@ -53,6 +56,13 @@ public class ResourceListener implements IResourceChangeListener {
 		for (IResourceDelta child : affectedChildren) {
 			recordChangedDelta(child);
 		}
+	}
+
+	public boolean isProjectIgnored(IResource affectedResource) {
+		IProject project = affectedResource.getProject();
+		if (project == null)
+			return true;
+		return COPEPlugin.getDefault().getIgnoreProjectsList().contains(project.getName());
 	}
 
 	private void recordFileRefresh(IFile affectedFile) {

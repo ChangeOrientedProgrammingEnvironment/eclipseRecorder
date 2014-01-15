@@ -2,13 +2,30 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="edu.oregonstate.cope.eclipse.ui.COPEPreferencePage"
+            id="edu.oregonstate.cope.eclipse.ui.prefenrencePage"
+            name="COPE recorder">
+      </page>
          id="edu.oregonstate.cope.eclipse.ui.surveyinstalloperation"
          name="Survey Install Operation"
          point="edu.oregonstate.cope.eclipse.installeroperation">
-      <provider
-            InstallerOperation="edu.oregonstate.cope.eclipse.ui.SurveyOperation">
-      </provider>
    </extension>
-
+  <extension
+        id="edu.oregonstate.cope.ui.surveyinstalloperation"
+        name="Survey Install Operation"
+        point="edu.oregonstate.cope.eclipse.installeroperation">
+     <provider
+           InstallerOperation="edu.oregonstate.cope.eclipse.ui.SurveyOperation">
+     </provider>
+  </extension>
+  <extension
+        id="edu.oregonstate.cope.ui.ignoredprojectnit"
+        point="edu.oregonstate.cope.eclipse.workspaceinitoperation">
+     <provider
+           InitializeWorkspaceOperation="edu.oregonstate.cope.eclipse.ui.IgnoredProjectStart">
+     </provider>
+  </extension>
 
 </plugin>
