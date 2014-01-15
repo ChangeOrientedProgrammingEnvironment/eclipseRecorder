@@ -22,12 +22,19 @@ public class COPEPreferencePage extends PreferencePage implements IWorkbenchPref
 	
 	@Override
 	protected void performApply() {
+		saveSelection();
 		super.performApply();
 	}
 	
 	@Override
 	public boolean performOk() {
+		saveSelection();
 		return super.performOk();
+	}
+	
+	private void saveSelection() {
+		List<String> ignoredProjects = composite.getIgnoredProjects();
+		COPEPlugin.getDefault().setIgnoredProjectsList(ignoredProjects);
 	}
 	
 	private List<String> getListOfWorkspaceProjects() {
