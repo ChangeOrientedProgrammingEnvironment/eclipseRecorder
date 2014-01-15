@@ -181,7 +181,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return ignoredProjects;
 	}
 	
-	protected void setIgnoredProjectsList(List<String> ignoredProjects) {
+	public void setIgnoredProjectsList(List<String> ignoredProjects) {
 		StringBuffer value = new StringBuffer();
 		for (String project : ignoredProjects) {
 			value.append(project);
