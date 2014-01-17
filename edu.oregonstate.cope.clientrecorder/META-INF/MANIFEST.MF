@@ -2,19 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Clientrecorder
 Bundle-SymbolicName: edu.oregonstate.cope.clientrecorder
-Bundle-Version: 0.4.0.qualifier
-Bundle-ClassPath: clientrecorder.jar,
- thirdParty/json-simple-1.1.1.jar,
- thirdParty/logback-classic-1.0.13.jar,
- thirdParty/logback-core-1.0.13.jar,
- thirdParty/slf4j-api-1.7.5.jar
+Bundle-Version: 0.6.0.qualifier
+Bundle-ClassPath: clientrecorder.jar
 Export-Package: edu.oregonstate.cope.clientRecorder,
  edu.oregonstate.cope.clientRecorder.fileOps,
- edu.oregonstate.cope.clientRecorder.util,
- org.json.simple,
- org.json.simple.parser,
- org.slf4j,
- org.slf4j.helpers,
- org.slf4j.impl,
- org.slf4j.spi
-Require-Bundle: org.junit;bundle-version="4.11.0"
+ edu.oregonstate.cope.clientRecorder.util
+Require-Bundle: org.junit;bundle-version="4.11.0",
+ edu.oregonstate.cope.thirdparty;bundle-version="0.4.0"

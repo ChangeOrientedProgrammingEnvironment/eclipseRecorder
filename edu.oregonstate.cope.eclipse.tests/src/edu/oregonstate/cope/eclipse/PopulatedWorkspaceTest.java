@@ -22,7 +22,7 @@ import org.junit.Before;
 public class PopulatedWorkspaceTest {
 
 	protected static IJavaProject javaProject;
-	protected static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
+	protected static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getDefault().getVersionedLocalStorage().getAbsolutePath());
 	
 	protected String getProjectPath() {
 		return "projects" + File.separator + getProjectName();
@@ -34,7 +34,7 @@ public class PopulatedWorkspaceTest {
 
 	@SuppressWarnings("restriction")
 	@Before
-	public void beforeClass() throws Exception {
+	public void before() throws Exception {
 		ImportOperation importOperation = new ImportOperation(new Path(getProjectName()), 
 				new File(Paths.get(getProjectPath()).toAbsolutePath().toString()), 
 				FileSystemStructureProvider.INSTANCE, 

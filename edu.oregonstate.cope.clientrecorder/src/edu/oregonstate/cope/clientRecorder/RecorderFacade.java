@@ -3,6 +3,8 @@ package edu.oregonstate.cope.clientRecorder;
 import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
 import edu.oregonstate.cope.clientRecorder.fileOps.SimpleFileProvider;
 import edu.oregonstate.cope.clientRecorder.util.COPELogger;
+import edu.oregonstate.cope.clientRecorder.util.ConsoleLogger;
+import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 
 public class RecorderFacade {
 	private static final String LOG_FILE_NAME = "log";
@@ -18,7 +20,7 @@ public class RecorderFacade {
 
 	private ClientRecorder clientRecorder;
 	private Uninstaller uninstaller;
-	private COPELogger copeLogger;
+	private LoggerInterface copeLogger;
 
 	private RecorderFacade() {
 		initLogger();
@@ -42,6 +44,7 @@ public class RecorderFacade {
 
 	private void initLogger() {
 		copeLogger = new COPELogger();
+		//copeLogger = new ConsoleLogger();
 		
 		// copeLogger.logOnlyErrors();
 		copeLogger.logEverything();
@@ -90,7 +93,7 @@ public class RecorderFacade {
 		return uninstaller;
 	}
 
-	public COPELogger getLogger() {
+	public LoggerInterface getLogger() {
 		return copeLogger;
 	}
 

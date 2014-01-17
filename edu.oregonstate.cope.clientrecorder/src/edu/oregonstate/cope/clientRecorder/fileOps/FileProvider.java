@@ -68,7 +68,7 @@ public abstract class FileProvider {
 	}
 
 	public void writeToCurrentFile(String string) {
-		doFileWriteOperation(string, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+		doFileWriteOperation(string, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
 	}
 
 	private void doFileWriteOperation(String string, StandardOpenOption... options) {

@@ -1,15 +1,14 @@
 package edu.oregonstate.cope.clientRecorder;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-
-import edu.oregonstate.cope.clientRecorder.ClientRecorder.EventType;
-import static edu.oregonstate.cope.clientRecorder.ClientRecorder.*;
-import static org.junit.Assert.*;
 
 //TODO refactor this test class. Too many hardcoded strings. Too much duplication with tested class.
 public class ClientRecorderTest {
@@ -65,16 +64,30 @@ public class ClientRecorderTest {
 		JSONObject obj = createChangeJSON("addedText", 3, 0, "/sampleFile", "changeOrigin");
 		assertJSONEquals(result1, obj);
 	}
+	
+	@Test
+	public void testRecordRefresh() {
+		JSONObject actual = clientRecorder.buildRefreshJSON("new file contents", "/proj/file1");
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.refresh + "");
+		expected.put(JSONConstants.JSON_TEXT, "new file contents");
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/proj/file1");
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
 
 	private JSONObject createChangeJSON(String text, int offset, int length, String sourceFile, String changeOrigin) {
 		JSONObject j = new JSONObject();
-		j.put(JSON_EVENT_TYPE, EventType.textChange.toString());
-		j.put(JSON_TEXT, text);
-		j.put(JSON_OFFSET, offset);
-		j.put(JSON_LENGTH, length);
-		j.put(JSON_ENTITY_ADDRESS, sourceFile);
-		j.put(JSON_CHANGE_ORIGIN, changeOrigin);
-		j.put(JSON_IDE, clientRecorder.getIDE());
+		j.put(JSONConstants.JSON_EVENT_TYPE, Events.textChange.toString());
+		j.put(JSONConstants.JSON_TEXT, text);
+		j.put(JSONConstants.JSON_OFFSET, offset);
+		j.put(JSONConstants.JSON_LENGTH, length);
+		j.put(JSONConstants.JSON_ENTITY_ADDRESS, sourceFile);
+		j.put(JSONConstants.JSON_CHANGE_ORIGIN, changeOrigin);
+		j.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
 		addTimeStamp(j);
 		return j;
 	}
@@ -87,11 +100,11 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testDebugLaunch() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.debugLaunch, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(Events.debugLaunch, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
-		expected.put(JSON_IDE, "IDEA");
-		expected.put(JSON_EVENT_TYPE, ClientRecorder.EventType.debugLaunch.toString());
-		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
+		expected.put(JSONConstants.JSON_IDE, "IDEA");
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.debugLaunch.toString());
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
@@ -99,11 +112,11 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testStdLaunch() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.normalLaunch, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(Events.normalLaunch, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
-		expected.put(JSON_IDE, "IDEA");
-		expected.put(JSON_EVENT_TYPE, ClientRecorder.EventType.normalLaunch.toString());
-		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
+		expected.put(JSONConstants.JSON_IDE, "IDEA");
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.normalLaunch.toString());
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
@@ -111,11 +124,11 @@ public class ClientRecorderTest {
 	
 	@Test
 	public void testLaunchEnd() throws Exception {
-		JSONObject actual = clientRecorder.buildLaunchEndEventJSON(EventType.launchEnd, "123");
+		JSONObject actual = clientRecorder.buildLaunchEndEventJSON(Events.launchEnd, "123");
 		JSONObject expected = new JSONObject();
-		expected.put(JSON_IDE, clientRecorder.getIDE());
-		expected.put(JSON_EVENT_TYPE, EventType.launchEnd + "");
-		expected.put(JSON_LAUNCH_TIMESTAMP, "123");
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.launchEnd + "");
+		expected.put(JSONConstants.JSON_LAUNCH_TIMESTAMP, "123");
 		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, actual);
@@ -123,11 +136,11 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testFileOpen() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.fileOpen, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(Events.fileOpen, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
-		expected.put(JSON_IDE, "IDEA");
-		expected.put(JSON_EVENT_TYPE, ClientRecorder.EventType.fileOpen.toString());
-		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
+		expected.put(JSONConstants.JSON_IDE, "IDEA");
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.fileOpen.toString());
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
@@ -135,11 +148,11 @@ public class ClientRecorderTest {
 
 	@Test
 	public void testFileClose() throws Exception {
-		JSONObject retObj = clientRecorder.buildIDEEventJSON(ClientRecorder.EventType.fileClose, "/workspace/package/filename.java");
+		JSONObject retObj = clientRecorder.buildIDEEventJSON(Events.fileClose, "/workspace/package/filename.java");
 		JSONObject expected = new JSONObject();
-		expected.put(JSON_IDE, "IDEA");
-		expected.put(JSON_EVENT_TYPE, ClientRecorder.EventType.fileClose.toString());
-		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
+		expected.put(JSONConstants.JSON_IDE, "IDEA");
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.fileClose.toString());
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/package/filename.java");
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, retObj);
@@ -160,11 +173,11 @@ public class ClientRecorderTest {
 		JSONObject actual = clientRecorder.buildTestEventJSON("/workspace/package/TestFoo/testBar", "success", 2);
 		JSONObject expected = new JSONObject();
 
-		expected.put(JSON_EVENT_TYPE, EventType.testRun.toString());
-		expected.put(JSON_IDE, clientRecorder.getIDE());
-		expected.put(JSON_ENTITY_ADDRESS, "/workspace/package/TestFoo/testBar");
-		expected.put(JSON_TEST_RESULT, "success");
-		expected.put(JSON_TEST_ELAPSED_TIME, 2.0);
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.testRun.toString());
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/package/TestFoo/testBar");
+		expected.put(JSONConstants.JSON_TEST_RESULT, "success");
+		expected.put(JSONConstants.JSON_TEST_ELAPSED_TIME, 2.0);
 		addTimeStamp(expected);
 
 		assertJSONEquals(expected, actual);
@@ -185,16 +198,16 @@ public class ClientRecorderTest {
 		JSONObject actual = clientRecorder.buildSnapshotJSON("/path/to/snapshot/theSnapshot");
 		
 		JSONObject expected = new JSONObject();
-		expected.put(JSON_EVENT_TYPE, EventType.snapshot + "");
-		expected.put(JSON_ENTITY_ADDRESS, "/path/to/snapshot/theSnapshot");
-		expected.put(JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.snapshot + "");
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/path/to/snapshot/theSnapshot");
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
 		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, actual);
 	}
 
 	private void addTimeStamp(JSONObject expected) {
-		expected.put(JSON_TIMESTAMP, (System.currentTimeMillis() / 1000) + "");
+		expected.put(JSONConstants.JSON_TIMESTAMP, (System.currentTimeMillis() / 1000) + "");
 	}
 
 	private void assertJSONEquals(JSONObject expected, JSONObject actual) {
@@ -202,7 +215,7 @@ public class ClientRecorderTest {
 		assertEquals(expected.keySet(), actual.keySet());
 
 		for (Object key : expected.keySet()) {
-			if (key.equals(JSON_TIMESTAMP)) {
+			if (key.equals(JSONConstants.JSON_TIMESTAMP)) {
 				assertTimestampsEqual(expected.get(key), actual.get(key));
 			} else {
 				assertEquals(expected.get(key), actual.get(key));
@@ -221,11 +234,11 @@ public class ClientRecorderTest {
 	
 	@Test
 	public void testFileSave() {
-		JSONObject output = clientRecorder.buildIDEEventJSON(EventType.fileSave, "/workspace/project/file");
+		JSONObject output = clientRecorder.buildIDEEventJSON(Events.fileSave, "/workspace/project/file");
 		JSONObject expected = new JSONObject();
-		expected.put(JSON_EVENT_TYPE, EventType.fileSave + "");
-		expected.put(JSON_ENTITY_ADDRESS, "/workspace/project/file");
-		expected.put(JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.fileSave + "");
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/project/file");
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
 		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, output);
@@ -236,15 +249,17 @@ public class ClientRecorderTest {
 		HashMap launchAttributes = new HashMap();
 		launchAttributes.put("attr1", "something");
 		launchAttributes.put("attr2", "something else");
-		JSONObject actual = clientRecorder.buildLaunchEventJSON(EventType.normalLaunch, "123", "something", launchAttributes);
+		JSONObject actual = clientRecorder.buildLaunchEventJSON(Events.normalLaunch, "123", "launch-name", "contents", "config", launchAttributes);
 		
 		JSONObject expected = new JSONObject();
-		expected.put(JSON_EVENT_TYPE,EventType.normalLaunch + "");
-		expected.put(JSON_ENTITY_ADDRESS,"something");
-		expected.put(JSON_IDE, clientRecorder.getIDE());
-		expected.put(JSON_LAUNCH_ATTRIBUTES, launchAttributes);
-		expected.put(JSON_LAUNCH_TIMESTAMP, "123");
 		addTimeStamp(expected);
+		expected.put(JSONConstants.JSON_EVENT_TYPE,Events.normalLaunch + "");
+		expected.put(JSONConstants.JSON_LAUNCH_TIMESTAMP, "123");
+		expected.put(JSONConstants.JSON_LAUNCH_NAME, "launch-name");
+		expected.put(JSONConstants.JSON_LAUNCH_FILE, "contents");
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSONConstants.JSON_LAUNCH_ATTRIBUTES, launchAttributes);
+		expected.put(JSONConstants.JSON_LAUNCH_CONFIGURATION, "config");
 		
 		assertJSONEquals(expected, actual);
 	}
@@ -254,13 +269,13 @@ public class ClientRecorderTest {
 		Map refactoringArguments = new HashMap();
 		refactoringArguments.put("arg1", "one");
 		refactoringArguments.put("arg", "two");
-		JSONObject actual = clientRecorder.buildRefactoringEvent(EventType.refactoringLaunch, "rename", refactoringArguments);
+		JSONObject actual = clientRecorder.buildRefactoringEvent(Events.refactoringLaunch, "rename", refactoringArguments);
 		
 		JSONObject expected = new JSONObject();
-		expected.put(JSON_EVENT_TYPE, EventType.refactoringLaunch + "");
-		expected.put(JSON_IDE, clientRecorder.getIDE());
-		expected.put(JSON_REFACTORING_ID, "rename");
-		expected.put(JSON_REFACTORING_ARGUMENTS, refactoringArguments);
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.refactoringLaunch + "");
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSONConstants.JSON_REFACTORING_ID, "rename");
+		expected.put(JSONConstants.JSON_REFACTORING_ARGUMENTS, refactoringArguments);
 		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, actual);
@@ -271,13 +286,56 @@ public class ClientRecorderTest {
 		Map refactoringArguments = new HashMap();
 		refactoringArguments.put("arg1", "one");
 		refactoringArguments.put("arg", "two");
-		JSONObject actual = clientRecorder.buildRefactoringEvent(EventType.refactoringUndo, "rename", refactoringArguments);
+		JSONObject actual = clientRecorder.buildRefactoringEvent(Events.refactoringUndo, "rename", refactoringArguments);
 		
 		JSONObject expected = new JSONObject();
-		expected.put(JSON_EVENT_TYPE, EventType.refactoringUndo + "");
-		expected.put(JSON_IDE, clientRecorder.getIDE());
-		expected.put(JSON_REFACTORING_ID, "rename");
-		expected.put(JSON_REFACTORING_ARGUMENTS, refactoringArguments);
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.refactoringUndo + "");
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSONConstants.JSON_REFACTORING_ID, "rename");
+		expected.put(JSONConstants.JSON_REFACTORING_ARGUMENTS, refactoringArguments);
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
+	
+	@Test
+	public void testCopy() {
+		JSONObject actual = clientRecorder.buildCopyJSON(Events.copy, "addr", 0, 12, "bla");
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.copy + "");
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "addr");
+		expected.put(JSONConstants.JSON_LENGTH, 12);
+		expected.put(JSONConstants.JSON_OFFSET, 0);
+		expected.put(JSONConstants.JSON_TEXT, "bla");
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
+	
+	@Test
+	public void testResourceDelete() {
+		JSONObject actual = clientRecorder.buildResourceDeleteJSON("/some/resource.txt");
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.resourceRemoved + "");
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/some/resource.txt");
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
+	
+	@Test
+	public void testResourceAdd() {
+		JSONObject actual = clientRecorder.buildResourceAddJSON("/some/resource.txt", "abc");
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.resourceAdded + "");
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/some/resource.txt");
+		expected.put(JSONConstants.JSON_TEXT, "abc");
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
 		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, actual);

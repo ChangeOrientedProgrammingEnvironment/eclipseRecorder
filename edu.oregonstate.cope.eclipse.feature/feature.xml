@@ -2,7 +2,7 @@
 <feature
       id="edu.oregonstate.cope.eclipse.feature"
       label="COPE Client Recorder"
-      version="0.4.0.qualifier">
+      version="0.6.0.qualifier">
 
    <description url="http://cope.eecs.oregonstate.edu/">
       The ClientRecorder plugin for Eclipse records source code changes
@@ -123,5 +123,11 @@ This Agreement is governed by the laws of the State of New York and the intellec
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="edu.oregonstate.cope.thirdparty"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

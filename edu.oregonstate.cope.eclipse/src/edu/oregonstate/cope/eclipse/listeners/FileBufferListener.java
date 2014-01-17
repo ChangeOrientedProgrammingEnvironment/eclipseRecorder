@@ -28,9 +28,11 @@ public class FileBufferListener implements IFileBufferListener {
 			return;
 		
 		ITextFileBuffer textFileBuffer = (ITextFileBuffer) buffer;
-		textFileBuffer.getDocument().addDocumentListener(new DocumentListener());
 		IPath fileLocation = textFileBuffer.getLocation();
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getFile(fileLocation).getProject();
+		if (COPEPlugin.getDefault().getIgnoreProjectsList().contains(project.getName()))
+			return;
+		textFileBuffer.getDocument().addDocumentListener(new DocumentListener());
 		if (!snapshotManager.isProjectKnown(project))
 			snapshotManager.takeSnapshot(project);
 	}

@@ -4,16 +4,25 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Version;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
-import edu.oregonstate.cope.clientRecorder.util.COPELogger;
+import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -23,15 +32,19 @@ public class COPEPlugin extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.oregonstate.edu.eclipse"; //$NON-NLS-1$
 
+	private static final String PREFERENCES_IGNORED_PROJECTS = "ignoredProjects";
+
 	// The shared instance
 	static COPEPlugin plugin;
 
 	// The ID of the current workspace
-	static String workspaceID;
+	String workspaceID;
 
 	private RecorderFacade recorderFacade;
 
 	private SnapshotManager snapshotManager;
+	
+	private List<String> ignoredProjects;
 
 	/**
 	 * The constructor
@@ -52,7 +65,14 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 		UIJob uiJob = new StartPluginUIJob(this, "Registering listeners");
 		uiJob.schedule();
-		snapshotManager = new SnapshotManager(COPEPlugin.getLocalStorage().getAbsolutePath());
+	}
+
+	public void initializeSnapshotManager() {
+		snapshotManager = new SnapshotManager(getVersionedLocalStorage().getAbsolutePath());
+	}
+
+	public void takeSnapshotOfKnownProjects() {
+		snapshotManager.takeSnapshotOfKnownProjects();
 	}
 
 	/*
@@ -63,7 +83,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
-		snapshotManager.takeSnapshotOfKnownProjects();
+		snapshotManager.takeSnapshotOfSessionTouchedProjects();
 		plugin = null;
 		super.stop(context);
 	}
@@ -89,7 +109,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return recorderFacade.getInstallationProperties();
 	}
 
-	Uninstaller getUninstaller() {
+	public Uninstaller getUninstaller() {
 		return recorderFacade.getUninstaller();
 	}
 
@@ -99,7 +119,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	}
 
 	protected File getWorkspaceIdFile() {
-		File pluginStoragePath = COPEPlugin.getLocalStorage();
+		File pluginStoragePath = getVersionedLocalStorage();
 		return new File(pluginStoragePath.getAbsolutePath() + File.separator + "workspace_id");
 	}
 
@@ -116,15 +136,32 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return workspaceID;
 	}
 
-	public static File getLocalStorage() {
+	public File getLocalStorage() {
 		return COPEPlugin.plugin.getStateLocation().toFile();
 	}
 
-	public static File getBundleStorage() {
+	public File getBundleStorage() {
 		return COPEPlugin.getDefault().getBundle().getDataFile("");
 	}
+	
+	public File getVersionedLocalStorage() {
+		return getVersionedPath(getLocalStorage().toPath()).toFile();
+	}
 
-	public COPELogger getLogger() {
+	public File getVersionedBundleStorage() {
+		return getVersionedPath(getBundleStorage().toPath()).toFile();
+	}
+
+	private Path getVersionedPath(Path path) {
+		String version = getPluginVersion().toString();
+		return path.resolve(version);
+	}
+
+	public Version getPluginVersion() {
+		return COPEPlugin.plugin.getBundle().getVersion();
+	}
+
+	public LoggerInterface getLogger() {
 		return recorderFacade.getLogger();
 	}
 
@@ -136,7 +173,47 @@ public class COPEPlugin extends AbstractUIPlugin {
 	 * Used only by the Installer.
 	 * TODO something is fishy here, this string should not leak outside
 	 */
-	String _getInstallationConfigFileName() {
+	public String _getInstallationConfigFileName() {
 		return RecorderFacade.instance().getInstallationConfigFilename();
+	}
+	
+	public List<String> getIgnoreProjectsList() {
+		return ignoredProjects;
+	}
+	
+	public void setIgnoredProjectsList(List<String> ignoredProjects) {
+		StringBuffer value = new StringBuffer();
+		for (String project : ignoredProjects) {
+			value.append(project);
+			value.append(";");
+		}
+		COPEPlugin.getDefault().getWorkspaceProperties().addProperty(PREFERENCES_IGNORED_PROJECTS, value.toString());
+		this.ignoredProjects = ignoredProjects;
+	}
+
+	public void readIgnoredProjects() {
+		String ignoredProjectsString = getWorkspaceProperties().getProperty(PREFERENCES_IGNORED_PROJECTS);
+		String[] projectNames = ignoredProjectsString.split(";");
+		ignoredProjects = new ArrayList<>();
+		for (String project : projectNames) {
+			ignoredProjects.add(project);
+		}
+	}
+
+	public IProject getProjectForEditor(IEditorInput editorInput) {
+		IProject project;
+		IFile file = ((FileEditorInput) editorInput).getFile();
+		project = file.getProject();
+		return project;
+	}
+
+	public List<String> getListOfWorkspaceProjects() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		List<String> projectNames = new ArrayList<String>();
+		for (IProject project : projects) {
+			projectNames.add(project.getName());
+		}
+		
+		return projectNames;
 	}
 }

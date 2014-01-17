@@ -64,7 +64,7 @@ public class SnapshotManager {
 			sessionTouchedProjects.add(projectName);
 	}
 
-	protected void knowProject(String string) {
+	public void knowProject(String string) {
 		knownProjects.add(string);
 		try {
 			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
@@ -192,8 +192,14 @@ public class SnapshotManager {
 		}
 	}
 	
-	protected void takeSnapshotOfKnownProjects() {
+	protected void takeSnapshotOfSessionTouchedProjects() {
 		for (String project : sessionTouchedProjects) {
+			takeSnapshot(project);
+		}
+	}
+	
+	protected void takeSnapshotOfKnownProjects() {
+		for (String project : knownProjects) {
 			takeSnapshot(project);
 		}
 	}
