@@ -165,12 +165,12 @@ class StartPluginUIJob extends UIJob {
 			IDocument document = getDocumentForEditor(editorReference);
 			if (document == null)
 				continue;
-			document.addDocumentListener(new DocumentListener());
 			IProject project = getProjectFromEditor(editorReference);
 			if (project == null)
 				continue;
 			if (ignoredProjects.contains(project.getName()))
 				continue;
+			document.addDocumentListener(new DocumentListener());
 			if (!snapshotManager.isProjectKnown(project))
 				snapshotManager.takeSnapshot(project);
 		}
