@@ -167,6 +167,8 @@ class StartPluginUIJob extends UIJob {
 				continue;
 			document.addDocumentListener(new DocumentListener());
 			IProject project = getProjectFromEditor(editorReference);
+			if (project == null)
+				continue;
 			if (ignoredProjects.contains(project.getName()))
 				continue;
 			if (!snapshotManager.isProjectKnown(project))
