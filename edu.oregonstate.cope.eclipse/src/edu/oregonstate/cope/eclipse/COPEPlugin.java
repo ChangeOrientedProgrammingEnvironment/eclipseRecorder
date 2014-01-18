@@ -193,6 +193,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 
 	public void readIgnoredProjects() {
 		String ignoredProjectsString = getWorkspaceProperties().getProperty(PREFERENCES_IGNORED_PROJECTS);
+		if (ignoredProjectsString == null) {
+			ignoredProjects = new ArrayList<>();
+			return;
+		}
 		String[] projectNames = ignoredProjectsString.split(";");
 		ignoredProjects = new ArrayList<>();
 		for (String project : projectNames) {
