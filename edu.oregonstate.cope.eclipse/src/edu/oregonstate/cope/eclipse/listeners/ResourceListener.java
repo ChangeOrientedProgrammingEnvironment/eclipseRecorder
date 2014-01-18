@@ -29,9 +29,9 @@ public class ResourceListener implements IResourceChangeListener {
 			return;
 		
 		IResource affectedResource = delta.getResource();
-		if (isProjectIgnored(affectedResource))
-				return;
 		if (affectedResource.getType() == IResource.FILE) {
+			if (isProjectIgnored(affectedResource))
+				return;
 			IFile affectedFile = (IFile) affectedResource;
 			String filePath = affectedFile.getFullPath().toPortableString();
 			if (isClassFile(affectedFile))
