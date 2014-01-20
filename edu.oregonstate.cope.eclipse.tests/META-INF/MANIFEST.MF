@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests
 Bundle-SymbolicName: edu.oregonstate.cope.eclipse.tests
-Bundle-Version: 0.6.0.qualifier
+Bundle-Version: 0.6.1.qualifier
 Bundle-Vendor: Oregon State University
 Fragment-Host: edu.oregonstate.cope.eclipse;bundle-version="0.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.junit;bundle-version="4.11.0",
- org.eclipse.jdt.core;bundle-version="3.9.1"
+ org.eclipse.jdt.core;bundle-version="3.7.3"
