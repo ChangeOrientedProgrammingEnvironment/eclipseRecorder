@@ -23,7 +23,6 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 	@Before
 	public void before() throws Exception {
-		super.before();
 		plugin = COPEPlugin.getDefault();
 		plugin.getSnapshotManager().knowProject(PopulatedWorkspaceTest.javaProject.getProject().getName());
 	}

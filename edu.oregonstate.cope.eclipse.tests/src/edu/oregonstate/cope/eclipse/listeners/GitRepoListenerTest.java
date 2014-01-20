@@ -20,16 +20,6 @@ public class GitRepoListenerTest extends PopulatedWorkspaceTest {
 	private GitRepoListner testListener;
 	private Git gitRepo;
 
-	@Override
-	protected String getProjectPath() {
-		return "projects/git-project";
-	}
-
-	 @Override
-	protected String getProjectName() {
-		return "git-project";
-	}
-	 
 	@Before
 	public void setUp() throws Exception {
 		testListener = new GitRepoListner(ResourcesPlugin.getWorkspace().getRoot().getProjects());
