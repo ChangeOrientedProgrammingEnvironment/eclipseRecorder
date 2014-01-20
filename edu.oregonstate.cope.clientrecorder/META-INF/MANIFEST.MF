@@ -7,5 +7,4 @@ Bundle-ClassPath: clientrecorder.jar
 Export-Package: edu.oregonstate.cope.clientRecorder,
  edu.oregonstate.cope.clientRecorder.fileOps,
  edu.oregonstate.cope.clientRecorder.util
-Require-Bundle: org.junit;bundle-version="4.11.0",
- edu.oregonstate.cope.thirdparty;bundle-version="0.4.0"
+Require-Bundle: edu.oregonstate.cope.thirdparty;bundle-version="0.4.0"
