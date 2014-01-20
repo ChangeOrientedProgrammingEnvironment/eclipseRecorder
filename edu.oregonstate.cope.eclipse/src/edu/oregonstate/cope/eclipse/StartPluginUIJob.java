@@ -41,8 +41,8 @@ import org.quartz.SchedulerException;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
-import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 import edu.oregonstate.cope.eclipse.installer.Installer;
+import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
 import edu.oregonstate.cope.eclipse.listeners.GitRefsChangedListener;
@@ -50,7 +50,6 @@ import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
 import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
-import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
 import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
