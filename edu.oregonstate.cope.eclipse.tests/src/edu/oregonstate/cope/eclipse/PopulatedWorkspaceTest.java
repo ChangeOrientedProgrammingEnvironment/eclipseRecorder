@@ -21,21 +21,14 @@ import org.junit.BeforeClass;
 public class PopulatedWorkspaceTest {
 
 	protected static IJavaProject javaProject;
-	protected static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getDefault().getVersionedLocalStorage().getAbsolutePath());
 	
-	protected static String getProjectPath() {
-		return "projects" + File.separator + getProjectName();
-	}
-	
-	protected static String getProjectName() {
-		return "librariesTest";
-	}
+	protected static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath());
 
 	@SuppressWarnings("restriction")
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		ImportOperation importOperation = new ImportOperation(new Path(getProjectName()), 
-				new File(Paths.get(getProjectPath()).toAbsolutePath().toString()), 
+		ImportOperation importOperation = new ImportOperation(new Path("librariesTest"), 
+				new File(Paths.get("projects" + File.separator + "librariesTest").toAbsolutePath().toString()), 
 				FileSystemStructureProvider.INSTANCE, 
 				new IOverwriteQuery() {
 	
