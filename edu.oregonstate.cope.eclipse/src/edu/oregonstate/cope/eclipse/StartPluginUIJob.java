@@ -45,7 +45,7 @@ import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
-import edu.oregonstate.cope.eclipse.listeners.GitListener;
+import edu.oregonstate.cope.eclipse.listeners.GitRefsChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
 import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
@@ -117,7 +117,9 @@ class StartPluginUIJob extends UIJob {
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
 
-		Repository.getGlobalListenerList().addRefsChangedListener(new GitListener(ResourcesPlugin.getWorkspace().getRoot().getProjects()));
+		GitRefsChangedListener gitChangeListener = new GitRefsChangedListener(ResourcesPlugin.getWorkspace().getRoot().getProjects());
+		Repository.getGlobalListenerList().addRefsChangedListener(gitChangeListener);
+		Repository.getGlobalListenerList().addIndexChangedListener(gitChangeListener);
 
 		initializeFileSender();
 	}

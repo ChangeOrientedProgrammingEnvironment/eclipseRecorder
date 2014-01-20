@@ -6,16 +6,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.errors.NoWorkTreeException;
+import org.eclipse.jgit.events.IndexChangedEvent;
+import org.eclipse.jgit.events.IndexChangedListener;
 import org.eclipse.jgit.events.RefsChangedEvent;
 import org.eclipse.jgit.events.RefsChangedListener;
 import org.eclipse.jgit.lib.Repository;
 
-public class GitListener implements RefsChangedListener {
+public class GitRefsChangedListener implements RefsChangedListener, IndexChangedListener {
 	
 	private Map<String, GitRepoStatus> repoStatus;
 	
-	public GitListener(IProject[] projects) {
+	public GitRefsChangedListener(IProject[] projects) {
 		repoStatus = new HashMap<String, GitRepoStatus>();
 		for (IProject project : projects) {
 			String projectPath = project.getLocation().makeAbsolute().toPortableString();
@@ -35,12 +41,23 @@ public class GitListener implements RefsChangedListener {
 	}
 
 	private GitRepoStatus getGitRepoStatus(String repoUnderGit) {
+		Git gitRepo = null;
 		try {
-			Git gitRepo = Git.open(new File(repoUnderGit));
+			gitRepo = Git.open(new File(repoUnderGit));
+		} catch (IOException e1) {
+		}
+		return getGitRepoStatus(gitRepo);
+	}
+
+	private GitRepoStatus getGitRepoStatus(Git gitRepo) {
+		try {
 			String branch = gitRepo.getRepository().getBranch();
 			String head = getHeadCommitSHA1(gitRepo.getRepository());
-			return new GitRepoStatus(branch, head);
+			Status repoStatus = gitRepo.status().call();
+			return new GitRepoStatus(branch, head, repoStatus.getAdded(), repoStatus.getModified(), repoStatus.getRemoved());
 		} catch (IOException e) {
+		} catch (NoWorkTreeException e) {
+		} catch (GitAPIException e) {
 		}
 		return null;
 	}
@@ -53,23 +70,24 @@ public class GitListener implements RefsChangedListener {
 		String dirUnderGit = getRepoUnderGitFromIndexFilePath(indexFile);
 		return repoStatus.get(dirUnderGit);
 	}
-
+	
 	private String getRepoUnderGitFromIndexFilePath(String indexFile) {
 		return removeLastPathElement(removeLastPathElement(indexFile));
 	}
 
 	@Override
 	public void onRefsChanged(RefsChangedEvent event) {
-		try {
-			String currentBranch = event.getRepository().getBranch();
-			String head = getHeadCommitSHA1(event.getRepository());
-			GitRepoStatus currentRepoStatus = new GitRepoStatus(currentBranch, head);
-			repoStatus.put(getRepoUnderGitFromIndexFilePath(event.getRepository().getIndexFile().getAbsolutePath()), currentRepoStatus);
-		} catch (IOException e) {
-		}
+		GitRepoStatus currentRepoStatus = getGitRepoStatus(Git.wrap(event.getRepository()));
+		repoStatus.put(getRepoUnderGitFromIndexFilePath(event.getRepository().getIndexFile().getAbsolutePath()), currentRepoStatus);
 	}
 
 	public String getCurrentBranch(String indexFile) {
 		return repoStatus.get(getRepoUnderGitFromIndexFilePath(indexFile)).getBranch();
+	}
+
+	@Override
+	public void onIndexChanged(IndexChangedEvent event) {
+		Repository repository = event.getRepository();
+		repoStatus.put(getRepoUnderGitFromIndexFilePath(repository.getIndexFile().getAbsolutePath()), getGitRepoStatus(Git.wrap(repository)));
 	}
 }
