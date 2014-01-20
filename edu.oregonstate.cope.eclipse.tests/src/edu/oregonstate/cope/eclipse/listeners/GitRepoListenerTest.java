@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
 
-public class GitListenerTest extends PopulatedWorkspaceTest {
+public class GitRepoListenerTest extends PopulatedWorkspaceTest {
 	
 	private GitRepoListner testListener;
 	private Git gitRepo;
