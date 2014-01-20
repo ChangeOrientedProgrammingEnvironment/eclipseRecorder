@@ -4,12 +4,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.ui.internal.wizards.datatransfer.ZipLeveledStructureProvider;
+import org.eclipse.ui.wizards.datatransfer.IImportStructureProvider;
+import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,15 +27,51 @@ public class GitRepoListenerTest extends PopulatedWorkspaceTest {
 	
 	private GitRepoListner testListener;
 	private Git gitRepo;
+	private ZipFile sourceFile;
+	private ZipLeveledStructureProvider structureProvider;
+	
+	public GitRepoListenerTest() {
+		try {
+			sourceFile = new ZipFile(getProjectPath());
+			structureProvider = new ZipLeveledStructureProvider(sourceFile);
+		} catch (IOException e) {
+		}
+	}
 
 	@Override
 	protected String getProjectPath() {
-		return "projects/git-project";
+		return "projects/git-project.zip";
 	}
 
 	 @Override
 	protected String getProjectName() {
 		return "git-project";
+	}
+	 
+	@Override
+	protected Object getRoot() {
+//		try {
+//			ZipFile zipFile = new ZipFile(getProjectPath());
+//			return zipFile.getEntry("git-project/");
+//		} catch (IOException e) {
+//			System.out.println(e);
+//		}
+		return new ZipEntry(getProjectName());
+	}
+	 
+	@Override
+	protected IImportStructureProvider getImportStructureProvider() {
+		return structureProvider;
+	}
+	
+	@Override
+	protected List<Object> getFileSystemObjects() {
+		List<Object> fileSystemObjects = new ArrayList<Object>();
+		Enumeration<? extends ZipEntry> entries = sourceFile.entries();
+		while (entries.hasMoreElements()) {
+		    fileSystemObjects.add((Object)entries.nextElement());
+		}
+		return fileSystemObjects;
 	}
 	 
 	@Before
