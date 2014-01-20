@@ -17,7 +17,7 @@ import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
 
 public class GitListenerTest extends PopulatedWorkspaceTest {
 	
-	private GitRefsChangedListener testListener;
+	private GitRepoListner testListener;
 	private Git gitRepo;
 
 	@Override
@@ -32,7 +32,7 @@ public class GitListenerTest extends PopulatedWorkspaceTest {
 	 
 	@Before
 	public void setUp() throws Exception {
-		testListener = new GitRefsChangedListener(ResourcesPlugin.getWorkspace().getRoot().getProjects());
+		testListener = new GitRepoListner(ResourcesPlugin.getWorkspace().getRoot().getProjects());
 		Repository.getGlobalListenerList().addRefsChangedListener(testListener);
 		
 		String projectPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().makeAbsolute().toOSString() + javaProject.getProject().getFullPath().toOSString();

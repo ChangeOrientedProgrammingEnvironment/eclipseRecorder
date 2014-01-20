@@ -17,11 +17,11 @@ import org.eclipse.jgit.events.RefsChangedEvent;
 import org.eclipse.jgit.events.RefsChangedListener;
 import org.eclipse.jgit.lib.Repository;
 
-public class GitRefsChangedListener implements RefsChangedListener, IndexChangedListener {
+public class GitRepoListner implements RefsChangedListener, IndexChangedListener {
 	
 	private Map<String, GitRepoStatus> repoStatus;
 	
-	public GitRefsChangedListener(IProject[] projects) {
+	public GitRepoListner(IProject[] projects) {
 		repoStatus = new HashMap<String, GitRepoStatus>();
 		for (IProject project : projects) {
 			String projectPath = project.getLocation().makeAbsolute().toPortableString();
