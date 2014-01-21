@@ -19,7 +19,7 @@ public class SurveyOperation extends InstallerOperation {
 	private static final String SURVEY_FILENAME = "survey.txt";
 
 	public SurveyOperation() {
-		super(COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath(), 
+		super(COPEPlugin.getDefault().getLocalStorage().toPath().toAbsolutePath(), 
 				COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath());
 	}
 
