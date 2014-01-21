@@ -10,7 +10,7 @@
                id="edu.oregonstate.cope.eclipse.branding.toolbar">
             <command
                   commandId="edu.oregonstate.cope.eclipse.branding.command"
-                  icon="icons/osu-logo-png.png"
+                  icon="icons/COPE-logo.png"
                   id="contibutions.trimicon"
                   label="COPE Recorder"
                   style="push"
