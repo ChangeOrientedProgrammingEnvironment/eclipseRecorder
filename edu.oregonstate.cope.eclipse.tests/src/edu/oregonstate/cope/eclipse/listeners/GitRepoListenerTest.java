@@ -17,12 +17,12 @@ import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
 
 public class GitRepoListenerTest extends PopulatedWorkspaceTest {
 	
-	private GitRepoListner testListener;
+	private GitRepoListener testListener;
 	private Git gitRepo;
 
 	@Before
 	public void setUp() throws Exception {
-		testListener = new GitRepoListner(ResourcesPlugin.getWorkspace().getRoot().getProjects());
+		testListener = new GitRepoListener(ResourcesPlugin.getWorkspace().getRoot().getProjects());
 		Repository.getGlobalListenerList().addRefsChangedListener(testListener);
 		
 		String projectPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().makeAbsolute().toOSString() + javaProject.getProject().getFullPath().toOSString();
