@@ -2,7 +2,9 @@
 <feature
       id="edu.oregonstate.cope.eclipse.feature"
       label="COPE Client Recorder"
-      version="0.6.1.qualifier">
+      version="0.6.1.qualifier"
+      provider-name="Oregon State University"
+      plugin="edu.oregonstate.cope.eclipse.branding">
 
    <description url="http://cope.eecs.oregonstate.edu/">
       The ClientRecorder plugin for Eclipse records source code changes
@@ -96,6 +98,11 @@ Everyone is permitted to copy and distribute copies of this Agreement, but in or
 
 This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
    </license>
+
+   <url>
+      <update label="COPE Client Recorder" url="http://cope.eecs.oregonstate.edu/client-recorder/"/>
+      <discovery label="COPE" url="http://cope.eecs.oregonstate.edu"/>
+   </url>
 
    <plugin
          id="edu.oregonstate.cope.clientrecorder"
