@@ -59,13 +59,14 @@ public class SurveyPage extends WizardPage {
 		qAndA.put("Q4", createQuestion(questions, "Select the project type you spend most of your time on", Arrays.asList(new String[] { "Proprietary Software Project", "Open Source Project", "Research Project", "Personal/Class project", "Other" })));
 		qAndA.put("Q5", createQuestion(questions, "What is the extent of your experience using TDD?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years" })));
 		qAndA.put("Q6", createQuestion(questions, "How often does your code development follow TDD practices?", Arrays.asList(new String[] { "Always", "Very often", "Sometimes", "Rarely", "Nevers" })));
-		qAndA.put("Q7", createQuestion(questions, "What is your gender", Arrays.asList(new String[] { "Male", "Female", "Decline to State" })));
+		qAndA.put("Q7", createQuestion(questions, "What is your gender", Arrays.asList(new String[] { "Male", "Female", "Decline to state" })));
 		qAndA.put("Q8", createQuestion(questions, "What is your current age", Arrays.asList(new String[] { "less than 18", "18-25", "26-29", "30-39", "40-49", "50 or older" })));
 
 		Composite emailComposite = new Composite(questions, SWT.NONE);
 		emailComposite.setLayout(new GridLayout(1, false));
 		Label emailQuestionText = new Label(emailComposite, SWT.NONE);
-		emailQuestionText.setText("If you choose to give us your email, we will send you a personalized version of the report\n" + " so you can see how your practices compare to the rest of the anonymous participants.\n " + "We know that spam is annoying, and we promise not to give out your email to anyone.");
+		//emailQuestionText.setText("If you choose to give us your email, we will send you a personalized version of the report\n" + " so you can see how your practices compare to the rest of the anonymous participants.\n " + "We know that spam is annoying, and we promise not to give out your email to anyone.");
+		emailQuestionText.setText("If you choose to give us your email, we will send you a personalized version of the report\n" + " so you can see how your practices compare to the rest of the anonymous participants.\n " + "We know that spam is annoying so we will only send you one email with the report at the end of the study. \n " + "Also, of course, we promise not to give out your email to anyone else.");
 		
 		
 		Composite emailLine = new Composite(emailComposite, SWT.NONE);
