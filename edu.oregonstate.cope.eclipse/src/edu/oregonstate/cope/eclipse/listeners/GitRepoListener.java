@@ -16,14 +16,19 @@ import org.eclipse.jgit.events.RefsChangedEvent;
 import org.eclipse.jgit.events.RefsChangedListener;
 import org.eclipse.jgit.lib.Repository;
 
+import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.GitRepoStatus;
+import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class GitRepoListener implements RefsChangedListener, IndexChangedListener {
 	
 	private Map<String, GitRepoStatus> repoStatus;
+	private ClientRecorder clientRecorder;
+	
 	
 	public GitRepoListener(IProject[] projects) {
 		repoStatus = new HashMap<String, GitRepoStatus>();
+		clientRecorder = COPEPlugin.getDefault().getClientRecorder();
 		for (IProject project : projects) {
 			String projectPath = project.getLocation().makeAbsolute().toPortableString();
 			try {
@@ -79,7 +84,9 @@ public class GitRepoListener implements RefsChangedListener, IndexChangedListene
 	@Override
 	public void onRefsChanged(RefsChangedEvent event) {
 		GitRepoStatus currentRepoStatus = getGitRepoStatus(Git.wrap(event.getRepository()));
-		repoStatus.put(getRepoUnderGitFromIndexFilePath(event.getRepository().getIndexFile().getAbsolutePath()), currentRepoStatus);
+		String repoPath = getRepoUnderGitFromIndexFilePath(event.getRepository().getIndexFile().getAbsolutePath());
+		repoStatus.put(repoPath, currentRepoStatus);
+		clientRecorder.recordGitEvent(repoPath, currentRepoStatus);
 	}
 
 	public String getCurrentBranch(String indexFile) {
@@ -89,6 +96,9 @@ public class GitRepoListener implements RefsChangedListener, IndexChangedListene
 	@Override
 	public void onIndexChanged(IndexChangedEvent event) {
 		Repository repository = event.getRepository();
-		repoStatus.put(getRepoUnderGitFromIndexFilePath(repository.getIndexFile().getAbsolutePath()), getGitRepoStatus(Git.wrap(repository)));
+		String repoPath = getRepoUnderGitFromIndexFilePath(repository.getIndexFile().getAbsolutePath());
+		GitRepoStatus status = getGitRepoStatus(Git.wrap(repository));
+		repoStatus.put(repoPath, status);
+		clientRecorder.recordGitEvent(repoPath, status);
 	}
 }
