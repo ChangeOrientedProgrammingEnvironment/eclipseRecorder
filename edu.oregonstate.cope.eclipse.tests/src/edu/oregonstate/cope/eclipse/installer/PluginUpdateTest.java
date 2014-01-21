@@ -1,6 +1,7 @@
 package edu.oregonstate.cope.eclipse.installer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -31,6 +32,8 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		allowedUnversionedFiles = new ArrayList<>();
 		allowedUnversionedFiles.add("workspace_id");
 		allowedUnversionedFiles.add("known-projects");
+		allowedUnversionedFiles.add("log");
+		allowedUnversionedFiles.add("config");
 		allowedUnversionedFiles.add(COPEPlugin.getDefault()._getInstallationConfigFileName());
 		allowedUnversionedFiles.add(Installer.SURVEY_FILENAME);
 		allowedUnversionedFiles.add(Installer.EMAIL_FILENAME);
@@ -68,10 +71,8 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 		List<String> versionedFileChildren = Arrays.asList(file.list());
 
-		assertEquals(3, versionedFileChildren.size());
+		assertEquals(1, versionedFileChildren.size());
 		assertTrue(versionedFileChildren.contains("eventFiles"));
-		assertTrue(versionedFileChildren.contains("log"));
-		assertTrue(versionedFileChildren.contains("config"));
 	}
 
 	@SuppressWarnings("static-access")
