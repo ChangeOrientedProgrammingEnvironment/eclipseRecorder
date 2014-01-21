@@ -10,7 +10,7 @@ public class EmailInstallOperation extends InstallerOperation {
 	 private static final String EMAIL_FILENAME = "email.txt";
 
 	public EmailInstallOperation() {
-		super(COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath(), 
+		super(COPEPlugin.getDefault().getLocalStorage().toPath().toAbsolutePath(), 
 				COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath());
 	}
 

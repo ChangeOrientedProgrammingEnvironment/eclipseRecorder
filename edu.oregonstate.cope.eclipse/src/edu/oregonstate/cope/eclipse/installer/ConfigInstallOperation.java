@@ -15,7 +15,7 @@ public class ConfigInstallOperation extends InstallerOperation {
 	private Uninstaller uninstaller;
 
 	public ConfigInstallOperation() {
-		super(COPEPlugin.getDefault().getVersionedLocalStorage().toPath().toAbsolutePath(), 
+		super(COPEPlugin.getDefault().getLocalStorage().toPath().toAbsolutePath(), 
 				COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath());
 		uninstaller = COPEPlugin.getDefault().getUninstaller();
 	}

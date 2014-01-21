@@ -26,12 +26,12 @@ public class RecorderFacade {
 		initLogger();
 	}
 
-	public RecorderFacade initialize(String workspaceDirectory, String permanentDirectory, String IDE) {
+	public RecorderFacade initialize(String workspaceDirectory, String permanentDirectory, String eventFilesDirectory, String IDE) {
 		initFileLogging(workspaceDirectory);
 
 		initProperties(workspaceDirectory, permanentDirectory);
 		initUninstaller();
-		initPersister(workspaceDirectory);
+		initPersister(eventFilesDirectory);
 		initClientRecorder(IDE);
 
 		return this;

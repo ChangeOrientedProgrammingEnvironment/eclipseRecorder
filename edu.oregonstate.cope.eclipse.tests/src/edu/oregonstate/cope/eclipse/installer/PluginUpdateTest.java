@@ -1,9 +1,11 @@
 package edu.oregonstate.cope.eclipse.installer;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,11 +22,21 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 	private static COPEPlugin plugin;
 	private static SnapshotManager snapshotManager;
+	private static List<String> allowedUnversionedFiles;
 
 	@Before
 	public void before() throws Exception {
 		plugin = COPEPlugin.getDefault();
 		plugin.getSnapshotManager().knowProject(PopulatedWorkspaceTest.javaProject.getProject().getName());
+
+		allowedUnversionedFiles = new ArrayList<>();
+		allowedUnversionedFiles.add("workspace_id");
+		allowedUnversionedFiles.add("known-projects");
+		allowedUnversionedFiles.add("log");
+		allowedUnversionedFiles.add("config");
+		allowedUnversionedFiles.add(COPEPlugin.getDefault()._getInstallationConfigFileName());
+		allowedUnversionedFiles.add(Installer.SURVEY_FILENAME);
+		allowedUnversionedFiles.add(Installer.EMAIL_FILENAME);
 	}
 
 	@Test
@@ -39,17 +51,28 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	}
 
 	@Test
-	public void testEverythingIsInVersionedFiles() throws Exception {
+	public void testVersioningFilePlacement() throws Exception {
 		for (File file : plugin.getLocalStorage().listFiles()) {
-			assertTrue(file.isDirectory());
-			assertTrue(file.getName().matches("\\d+\\.\\d+\\.\\d+\\.qualifier"));
+			if (file.isDirectory())
+				checkDirectory(file);
 
-			List<String> versionedFileChildren = Arrays.asList(file.list());
-
-			assertTrue(versionedFileChildren.contains("eventFiles"));
-			assertTrue(versionedFileChildren.contains("workspace_id"));
-			assertTrue(versionedFileChildren.contains("known-projects"));
+			if (file.isFile())
+				checkFile(file);
 		}
+	}
+
+	private void checkFile(File file) {
+		if (!file.getName().endsWith("zip"))
+			assertTrue(allowedUnversionedFiles.contains(file.getName()));
+	}
+
+	private void checkDirectory(File file) {
+		assertTrue(file.getName().matches("\\d+\\.\\d+\\.\\d+\\.qualifier"));
+
+		List<String> versionedFileChildren = Arrays.asList(file.list());
+
+		assertEquals(1, versionedFileChildren.size());
+		assertTrue(versionedFileChildren.contains("eventFiles"));
 	}
 
 	@SuppressWarnings("static-access")
@@ -61,7 +84,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 		boolean zipExists = false;
 
-		for (File file : plugin.getVersionedLocalStorage().listFiles()) {
+		for (File file : plugin.getLocalStorage().listFiles()) {
 			if (file.toPath().toString().endsWith(".zip"))
 				zipExists = true;
 		}
