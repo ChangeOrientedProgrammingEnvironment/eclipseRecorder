@@ -2,6 +2,8 @@ package edu.oregonstate.cope.clientRecorder;
 
 import java.util.Set;
 
+import org.json.simple.JSONObject;
+
 public class GitRepoStatus {
 	
 	private String branch;
@@ -21,6 +23,16 @@ public class GitRepoStatus {
 	
 	public String getCommitSHA1() {
 		return commitSHA1;
+	}
+	
+	public JSONObject getJSON() {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put(JSONConstants.JSON_GIT_HEAD_COMMIT, commitSHA1);
+		jsonObject.put(JSONConstants.JSON_GIT_BRANCH, branch);
+		jsonObject.put(JSONConstants.JSON_GIT_FILES_MODIFIED, filesModified);
+		jsonObject.put(JSONConstants.JSON_GIT_FILES_ADDED, filesAdded);
+		jsonObject.put(JSONConstants.JSON_GIT_FILES_REMOVED, filesDeleted);
+		return jsonObject;
 	}
 
 }
