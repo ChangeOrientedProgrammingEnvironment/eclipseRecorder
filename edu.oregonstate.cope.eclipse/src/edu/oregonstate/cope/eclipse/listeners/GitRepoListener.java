@@ -16,6 +16,8 @@ import org.eclipse.jgit.events.RefsChangedEvent;
 import org.eclipse.jgit.events.RefsChangedListener;
 import org.eclipse.jgit.lib.Repository;
 
+import edu.oregonstate.cope.clientRecorder.GitRepoStatus;
+
 public class GitRepoListener implements RefsChangedListener, IndexChangedListener {
 	
 	private Map<String, GitRepoStatus> repoStatus;

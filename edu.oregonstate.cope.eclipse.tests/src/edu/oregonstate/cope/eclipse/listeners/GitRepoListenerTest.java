@@ -13,6 +13,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.oregonstate.cope.clientRecorder.GitRepoStatus;
 import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
 
 public class GitRepoListenerTest extends PopulatedWorkspaceTest {

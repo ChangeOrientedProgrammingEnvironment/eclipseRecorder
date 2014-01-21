@@ -1,4 +1,4 @@
-package edu.oregonstate.cope.eclipse.listeners;
+package edu.oregonstate.cope.clientRecorder;
 
 import java.util.Set;
 
