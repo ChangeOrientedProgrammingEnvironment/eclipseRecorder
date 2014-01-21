@@ -113,9 +113,9 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return recorderFacade.getUninstaller();
 	}
 
-	public void initializeRecorder(String workspaceDirectory, String permanentDirectory, String workspaceID, String IDE) {
+	public void initializeRecorder(String workspaceDirectory, String permanentDirectory, String eventFilesDirectory, String workspaceID, String IDE) {
 		this.workspaceID = workspaceID;
-		recorderFacade = RecorderFacade.instance().initialize(workspaceDirectory, permanentDirectory, IDE);
+		recorderFacade = RecorderFacade.instance().initialize(workspaceDirectory, permanentDirectory, eventFilesDirectory, IDE);
 	}
 
 	protected File getWorkspaceIdFile() {
