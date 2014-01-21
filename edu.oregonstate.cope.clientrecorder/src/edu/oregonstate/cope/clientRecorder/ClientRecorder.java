@@ -223,5 +223,12 @@ public class ClientRecorder {
 		jsonObj.put(JSONConstants.JSON_TEXT, initialText);
 		return jsonObj;
 	}
+	
+	protected JSONObject buildGitStatusJSON(String repoPath, GitRepoStatus status) {
+		JSONObject json = buildCommonJSONObj(Events.gitEvent);
+		json.put(JSONConstants.JSON_GIT_REPO_PATH, repoPath);
+		json.put(JSONConstants.JSON_GIT_STATUS, status.getJSON());
+		return json;
+	}
 
 }
