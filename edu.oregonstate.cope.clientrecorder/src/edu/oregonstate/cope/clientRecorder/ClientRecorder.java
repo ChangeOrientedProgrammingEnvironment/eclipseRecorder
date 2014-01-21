@@ -90,6 +90,10 @@ public class ClientRecorder {
 	public void recordResourceDelete(String entityAddress) {
 		ChangePersister.instance().persist(buildResourceDeleteJSON(entityAddress));
 	}
+	
+	public void recordGitEvent(String repoPath, GitRepoStatus status) {
+		ChangePersister.instance().persist(buildGitStatusJSON(repoPath, status));
+	}
 
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
 		JSONObject obj;
@@ -222,6 +226,13 @@ public class ClientRecorder {
 		jsonObj.put(JSONConstants.JSON_ENTITY_ADDRESS, entityAddress);
 		jsonObj.put(JSONConstants.JSON_TEXT, initialText);
 		return jsonObj;
+	}
+	
+	protected JSONObject buildGitStatusJSON(String repoPath, GitRepoStatus status) {
+		JSONObject json = buildCommonJSONObj(Events.gitEvent);
+		json.put(JSONConstants.JSON_GIT_REPO_PATH, repoPath);
+		json.put(JSONConstants.JSON_GIT_STATUS, status.getJSON());
+		return json;
 	}
 
 }

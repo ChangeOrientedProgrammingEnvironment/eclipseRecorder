@@ -20,5 +20,13 @@ public interface JSONConstants {
 	public static final String JSON_LAUNCH_TIMESTAMP = "launchTimestamp";
 	public static final String JSON_REFACTORING_ID = "refactoringId";
 	public static final String JSON_REFACTORING_ARGUMENTS = "refactoringArguments";
+	
+	public static final String JSON_GIT_HEAD_COMMIT = "headCommit";
+	public static final String JSON_GIT_BRANCH = "branch";
+	public static final String JSON_GIT_FILES_MODIFIED = "filesModified";
+	public static final String JSON_GIT_FILES_ADDED = "filesAdded";
+	public static final String JSON_GIT_FILES_REMOVED = "filesRemoved";
+	public static final String JSON_GIT_REPO_PATH = "repoPath";
+	public static final String JSON_GIT_STATUS = "status";
 
 }

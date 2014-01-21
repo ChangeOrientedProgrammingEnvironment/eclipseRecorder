@@ -24,6 +24,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ltk.internal.core.refactoring.history.RefactoringHistoryService;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -40,15 +41,15 @@ import org.quartz.SchedulerException;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
-import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 import edu.oregonstate.cope.eclipse.installer.Installer;
+import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
+import edu.oregonstate.cope.eclipse.listeners.GitRepoListener;
 import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
 import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
-import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
 import edu.oregonstate.cope.fileSender.FileSender;
 
 @SuppressWarnings("restriction")
@@ -115,6 +116,10 @@ class StartPluginUIJob extends UIJob {
 		refactoringHistoryService.addExecutionListener(new RefactoringExecutionListener());
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new LaunchListener());
+
+		GitRepoListener gitChangeListener = new GitRepoListener(ResourcesPlugin.getWorkspace().getRoot().getProjects());
+		Repository.getGlobalListenerList().addRefsChangedListener(gitChangeListener);
+		Repository.getGlobalListenerList().addIndexChangedListener(gitChangeListener);
 
 		initializeFileSender();
 	}

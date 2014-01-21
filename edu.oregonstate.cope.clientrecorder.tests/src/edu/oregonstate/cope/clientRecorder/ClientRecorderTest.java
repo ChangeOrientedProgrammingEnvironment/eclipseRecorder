@@ -1,9 +1,7 @@
 package edu.oregonstate.cope.clientRecorder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -11,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 //TODO refactor this test class. Too many hardcoded strings. Too much duplication with tested class.
-public class ClientRecorderTest {
+public class ClientRecorderTest extends JSONTest {
 
 	private ClientRecorder clientRecorder;
 
@@ -209,28 +207,6 @@ public class ClientRecorderTest {
 	private void addTimeStamp(JSONObject expected) {
 		expected.put(JSONConstants.JSON_TIMESTAMP, (System.currentTimeMillis() / 1000) + "");
 	}
-
-	private void assertJSONEquals(JSONObject expected, JSONObject actual) {
-
-		assertEquals(expected.keySet(), actual.keySet());
-
-		for (Object key : expected.keySet()) {
-			if (key.equals(JSONConstants.JSON_TIMESTAMP)) {
-				assertTimestampsEqual(expected.get(key), actual.get(key));
-			} else {
-				assertEquals(expected.get(key), actual.get(key));
-			}
-		}
-	}
-
-	private void assertTimestampsEqual(Object expected, Object actual) {
-		int oneSecond = 3600;
-		
-		Long expectedTimestamp = Long.parseLong((String) expected);
-		Long actualTimestamp = Long.parseLong((String) actual);
-		
-		assertTrue(expectedTimestamp > actualTimestamp - oneSecond);
-	}
 	
 	@Test
 	public void testFileSave() {
@@ -338,6 +314,22 @@ public class ClientRecorderTest {
 		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
 		addTimeStamp(expected);
 		
+		assertJSONEquals(expected, actual);
+	}
+	
+	@Test
+	public void testGitEventRecording() {
+		GitRepoStatus repoStatus = new GitRepoStatus("master", "bla", new HashSet<String>(), new HashSet<String>(), new HashSet<String>());
+		JSONObject actual = clientRecorder.buildGitStatusJSON("somepath", repoStatus);
+		addTimeStamp(actual);
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.gitEvent + "");
+		expected.put(JSONConstants.JSON_GIT_REPO_PATH, "somepath");
+		expected.put(JSONConstants.JSON_GIT_STATUS, repoStatus.getJSON());
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		addTimeStamp(expected);
+
 		assertJSONEquals(expected, actual);
 	}
 }

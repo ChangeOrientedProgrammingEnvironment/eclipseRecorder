@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,9 +24,8 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	private static SnapshotManager snapshotManager;
 	private static List<String> allowedUnversionedFiles;
 
-	@BeforeClass
-	public static void beforeClass() throws Exception {
-		PopulatedWorkspaceTest.beforeClass();
+	@Before
+	public void before() throws Exception {
 		plugin = COPEPlugin.getDefault();
 		plugin.getSnapshotManager().knowProject(PopulatedWorkspaceTest.javaProject.getProject().getName());
 

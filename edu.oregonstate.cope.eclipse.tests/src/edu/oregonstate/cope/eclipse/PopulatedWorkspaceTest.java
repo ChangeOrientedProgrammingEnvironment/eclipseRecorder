@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
@@ -20,6 +21,7 @@ import org.junit.BeforeClass;
 public class PopulatedWorkspaceTest {
 
 	protected static IJavaProject javaProject;
+	
 	protected static SnapshotManager snapshotManager = new SnapshotManager(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath());
 
 	@SuppressWarnings("restriction")
