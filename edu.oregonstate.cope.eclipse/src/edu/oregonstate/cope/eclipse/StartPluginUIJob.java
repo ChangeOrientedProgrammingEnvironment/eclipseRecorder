@@ -69,11 +69,8 @@ class StartPluginUIJob extends UIJob {
 
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-		String workspaceDirectory = copePlugin.getLocalStorage().getAbsolutePath();
-		String permanentDirectory = copePlugin.getBundleStorage().getAbsolutePath();
-		String eventFilesDirectory = copePlugin.getVersionedLocalStorage().getAbsolutePath();
+		copePlugin.initializeRecorder();
 		
-		copePlugin.initializeRecorder(workspaceDirectory, permanentDirectory, eventFilesDirectory , copePlugin.getWorkspaceID(), ClientRecorder.ECLIPSE_IDE);
 		Uninstaller uninstaller = copePlugin.getUninstaller();
 
 		if (uninstaller.isUninstalled())

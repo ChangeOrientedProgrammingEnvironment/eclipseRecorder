@@ -113,8 +113,14 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return recorderFacade.getUninstaller();
 	}
 
-	public void initializeRecorder(String workspaceDirectory, String permanentDirectory, String eventFilesDirectory, String workspaceID, String IDE) {
-		this.workspaceID = workspaceID;
+	public void initializeRecorder() {
+		String workspaceDirectory = getLocalStorage().getAbsolutePath();
+		String permanentDirectory = getBundleStorage().getAbsolutePath();
+		String eventFilesDirectory = getVersionedLocalStorage().getAbsolutePath();		
+		String IDE = ClientRecorder.ECLIPSE_IDE;
+
+		this.workspaceID = getWorkspaceID();
+		
 		recorderFacade = RecorderFacade.instance().initialize(workspaceDirectory, permanentDirectory, eventFilesDirectory, IDE);
 	}
 
