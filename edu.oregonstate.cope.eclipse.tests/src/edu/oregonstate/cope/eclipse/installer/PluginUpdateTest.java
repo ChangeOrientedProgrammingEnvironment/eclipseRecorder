@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +28,11 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		plugin = COPEPlugin.getDefault();
 		plugin.getSnapshotManager().knowProject(PopulatedWorkspaceTest.javaProject.getProject().getName());
 		
-		allowedUnversionedFiles = Arrays.asList(new String[]{COPEPlugin.getDefault()._getInstallationConfigFileName(), Installer.SURVEY_FILENAME, Installer.EMAIL_FILENAME});
+		allowedUnversionedFiles = new ArrayList<>();
+		allowedUnversionedFiles.add("workspace_id");
+		allowedUnversionedFiles.add(COPEPlugin.getDefault()._getInstallationConfigFileName());
+		allowedUnversionedFiles.add(Installer.SURVEY_FILENAME);
+		allowedUnversionedFiles.add(Installer.EMAIL_FILENAME);
 	}
 
 	@Test
@@ -62,7 +67,6 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		List<String> versionedFileChildren = Arrays.asList(file.list());
 
 		assertTrue(versionedFileChildren.contains("eventFiles"));
-		assertTrue(versionedFileChildren.contains("workspace_id"));
 		assertTrue(versionedFileChildren.contains("known-projects"));
 	}
 
