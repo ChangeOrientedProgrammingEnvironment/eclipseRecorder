@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/edu.oregonstate.cope.eclipse.feature_0.6.1.qualifier.jar" id="edu.oregonstate.cope.eclipse.feature" version="0.6.1.qualifier"/>
+   <description name="COPE Client Recorder" url="http://cope.eecs.oregonstate.edu/client-recorder">
+      COPE Client Recorder
+   </description>
+   <feature url="features/edu.oregonstate.cope.eclipse.feature_0.6.1.qualifier.jar" id="edu.oregonstate.cope.eclipse.feature" version="0.6.1.qualifier">
+      <category name="edu.oregonstate.cope.category"/>
+   </feature>
+   <category-def name="edu.oregonstate.cope.category" label="Research"/>
 </site>
