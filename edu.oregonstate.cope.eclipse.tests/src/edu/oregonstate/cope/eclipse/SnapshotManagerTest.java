@@ -34,15 +34,15 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		File file = new File(COPEPlugin.getDefault().getVersionedLocalStorage(), "known-projects");
+		File file = new File(COPEPlugin.getDefault().getLocalStorage(), "known-projects");
 		file.createNewFile();
 		Files.write(file.toPath(), "known1\nknown2\n".getBytes(), StandardOpenOption.WRITE);
-		snapshotManager = new SnapshotManager(COPEPlugin.getDefault().getVersionedLocalStorage().getAbsolutePath());
+		snapshotManager = new SnapshotManager(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath());
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getVersionedLocalStorage());
+		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
 		for (File zipFile : zipFiles) {
 			zipFile.delete();
 		}
@@ -63,7 +63,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 	public void testKnowProject() throws Exception {
 		snapshotManager.knowProject("known3");
 		assertTrue(snapshotManager.isProjectKnown("known3"));
-		assertEquals("known1\nknown2\nlibrariesTest\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getDefault().getVersionedLocalStorage().getAbsolutePath(), "known-projects"))));
+		assertEquals("known1\nknown2\nlibrariesTest\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath(), "known-projects"))));
 	}
 	
 	@Test
@@ -71,7 +71,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		String projectName = javaProject.getProject().getName();
 		snapshotManager.isProjectKnown(projectName);
 		snapshotManager.takeSnapshotOfSessionTouchedProjects();
-		File fileDir = COPEPlugin.getDefault().getVersionedLocalStorage();
+		File fileDir = COPEPlugin.getDefault().getLocalStorage();
 		assertTrue(fileDir.isDirectory());
 		File[] listFiles = listZipFilesInDir(fileDir);
 		assertEquals(1,listFiles.length);

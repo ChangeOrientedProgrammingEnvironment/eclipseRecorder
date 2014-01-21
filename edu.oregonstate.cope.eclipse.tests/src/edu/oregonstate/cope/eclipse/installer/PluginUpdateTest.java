@@ -27,9 +27,10 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		PopulatedWorkspaceTest.beforeClass();
 		plugin = COPEPlugin.getDefault();
 		plugin.getSnapshotManager().knowProject(PopulatedWorkspaceTest.javaProject.getProject().getName());
-		
+
 		allowedUnversionedFiles = new ArrayList<>();
 		allowedUnversionedFiles.add("workspace_id");
+		allowedUnversionedFiles.add("known-projects");
 		allowedUnversionedFiles.add(COPEPlugin.getDefault()._getInstallationConfigFileName());
 		allowedUnversionedFiles.add(Installer.SURVEY_FILENAME);
 		allowedUnversionedFiles.add(Installer.EMAIL_FILENAME);
@@ -47,18 +48,19 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	}
 
 	@Test
-	public void testEverythingIsInVersionedFiles() throws Exception {
+	public void testVersioningFilePlacement() throws Exception {
 		for (File file : plugin.getLocalStorage().listFiles()) {
 			if (file.isDirectory())
 				checkDirectory(file);
-			
+
 			if (file.isFile())
 				checkFile(file);
 		}
 	}
 
 	private void checkFile(File file) {
-		assertTrue(allowedUnversionedFiles.contains(file.getName()));
+		if (!file.getName().endsWith("zip"))
+			assertTrue(allowedUnversionedFiles.contains(file.getName()));
 	}
 
 	private void checkDirectory(File file) {
@@ -66,8 +68,10 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 		List<String> versionedFileChildren = Arrays.asList(file.list());
 
+		assertEquals(3, versionedFileChildren.size());
 		assertTrue(versionedFileChildren.contains("eventFiles"));
-		assertTrue(versionedFileChildren.contains("known-projects"));
+		assertTrue(versionedFileChildren.contains("log"));
+		assertTrue(versionedFileChildren.contains("config"));
 	}
 
 	@SuppressWarnings("static-access")
@@ -79,7 +83,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 		boolean zipExists = false;
 
-		for (File file : plugin.getVersionedLocalStorage().listFiles()) {
+		for (File file : plugin.getLocalStorage().listFiles()) {
 			if (file.toPath().toString().endsWith(".zip"))
 				zipExists = true;
 		}
