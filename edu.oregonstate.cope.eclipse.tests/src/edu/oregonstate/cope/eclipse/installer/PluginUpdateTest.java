@@ -1,6 +1,6 @@
 package edu.oregonstate.cope.eclipse.installer;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -19,12 +19,15 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 	private static COPEPlugin plugin;
 	private static SnapshotManager snapshotManager;
+	private static List<String> allowedUnversionedFiles;
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		PopulatedWorkspaceTest.beforeClass();
 		plugin = COPEPlugin.getDefault();
 		plugin.getSnapshotManager().knowProject(PopulatedWorkspaceTest.javaProject.getProject().getName());
+		
+		allowedUnversionedFiles = Arrays.asList(new String[]{COPEPlugin.getDefault()._getInstallationConfigFileName(), Installer.SURVEY_FILENAME, Installer.EMAIL_FILENAME});
 	}
 
 	@Test
@@ -41,15 +44,26 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	@Test
 	public void testEverythingIsInVersionedFiles() throws Exception {
 		for (File file : plugin.getLocalStorage().listFiles()) {
-			assertTrue(file.isDirectory());
-			assertTrue(file.getName().matches("\\d+\\.\\d+\\.\\d+\\.qualifier"));
-
-			List<String> versionedFileChildren = Arrays.asList(file.list());
-
-			assertTrue(versionedFileChildren.contains("eventFiles"));
-			assertTrue(versionedFileChildren.contains("workspace_id"));
-			assertTrue(versionedFileChildren.contains("known-projects"));
+			if (file.isDirectory())
+				checkDirectory(file);
+			
+			if (file.isFile())
+				checkFile(file);
 		}
+	}
+
+	private void checkFile(File file) {
+		assertTrue(allowedUnversionedFiles.contains(file.getName()));
+	}
+
+	private void checkDirectory(File file) {
+		assertTrue(file.getName().matches("\\d+\\.\\d+\\.\\d+\\.qualifier"));
+
+		List<String> versionedFileChildren = Arrays.asList(file.list());
+
+		assertTrue(versionedFileChildren.contains("eventFiles"));
+		assertTrue(versionedFileChildren.contains("workspace_id"));
+		assertTrue(versionedFileChildren.contains("known-projects"));
 	}
 
 	@SuppressWarnings("static-access")

@@ -25,7 +25,7 @@ public class PluginInstallationTest {
 		workspaceFiles = new HashSet<>();
 		permanentFiles = new HashSet<>();
 
-		addToFileSet(workspaceFiles, COPEPlugin.getDefault().getVersionedLocalStorage().toPath());
+		addToFileSet(workspaceFiles, COPEPlugin.getDefault().getLocalStorage().toPath());
 		addToFileSet(permanentFiles, COPEPlugin.getDefault().getBundleStorage().toPath());
 	}
 
