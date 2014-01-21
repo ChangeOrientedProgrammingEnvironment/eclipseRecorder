@@ -68,7 +68,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	}
 
 	public void initializeSnapshotManager() {
-		snapshotManager = new SnapshotManager(getVersionedLocalStorage().getAbsolutePath());
+		snapshotManager = new SnapshotManager(getLocalStorage().getAbsolutePath());
 	}
 
 	public void takeSnapshotOfKnownProjects() {
@@ -113,13 +113,19 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return recorderFacade.getUninstaller();
 	}
 
-	public void initializeRecorder(String workspaceDirectory, String permanentDirectory, String workspaceID, String IDE) {
-		this.workspaceID = workspaceID;
-		recorderFacade = RecorderFacade.instance().initialize(workspaceDirectory, permanentDirectory, IDE);
+	public void initializeRecorder() {
+		String workspaceDirectory = getLocalStorage().getAbsolutePath();
+		String permanentDirectory = getBundleStorage().getAbsolutePath();
+		String eventFilesDirectory = getVersionedLocalStorage().getAbsolutePath();		
+		String IDE = ClientRecorder.ECLIPSE_IDE;
+
+		this.workspaceID = getWorkspaceID();
+		
+		recorderFacade = RecorderFacade.instance().initialize(workspaceDirectory, permanentDirectory, eventFilesDirectory, IDE);
 	}
 
 	protected File getWorkspaceIdFile() {
-		File pluginStoragePath = getVersionedLocalStorage();
+		File pluginStoragePath = getLocalStorage();
 		return new File(pluginStoragePath.getAbsolutePath() + File.separator + "workspace_id");
 	}
 
