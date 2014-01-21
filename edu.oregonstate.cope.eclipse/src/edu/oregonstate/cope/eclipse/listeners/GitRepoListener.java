@@ -14,6 +14,7 @@ import org.eclipse.jgit.events.IndexChangedEvent;
 import org.eclipse.jgit.events.IndexChangedListener;
 import org.eclipse.jgit.events.RefsChangedEvent;
 import org.eclipse.jgit.events.RefsChangedListener;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
@@ -35,8 +36,11 @@ public class GitRepoListener implements RefsChangedListener, IndexChangedListene
 				Git gitRepo = Git.open(new File(projectPath));
 				String gitPath = gitRepo.getRepository().getDirectory().getAbsolutePath();
 				String repoUnderGit = removeLastPathElement(gitPath);
-				if (repoStatus.get(repoUnderGit) == null)
-					repoStatus.put(repoUnderGit, getGitRepoStatus(repoUnderGit));
+				GitRepoStatus gitRepoStatus = getGitRepoStatus(repoUnderGit);
+				clientRecorder.recordGitEvent(repoUnderGit, gitRepoStatus);
+				if (repoStatus.get(repoUnderGit) == null) {
+					repoStatus.put(repoUnderGit, gitRepoStatus);
+				}
 			} catch (IOException e) {
 			}
 		}
@@ -69,7 +73,10 @@ public class GitRepoListener implements RefsChangedListener, IndexChangedListene
 	}
 
 	private String getHeadCommitSHA1(Repository repository) throws IOException {
-		return repository.getRef("HEAD").getObjectId().getName();
+		ObjectId objectId = repository.getRef("HEAD").getObjectId();
+		if (objectId == null)
+			return "";
+		return objectId.getName();
 	}
 	
 	public GitRepoStatus getRepoStatus(String indexFile) {
