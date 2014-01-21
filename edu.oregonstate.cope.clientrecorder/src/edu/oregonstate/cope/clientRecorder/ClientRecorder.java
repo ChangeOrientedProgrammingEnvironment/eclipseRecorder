@@ -90,6 +90,10 @@ public class ClientRecorder {
 	public void recordResourceDelete(String entityAddress) {
 		ChangePersister.instance().persist(buildResourceDeleteJSON(entityAddress));
 	}
+	
+	public void recordGitEvent(String repoPath, GitRepoStatus status) {
+		ChangePersister.instance().persist(buildGitStatusJSON(repoPath, status));
+	}
 
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
 		JSONObject obj;
