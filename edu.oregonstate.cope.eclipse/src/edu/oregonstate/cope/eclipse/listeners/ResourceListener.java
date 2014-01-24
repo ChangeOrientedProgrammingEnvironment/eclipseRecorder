@@ -1,6 +1,7 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
 import java.io.InputStream;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import org.eclipse.core.resources.IFile;
@@ -76,7 +77,12 @@ public class ResourceListener implements IResourceChangeListener {
 		try {
 			inputStream = affectedFile.getContents();
 			Scanner scanner = new Scanner(inputStream, affectedFile.getCharset());
-			String contents = scanner.useDelimiter("\\A").next();
+			String contents = "";
+			try {
+				contents = scanner.useDelimiter("\\A").next(); 
+			} catch (NoSuchElementException e) {
+				contents = "";
+			}
 			scanner.close();
 			return contents;
 		} catch (CoreException e) {
