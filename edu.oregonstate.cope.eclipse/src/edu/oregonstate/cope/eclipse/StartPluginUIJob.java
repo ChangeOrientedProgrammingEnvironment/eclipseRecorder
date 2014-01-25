@@ -169,8 +169,10 @@ class StartPluginUIJob extends UIJob {
 		IEditorReference[] editorReferences = activeWindow.getActivePage().getEditorReferences();
 		for (IEditorReference editorReference : editorReferences) {
 			IDocument document = getDocumentForEditor(editorReference);
-			if (document == null)
+			if (document == null) {
+				copePlugin.getLogger().info(this, "Could not find project for editor " + editorReference.getName());
 				continue;
+			}
 			IProject project = getProjectFromEditor(editorReference);
 			if (project == null)
 				continue;
@@ -203,6 +205,8 @@ class StartPluginUIJob extends UIJob {
 			return null;
 		}
 		ISourceViewer sourceViewer = (ISourceViewer) editorPart.getAdapter(ITextOperationTarget.class);
+		if (sourceViewer == null)
+			return null;
 		IDocument document = sourceViewer.getDocument();
 		return document;
 	}
