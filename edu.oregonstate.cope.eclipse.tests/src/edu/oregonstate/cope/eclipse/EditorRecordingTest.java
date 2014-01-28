@@ -8,8 +8,10 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchCommandConstants;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -28,18 +30,36 @@ public class EditorRecordingTest {
 	private MockRecorder recorder;
 	private IDocument document;
 	private IEditorPart editor;
+	private boolean done;
 
 	@Before
 	public void before() throws Exception {
 		recorder = new MockRecorder();
 		COPEPlugin.getDefault().setClientRecorder(recorder);
-		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IProject project = FileUtil.createProject("testProject");
-		IFile file = FileUtil.createFile("testFile.java", project);
-		editor = workbenchWindow.getActivePage().openEditor(new FileEditorInput(file), JavaUI.ID_CU_EDITOR, true);
-		document = getDocumentForEditor(editor);
-		document.addDocumentListener(new DocumentListener());
-		document.set("Hello there");
+		this.done = false;
+		Display.getDefault().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				IProject project;
+				try {
+					project = FileUtil.createProject("testProject");
+					IFile file = FileUtil.createFile("testFile.java", project);
+					editor = workbenchWindow.getActivePage().openEditor(new FileEditorInput(file), JavaUI.ID_CU_EDITOR, true);
+					document = getDocumentForEditor(editor);
+					document.addDocumentListener(new DocumentListener());
+					document.set("Hello there");
+					done = true;
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		while (!done)
+			Thread.sleep(100);
+		
 	}
 	
 	private IDocument getDocumentForEditor(IEditorPart editorPart) {
