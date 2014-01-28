@@ -1,12 +1,13 @@
 package edu.oregonstate.cope.eclipse;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -20,6 +21,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.keyboard.SWTKeyboardStrategy;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPart;
@@ -136,12 +138,29 @@ public class EditorRecordingTest {
 
 		KeyboardFactory.getSWTKeyboard().pressShortcut(command, z);
 	}
+	
+	@Test
+	public void testRedo() throws Exception {
+		typeHAtTheBeginning();
+		doUndo();
+		
+		KeyStroke command = KeyStroke.getInstance(SWT.COMMAND, KeyStroke.NO_KEY);
+		KeyStroke shift = KeyStroke.getInstance(SWT.SHIFT, KeyStroke.NO_KEY);
+		KeyStroke z = KeyStroke.getInstance("Z");
+		
+		KeyboardFactory.getSWTKeyboard().pressShortcut(shift, command, z);
+		
+		SWTBotMenu editMenu = bot.menu("Edit");
+		SWTBotMenu redoMenu = editMenu.menu("Redo Typing");
+		if (!redoMenu.isEnabled())
+			fail("Redo option is not active");
+		redoMenu.click();
 		
 		Thread.sleep(100);
 		
-		assertEquals(ChangeOrigin.UNDO, recorder.recordedChangeOrigin);
-		assertEquals(1,recorder.recordedLength);
+		assertEquals(ChangeOrigin.REDO, recorder.recordedChangeOrigin);
+		assertEquals(0,recorder.recordedLength);
 		assertEquals(0,recorder.recordedOffset);
-		assertEquals("",recorder.recordedText);
+		assertEquals("H",recorder.recordedText);
 	}
 }
