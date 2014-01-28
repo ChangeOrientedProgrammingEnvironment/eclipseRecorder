@@ -144,12 +144,6 @@ public class EditorRecordingTest {
 		typeHAtTheBeginning();
 		doUndo();
 		
-		KeyStroke command = KeyStroke.getInstance(SWT.COMMAND, KeyStroke.NO_KEY);
-		KeyStroke shift = KeyStroke.getInstance(SWT.SHIFT, KeyStroke.NO_KEY);
-		KeyStroke z = KeyStroke.getInstance("Z");
-		
-		KeyboardFactory.getSWTKeyboard().pressShortcut(shift, command, z);
-		
 		SWTBotMenu redoMenu = bot.menu("Edit").menu("Redo Typing");
 		if (!redoMenu.isEnabled())
 			fail("Redo option is not active");
