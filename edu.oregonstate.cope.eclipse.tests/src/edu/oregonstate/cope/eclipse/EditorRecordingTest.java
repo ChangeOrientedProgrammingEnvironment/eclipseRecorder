@@ -81,6 +81,7 @@ public class EditorRecordingTest {
 		while (!done)
 			Thread.sleep(100);
 		
+		assertEquals(editor, bot.activeEditor().getReference().getEditor(true));
 	}
 	
 	private IDocument getDocumentForEditor(IEditorPart editorPart) {
@@ -104,7 +105,6 @@ public class EditorRecordingTest {
 	
 	@Test
 	public void testUndo() throws Exception {
-		assertEquals(editor, bot.activeEditor().getReference().getEditor(true));
 		SWTBotEclipseEditor textEditor = bot.activeEditor().toTextEditor();
 		String text = textEditor.getText();
 		System.out.println(text);
