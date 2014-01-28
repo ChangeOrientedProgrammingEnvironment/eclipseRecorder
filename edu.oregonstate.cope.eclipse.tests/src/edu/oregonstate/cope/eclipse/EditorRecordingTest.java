@@ -44,6 +44,7 @@ public class EditorRecordingTest {
 	private IDocument document;
 	private IEditorPart editor;
 	private static SWTWorkbenchBot bot;
+	private IProject project;
 	
 	private boolean done;
 	
@@ -63,7 +64,6 @@ public class EditorRecordingTest {
 			@Override
 			public void run() {
 				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				IProject project;
 				try {
 					project = FileUtil.createProject("testProject");
 					IFile file = FileUtil.createFile("testFile.java", project);
