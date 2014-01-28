@@ -54,7 +54,6 @@ public class EditorRecordingTest {
 	@Test
 	public void testAddCharacter() throws Exception {
 		document.replace(0, 1, "!");
-		Thread.sleep(1000);
 		assertEquals(0, recorder.recordedOffset);
 		assertEquals(1, recorder.recordedLength);
 		assertEquals("!", recorder.recordedText);
