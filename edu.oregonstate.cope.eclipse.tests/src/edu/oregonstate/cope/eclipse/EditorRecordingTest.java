@@ -1,8 +1,7 @@
 package edu.oregonstate.cope.eclipse;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.ui.JavaUI;
@@ -10,9 +9,11 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.operations.IWorkbenchOperationSupport;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.tests.harness.util.FileUtil;
@@ -35,7 +36,7 @@ public class EditorRecordingTest {
 		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IProject project = FileUtil.createProject("testProject");
 		IFile file = FileUtil.createFile("testFile.java", project);
-		editor = workbenchWindow.getActivePage().openEditor(new FileEditorInput(file), JavaUI.ID_CU_EDITOR);
+		editor = workbenchWindow.getActivePage().openEditor(new FileEditorInput(file), JavaUI.ID_CU_EDITOR, true);
 		document = getDocumentForEditor(editor);
 		document.addDocumentListener(new DocumentListener());
 		document.set("Hello there");
@@ -61,4 +62,16 @@ public class EditorRecordingTest {
 		assertEquals(ChangeOrigin.USER, recorder.recordedChangeOrigin);
 	}
 	
+	@Test
+	public void testUndo() throws Exception {
+		document.replace(0, 1, "!");
+
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(editor);
+		
+//		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
+		IHandlerService handlerService = (IHandlerService) editor.getSite().getService(IHandlerService.class);
+		handlerService.executeCommand(IWorkbenchCommandConstants.EDIT_UNDO, null);
+		
+		assertEquals(ChangeOrigin.UNDO, recorder.recordedChangeOrigin);
+	}
 }
