@@ -2,7 +2,7 @@
 <feature
       id="edu.oregonstate.cope.eclipse.feature"
       label="COPE Client Recorder"
-      version="0.7.0.qualifier"
+      version="0.7.1.qualifier"
       provider-name="Oregon State University"
       plugin="edu.oregonstate.cope.eclipse.branding">
 
