@@ -114,10 +114,8 @@ public class EditorRecordingTest {
 	public void testUndo() throws Exception {
 		SWTBotEclipseEditor textEditor = bot.activeEditor().toTextEditor();
 		String text = textEditor.getText();
-		System.out.println(text);
 		textEditor.typeText(0, 0, "H");
 		text = textEditor.getText();
-		System.out.println(text);
 		
 		KeyStroke command = KeyStroke.getInstance(SWT.COMMAND, KeyStroke.NO_KEY);
 		KeyStroke z = KeyStroke.getInstance("Z");
