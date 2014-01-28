@@ -29,6 +29,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.tests.harness.util.FileUtil;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -82,6 +83,12 @@ public class EditorRecordingTest {
 			Thread.sleep(100);
 		
 		assertEquals(editor, bot.activeEditor().getReference().getEditor(true));
+	}
+	
+	@After
+	public void after() throws Exception {
+		bot.activeEditor().toTextEditor().saveAndClose();
+		FileUtil.deleteProject(project);
 	}
 	
 	private IDocument getDocumentForEditor(IEditorPart editorPart) {
