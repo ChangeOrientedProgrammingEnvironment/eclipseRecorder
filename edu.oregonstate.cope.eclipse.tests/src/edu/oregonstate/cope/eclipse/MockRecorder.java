@@ -12,7 +12,6 @@ public class MockRecorder extends ClientRecorder {
 
 	@Override
 	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
-		System.out.println(text);
 		recordedText = text;
 		recordedOffset = offset;
 		recordedLength = length;
