@@ -46,6 +46,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 	
 	private List<String> ignoredProjects;
 
+	private ClientRecorder clientRecorder;
+
 	/**
 	 * The constructor
 	 */
@@ -62,7 +64,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-
+		
 		UIJob uiJob = new StartPluginUIJob(this, "Registering listeners");
 		uiJob.schedule();
 	}
@@ -98,7 +100,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	}
 
 	public ClientRecorder getClientRecorder() {
-		return recorderFacade.getClientRecorder();
+		return clientRecorder;
 	}
 
 	public Properties getWorkspaceProperties() {
@@ -120,8 +122,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 		String IDE = ClientRecorder.ECLIPSE_IDE;
 
 		this.workspaceID = getWorkspaceID();
-		
+
 		recorderFacade = RecorderFacade.instance().initialize(workspaceDirectory, permanentDirectory, eventFilesDirectory, IDE);
+		clientRecorder = recorderFacade.getClientRecorder();
+
 	}
 
 	protected File getWorkspaceIdFile() {
@@ -225,5 +229,9 @@ public class COPEPlugin extends AbstractUIPlugin {
 		}
 		
 		return projectNames;
+	}
+	
+	public void setClientRecorder(ClientRecorder recorder) {
+		clientRecorder = recorder;
 	}
 }
