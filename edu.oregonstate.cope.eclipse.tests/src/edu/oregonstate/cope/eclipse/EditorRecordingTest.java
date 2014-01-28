@@ -112,15 +112,30 @@ public class EditorRecordingTest {
 	
 	@Test
 	public void testUndo() throws Exception {
+		typeHAtTheBeginning();
+		doUndo();
+		
+		Thread.sleep(100);
+		
+		assertEquals(ChangeOrigin.UNDO, recorder.recordedChangeOrigin);
+		assertEquals(1,recorder.recordedLength);
+		assertEquals(0,recorder.recordedOffset);
+		assertEquals("",recorder.recordedText);
+	}
+
+	private void typeHAtTheBeginning() {
 		SWTBotEclipseEditor textEditor = bot.activeEditor().toTextEditor();
 		String text = textEditor.getText();
 		textEditor.typeText(0, 0, "H");
 		text = textEditor.getText();
-		
+	}
+
+	private void doUndo() throws ParseException {
 		KeyStroke command = KeyStroke.getInstance(SWT.COMMAND, KeyStroke.NO_KEY);
 		KeyStroke z = KeyStroke.getInstance("Z");
 
 		KeyboardFactory.getSWTKeyboard().pressShortcut(command, z);
+	}
 		
 		Thread.sleep(100);
 		
