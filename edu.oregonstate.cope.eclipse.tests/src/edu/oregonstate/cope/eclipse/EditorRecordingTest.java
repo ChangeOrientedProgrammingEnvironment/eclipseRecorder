@@ -150,8 +150,7 @@ public class EditorRecordingTest {
 		
 		KeyboardFactory.getSWTKeyboard().pressShortcut(shift, command, z);
 		
-		SWTBotMenu editMenu = bot.menu("Edit");
-		SWTBotMenu redoMenu = editMenu.menu("Redo Typing");
+		SWTBotMenu redoMenu = bot.menu("Edit").menu("Redo Typing");
 		if (!redoMenu.isEnabled())
 			fail("Redo option is not active");
 		redoMenu.click();
