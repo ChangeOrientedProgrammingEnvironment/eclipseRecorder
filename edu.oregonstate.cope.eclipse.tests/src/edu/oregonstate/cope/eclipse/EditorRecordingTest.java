@@ -156,4 +156,18 @@ public class EditorRecordingTest {
 		assertEquals(0,recorder.recordedOffset);
 		assertEquals("H",recorder.recordedText);
 	}
+	
+	@Test
+	public void testCut() throws Exception {
+		bot.activeEditor().toTextEditor().selectCurrentLine();
+		bot.menu("Edit").menu("Cut").click();
+		
+		Thread.sleep(100);
+		
+		assertEquals(ChangeOrigin.CUT, recorder.recordedChangeOrigin);
+		assertEquals(11,recorder.recordedLength);
+		assertEquals(0,recorder.recordedOffset);
+		assertEquals("",recorder.recordedText);
+		
+	}
 }
