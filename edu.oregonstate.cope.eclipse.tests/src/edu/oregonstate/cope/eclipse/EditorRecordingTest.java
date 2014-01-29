@@ -3,10 +3,12 @@ package edu.oregonstate.cope.eclipse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -218,6 +220,7 @@ public class EditorRecordingTest {
 		IPackageFragmentRoot srcFolderPkg = createSourceFolder(javaProject);
 		IPackageFragment packageFragment = srcFolderPkg.createPackageFragment("test", true, new NullProgressMonitor());
 		final ICompilationUnit compilationUnit = packageFragment.createCompilationUnit("TestFile.java", "package test;\n\npublic class TestFile{}\n", true, new NullProgressMonitor());
+		javaProject.getProject().build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		
 		Display.getDefault().asyncExec(new Runnable() {
 			
@@ -234,8 +237,8 @@ public class EditorRecordingTest {
 	}
 
 	private IPackageFragmentRoot createSourceFolder(IJavaProject javaProject) throws CoreException, JavaModelException {
-		IFolder srcFolder = project.getFolder("src");
-		srcFolder.create(true, true, new NullProgressMonitor());
+		IFolder srcFolder = javaProject.getProject().getFolder("src");
+		srcFolder.create(true, false, new NullProgressMonitor());
 		IPackageFragmentRoot srcFolderPkg = javaProject.getPackageFragmentRoot(srcFolder);
 		IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(srcFolder.getFullPath());
 		javaProject.setRawClasspath(new IClasspathEntry[]{newSourceEntry}, new NullProgressMonitor());
