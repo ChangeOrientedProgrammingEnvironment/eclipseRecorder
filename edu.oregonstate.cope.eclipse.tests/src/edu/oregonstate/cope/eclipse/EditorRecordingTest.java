@@ -3,7 +3,6 @@ package edu.oregonstate.cope.eclipse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -24,8 +23,6 @@ import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.ltk.core.refactoring.RefactoringCore;
-import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
@@ -76,7 +73,6 @@ public class EditorRecordingTest {
 			
 			@Override
 			public void run() {
-				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				try {
 					project = FileUtil.createProject("testProject");
 					IFile file = FileUtil.createFile("testFile.java", project);
@@ -142,9 +138,7 @@ public class EditorRecordingTest {
 
 	private void typeHAtTheBeginning() {
 		SWTBotEclipseEditor textEditor = bot.activeEditor().toTextEditor();
-		String text = textEditor.getText();
 		textEditor.typeText(0, 0, "H");
-		text = textEditor.getText();
 	}
 
 	private void doUndo() throws ParseException {
