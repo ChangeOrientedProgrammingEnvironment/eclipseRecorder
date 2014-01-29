@@ -154,8 +154,7 @@ public class EditorRecordingTest {
 	
 	@Test
 	public void testCut() throws Exception {
-		bot.activeEditor().toTextEditor().selectCurrentLine();
-		bot.menu("Edit").menu("Cut").click();
+		doCut();
 		
 		Thread.sleep(100);
 		
@@ -164,6 +163,11 @@ public class EditorRecordingTest {
 		assertEquals(0,recorder.recordedOffset);
 		assertEquals("",recorder.recordedText);
 		
+	}
+
+	private void doCut() {
+		bot.activeEditor().toTextEditor().selectCurrentLine();
+		bot.menu("Edit").menu("Cut").click();
 	}
 	
 	@Test
