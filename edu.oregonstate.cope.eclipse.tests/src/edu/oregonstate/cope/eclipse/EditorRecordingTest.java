@@ -4,14 +4,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ltk.core.refactoring.RefactoringCore;
+import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
@@ -21,6 +33,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
@@ -65,9 +78,7 @@ public class EditorRecordingTest {
 				try {
 					project = FileUtil.createProject("testProject");
 					IFile file = FileUtil.createFile("testFile.java", project);
-					editor = workbenchWindow.getActivePage().openEditor(new FileEditorInput(file), JavaUI.ID_CU_EDITOR, true);
-					document = getDocumentForEditor(editor);
-					document.addDocumentListener(new DocumentListener());
+					openJavaEditorOnFile(file);
 					document.set("Hello there");
 					done = true;
 				} catch (CoreException e) {
@@ -80,6 +91,13 @@ public class EditorRecordingTest {
 			Thread.sleep(100);
 		
 		assertEquals(editor, bot.activeEditor().getReference().getEditor(true));
+	}
+	
+	private void openJavaEditorOnFile(IFile file) throws PartInitException {
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		editor = workbenchWindow.getActivePage().openEditor(new FileEditorInput(file), JavaUI.ID_CU_EDITOR, true);
+		document = getDocumentForEditor(editor);
+		document.addDocumentListener(new DocumentListener());
 	}
 	
 	@After
@@ -192,5 +210,43 @@ public class EditorRecordingTest {
 		assertEquals(11,recorder.recordedLength);
 		assertEquals(0,recorder.recordedOffset);
 		assertEquals("Hello there",recorder.recordedText);
+	}
+	
+	@Test
+	public void testRefactoring() throws Exception {
+		IJavaProject javaProject = createTestJavaProject();
+		IPackageFragmentRoot srcFolderPkg = createSourceFolder(javaProject);
+		IPackageFragment packageFragment = srcFolderPkg.createPackageFragment("test", true, new NullProgressMonitor());
+		final ICompilationUnit compilationUnit = packageFragment.createCompilationUnit("TestFile.java", "package test;\n\npublic class TestFile{}\n", true, new NullProgressMonitor());
+		
+		Display.getDefault().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					openJavaEditorOnFile((IFile) compilationUnit.getResource());
+				} catch (PartInitException e) {
+				}
+			}
+		});
+		
+		Thread.sleep(200);				
+	}
+
+	private IPackageFragmentRoot createSourceFolder(IJavaProject javaProject) throws CoreException, JavaModelException {
+		IFolder srcFolder = project.getFolder("src");
+		srcFolder.create(true, true, new NullProgressMonitor());
+		IPackageFragmentRoot srcFolderPkg = javaProject.getPackageFragmentRoot(srcFolder);
+		IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(srcFolder.getFullPath());
+		javaProject.setRawClasspath(new IClasspathEntry[]{newSourceEntry}, new NullProgressMonitor());
+		return srcFolderPkg;
+	}
+
+	private IJavaProject createTestJavaProject() throws CoreException {
+		IJavaProject javaProject = JavaCore.create(FileUtil.createProject("JavaProject"));
+		IProjectDescription description = javaProject.getProject().getDescription();
+		description.setNatureIds(new String[]{JavaCore.NATURE_ID});
+		javaProject.getProject().setDescription(description, new NullProgressMonitor());
+		return javaProject;
 	}
 }
