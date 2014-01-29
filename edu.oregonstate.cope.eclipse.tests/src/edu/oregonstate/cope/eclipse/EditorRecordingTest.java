@@ -233,7 +233,15 @@ public class EditorRecordingTest {
 			}
 		});
 		
-		Thread.sleep(200);				
+		Thread.sleep(200);
+
+		bot.activeEditor().toTextEditor().selectRange(2, 13, 8);
+		bot.menu("Refactor").menu("Rename...").click();
+		KeyboardFactory.getSWTKeyboard().typeText("SomethingElse\n");
+		
+		Thread.sleep(200);
+		
+		assertEquals(ChangeOrigin.REFACTORING, recorder.recordedChangeOrigin);
 	}
 
 	private IPackageFragmentRoot createSourceFolder(IJavaProject javaProject) throws CoreException, JavaModelException {
