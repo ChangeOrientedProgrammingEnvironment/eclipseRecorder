@@ -183,4 +183,14 @@ public class EditorRecordingTest {
 		assertEquals("Hello there",recorder.recordedText);
 		
 	}
+	
+	public void testPaste() throws Exception {
+		doCut();
+		bot.menu("Edit").menu("Paste").click();
+		assertEquals(Events.textChange, recorder.recordedEvent);
+		assertEquals(ChangeOrigin.PASTE, recorder.recordedChangeOrigin);
+		assertEquals(11,recorder.recordedLength);
+		assertEquals(0,recorder.recordedOffset);
+		assertEquals("Hello there",recorder.recordedText);
+	}
 }
