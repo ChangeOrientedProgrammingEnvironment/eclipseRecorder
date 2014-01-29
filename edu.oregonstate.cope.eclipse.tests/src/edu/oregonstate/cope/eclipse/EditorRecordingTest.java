@@ -219,7 +219,7 @@ public class EditorRecordingTest {
 		IJavaProject javaProject = createTestJavaProject();
 		IPackageFragmentRoot srcFolderPkg = createSourceFolder(javaProject);
 		IPackageFragment packageFragment = srcFolderPkg.createPackageFragment("test", true, new NullProgressMonitor());
-		final ICompilationUnit compilationUnit = packageFragment.createCompilationUnit("TestFile.java", "package test;\n\npublic class TestFile{}\n", true, new NullProgressMonitor());
+		final ICompilationUnit compilationUnit = packageFragment.createCompilationUnit("TestFile.java", "package test;\n\npublic class TestFile{private int x;private int z=x;}\n", true, new NullProgressMonitor());
 		javaProject.getProject().build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		
 		Display.getDefault().asyncExec(new Runnable() {
