@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import edu.oregonstate.cope.clientRecorder.ChangeOrigin;
+import edu.oregonstate.cope.clientRecorder.Events;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 
 @RunWith(SWTBotJunit4ClassRunner.class)
@@ -162,6 +163,20 @@ public class EditorRecordingTest {
 		assertEquals(11,recorder.recordedLength);
 		assertEquals(0,recorder.recordedOffset);
 		assertEquals("",recorder.recordedText);
+		
+	}
+	
+	@Test
+	public void testCopy() throws Exception {
+		bot.activeEditor().toTextEditor().selectCurrentLine();
+		bot.menu("Edit").menu("Copy").click();
+		
+		Thread.sleep(100);
+		
+		assertEquals(Events.copy, recorder.recordedEvent);
+		assertEquals(11,recorder.recordedLength);
+		assertEquals(0,recorder.recordedOffset);
+		assertEquals("Hello there",recorder.recordedText);
 		
 	}
 }
