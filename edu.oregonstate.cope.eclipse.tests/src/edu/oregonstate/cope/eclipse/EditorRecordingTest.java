@@ -235,9 +235,14 @@ public class EditorRecordingTest {
 		
 		Thread.sleep(200);
 
-		bot.activeEditor().toTextEditor().selectRange(2, 13, 8);
+		bot.activeEditor().toTextEditor().selectRange(2, 34, 1);
 		bot.menu("Refactor").menu("Rename...").click();
-		KeyboardFactory.getSWTKeyboard().typeText("SomethingElse\n");
+		KeyboardFactory.getSWTKeyboard().typeText("y");
+		KeyboardFactory.getSWTKeyboard().typeCharacter((char) Character.LINE_SEPARATOR);
+		
+		Thread.sleep(400);
+		
+		bot.button("Continue").click();
 		
 		Thread.sleep(200);
 		
