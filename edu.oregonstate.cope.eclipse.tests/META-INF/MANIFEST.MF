@@ -8,4 +8,10 @@ Fragment-Host: edu.oregonstate.cope.eclipse;bundle-version="0.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.junit;bundle-version="4.11.0",
  org.eclipse.jdt.core;bundle-version="3.7.3",
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ org.eclipse.ui.tests;bundle-version="3.8.0",
+ org.eclipse.ui.tests.harness;bundle-version="1.2.0",
+ org.eclipse.jdt.ui;bundle-version="3.9.1",
+ org.eclipse.swtbot.eclipse.core;bundle-version="2.2.0",
+ org.eclipse.swtbot.junit4_x;bundle-version="2.2.0",
+ org.eclipse.swtbot.eclipse.finder;bundle-version="2.2.0"
