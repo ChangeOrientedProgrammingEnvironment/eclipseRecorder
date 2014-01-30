@@ -92,7 +92,7 @@ class StartPluginUIJob extends UIJob {
 	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
 
-		if (!COPEPlugin.getDefault().getBundle().getVersion().getQualifier().equals("qualifier") && Platform.inDevelopmentMode())
+		if (!isDevelopementCOPE() && Platform.inDevelopmentMode())
 			return;
 		
 		copePlugin.initializeSnapshotManager();
@@ -124,6 +124,10 @@ class StartPluginUIJob extends UIJob {
 		Repository.getGlobalListenerList().addIndexChangedListener(gitChangeListener);
 
 		initializeFileSender();
+	}
+
+	private boolean isDevelopementCOPE() {
+		return COPEPlugin.getDefault().getBundle().getVersion().getQualifier().equals("qualifier");
 	}
 
 	private void initializeWorkspace() {
