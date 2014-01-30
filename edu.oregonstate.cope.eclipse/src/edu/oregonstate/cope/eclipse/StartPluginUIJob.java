@@ -123,7 +123,8 @@ class StartPluginUIJob extends UIJob {
 		Repository.getGlobalListenerList().addRefsChangedListener(gitChangeListener);
 		Repository.getGlobalListenerList().addIndexChangedListener(gitChangeListener);
 
-		initializeFileSender();
+		if (!isDevelopementCOPE())
+			initializeFileSender();
 	}
 
 	private boolean isDevelopementCOPE() {
