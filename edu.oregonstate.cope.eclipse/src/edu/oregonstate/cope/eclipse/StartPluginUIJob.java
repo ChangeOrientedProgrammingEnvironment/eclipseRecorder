@@ -39,7 +39,6 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.progress.UIJob;
 import org.quartz.SchedulerException;
 
-import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
@@ -93,6 +92,9 @@ class StartPluginUIJob extends UIJob {
 	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
 
+		if (!isDevelopementCOPE() && Platform.inDevelopmentMode())
+			return;
+		
 		copePlugin.initializeSnapshotManager();
 		doInstall();
 
@@ -121,7 +123,12 @@ class StartPluginUIJob extends UIJob {
 		Repository.getGlobalListenerList().addRefsChangedListener(gitChangeListener);
 		Repository.getGlobalListenerList().addIndexChangedListener(gitChangeListener);
 
-		initializeFileSender();
+		if (!isDevelopementCOPE())
+			initializeFileSender();
+	}
+
+	private boolean isDevelopementCOPE() {
+		return COPEPlugin.getDefault().getBundle().getVersion().getQualifier().equals("qualifier");
 	}
 
 	private void initializeWorkspace() {
