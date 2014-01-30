@@ -2,13 +2,16 @@ package edu.oregonstate.cope.fileSender;
 
 import java.io.File;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 
-import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class DeleteOldFilesUtil {
+	
+	private static final String ZIP_LIBS_REGEX = ".*\\.zip(-libs)?";
+	private static final String EVENTFILE_REGEX = ".*" + File.separator + "eventFiles" + File.separator + ".*";
 	
 	public String getRootDirPath() {
 		return COPEPlugin.getDefault().getLocalStorage().getAbsolutePath();
@@ -16,12 +19,11 @@ public class DeleteOldFilesUtil {
 	
 	public void deleteFilesOlderThanNdays(int daysBack, Date date) {
 		long purgeTime = date.getTime() - (daysBack * 24 * 60 * 60 * 1000);
-		 
-		String eventsDirectoryPath = getRootDirPath() + File.separator + EventFilesProvider.EVENTFILE_ROOTDIR;
 		File rootDirectory = new File(getRootDirPath());
-		File eventsDirectory = new File(eventsDirectoryPath);
-		deleteFilesInDirByPattern(eventsDirectory, ".*", purgeTime);
-		deleteFilesInDirByPattern(rootDirectory, ".*\\.zip(-libs)?", purgeTime);
+
+		deleteFilesInDirByPattern(rootDirectory, EVENTFILE_REGEX, purgeTime);
+		
+		deleteFilesInDirByPattern(rootDirectory, ZIP_LIBS_REGEX, purgeTime);
 	}
 	
 	protected void deleteFilesInDirByPattern(File dir, String pattern, long purgeTime) {
