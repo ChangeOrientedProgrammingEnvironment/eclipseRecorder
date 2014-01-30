@@ -24,7 +24,7 @@ public class DeleteOldFilesUtil {
 		deleteFilesInDirByPattern(rootDirectory, ".*\\.zip(-libs)?", purgeTime);
 	}
 	
-	public void deleteFilesInDirByPattern(File dir, String pattern, long purgeTime) {
+	protected void deleteFilesInDirByPattern(File dir, String pattern, long purgeTime) {
 	    if(dir.exists()) {
             File[] listFiles = dir.listFiles();            
             if(listFiles != null) {
