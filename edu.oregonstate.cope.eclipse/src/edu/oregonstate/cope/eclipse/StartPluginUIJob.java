@@ -93,6 +93,9 @@ class StartPluginUIJob extends UIJob {
 	private void performStartup(IProgressMonitor monitor) {
 		monitor.beginTask("Starting Recorder", 2);
 
+		if (!COPEPlugin.getDefault().getBundle().getVersion().getQualifier().equals("qualifier") && Platform.inDevelopmentMode())
+			return;
+		
 		copePlugin.initializeSnapshotManager();
 		doInstall();
 
