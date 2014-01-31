@@ -23,6 +23,11 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
 import org.junit.After;
 import org.junit.Before;
@@ -185,5 +190,13 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 			entryName = entryName.substring(0, entryName.length() - 1);
 		entryName = entryName.substring(entryName.lastIndexOf("/") + 1);
 		return entryName;
+	}
+	
+	@Test
+	public void testSnapshotOfIgnoredDependentProject() throws Exception {
+		IJavaProject mainProject = FileUtil.createTestJavaProject("MainProject");
+		IPackageFragmentRoot sourceFolder = FileUtil.createSourceFolder(mainProject);
+		IClasspathEntry referencedProjectEntry = JavaCore.newProjectEntry(javaProject.getPath());
+		
 	}
 }
