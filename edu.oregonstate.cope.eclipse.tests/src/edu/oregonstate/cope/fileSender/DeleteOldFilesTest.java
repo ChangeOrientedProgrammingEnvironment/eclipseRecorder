@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class DeleteOldFilesTest {
@@ -29,6 +31,8 @@ public class DeleteOldFilesTest {
 	}
 	private File createFile(String name, String[] contents, String creationDate) throws IOException  {
 		File file = new File(name);
+		
+		file.getParentFile().mkdirs();
 		file.createNewFile();
 		PrintWriter writer;
 		try {
@@ -138,14 +142,38 @@ public class DeleteOldFilesTest {
 			Date cutoffDate = sdf.parse("2013-12-31");
 			
 			deleteUtil.deleteFilesInDirByPattern(new File(getPathForTestFiles()), ".*\\.zip(-libs)?", cutoffDate.getTime());
+			
 			for(String f: getListOfFilesInDir(getPathForTestFiles())) {
 				System.out.println(f);
 			}
 			assertArrayEquals(getListOfFilesInDir(getPathForTestFiles()), new String[] {"file2.zip", "file4.txt", "file6.zip-libs", "file7.zipl"});
+			
 			FileUtils.cleanDirectory(new File(getPathForTestFiles()));
 		} catch (IOException | ParseException e) {	
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void testHierarchy() throws Exception {
+		File event1 = createFile(Paths.get(getPathForTestFiles(), "0.7.0.201401211052", "eventFiles", "2010-01-01").toAbsolutePath().toString(), new String[]{"1", "2"}, "2010-01-01");
+		File event2 = createFile(Paths.get(getPathForTestFiles(), "0.7.0.201401211052", "eventFiles", "2010-01-02").toAbsolutePath().toString(), new String[]{"1", "2"}, "2010-01-02");
+		File event3 = createFile(Paths.get(getPathForTestFiles(), "0.9.0.201234321052", "eventFiles", "2013-01-02").toAbsolutePath().toString(), new String[]{"1", "2"}, "2013-01-02");
+		
+		File zip1 = createFile(getPathForTestFiles() + File.separator + "file1.zip", new String[]{"dfsdfdsf"}, "2010-01-01");
+		File zip2 = createFile(getPathForTestFiles() + File.separator + "file2.zip", new String[]{"dsfsdfsdf"}, "2013-01-01");
+		
+		Date referenceDate = sdf.parse("2013-01-02");
+		deleteUtil.deleteFilesOlderThanNdays(100, referenceDate);
+		
+		assertFalse(event1.exists());
+		assertFalse(event2.exists());
+		assertFalse(zip1.exists());
+		
+		assertTrue(event3.exists());
+		assertTrue(zip2.exists());
+		
+		FileUtils.cleanDirectory(new File(getPathForTestFiles()));
 	}
 	
 	@After
