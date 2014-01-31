@@ -2,7 +2,10 @@ package edu.oregonstate.cope.fileSender;
 
 import java.io.File;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import org.apache.commons.io.FileUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -10,12 +13,25 @@ import org.quartz.JobExecutionException;
 import com.jcraft.jsch.JSchException;
 
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class FileSenderJob implements Job
 {
+	private static final String LAST_UPLOAD_DATE = "lastUploadDate";
+	private static final String LAST_UPLOAD_DATE_FORMAT = "yyyy-MM-dd HH:mm";
+			
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		try {
+			SimpleDateFormat formatter = new SimpleDateFormat(LAST_UPLOAD_DATE_FORMAT);
+			String lastUploadDateStr = RecorderFacade.instance().getWorkspaceProperties().getProperty(LAST_UPLOAD_DATE);
+			if(lastUploadDateStr != null) {
+				Date lastUploadDate = formatter.parse(lastUploadDateStr);
+				// delete files created at least 2 days earlier before last upload date
+				DeleteOldFilesUtil deleteUtil = new DeleteOldFilesUtil(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath());
+				deleteUtil.deleteFilesOlderThanNdays(2, lastUploadDate);
+			}
+			
 			COPEPlugin.getDefault().getLogger().info(this, "Connecting to host " + FTPConnectionProperties.getHost() + " ...");
 			
 			SFTPUploader uploader = new SFTPUploader(
@@ -31,6 +47,7 @@ public class FileSenderJob implements Job
 			
 			uploader.createRemoteDir(remotePath);
 			uploader.upload(localPath, remotePath);
+			RecorderFacade.instance().getWorkspaceProperties().addProperty(LAST_UPLOAD_DATE, formatter.format(new Date()));
 			
 			COPEPlugin.getDefault().getLogger().info(this, "Upload finished");
 			
@@ -40,4 +57,5 @@ public class FileSenderJob implements Job
 			COPEPlugin.getDefault().getLogger().error(FTPConnectionProperties.class, e.getMessage(), e);
 		} 
 	}
+	
 }

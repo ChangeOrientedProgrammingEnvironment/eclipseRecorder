@@ -18,6 +18,14 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
+
+/**
+ * Got this from org.eclipse.ui.tests.harness. It's useful
+ * to have around.
+ * 
+ * @author Caius Brindescu
+ *
+ */
 public class FileUtil {
 
     /**
