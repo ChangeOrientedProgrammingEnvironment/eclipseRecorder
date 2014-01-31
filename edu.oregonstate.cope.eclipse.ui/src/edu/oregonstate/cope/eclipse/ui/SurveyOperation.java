@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 
@@ -25,8 +26,11 @@ public class SurveyOperation extends InstallerOperation {
 
 	@Override
 	protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-		SurveyProvider sw = SurveyWizard.takeRealSurvey();
-//		SurveyProvider sw = SurveyWizard.takeFakeSurvey();
+		SurveyProvider sw;
+		if (Platform.inDevelopmentMode())
+			sw = SurveyWizard.takeFakeSurvey();
+		else
+			sw = SurveyWizard.takeRealSurvey();
 
 		writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 		writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());

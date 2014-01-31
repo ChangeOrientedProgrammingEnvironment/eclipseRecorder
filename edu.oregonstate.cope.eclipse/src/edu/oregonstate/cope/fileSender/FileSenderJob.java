@@ -28,7 +28,7 @@ public class FileSenderJob implements Job
 			if(lastUploadDateStr != null) {
 				Date lastUploadDate = formatter.parse(lastUploadDateStr);
 				// delete files created at least 2 days earlier before last upload date
-				DeleteOldFilesUtil deleteUtil = new DeleteOldFilesUtil();
+				DeleteOldFilesUtil deleteUtil = new DeleteOldFilesUtil(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath());
 				deleteUtil.deleteFilesOlderThanNdays(2, lastUploadDate);
 			}
 			
