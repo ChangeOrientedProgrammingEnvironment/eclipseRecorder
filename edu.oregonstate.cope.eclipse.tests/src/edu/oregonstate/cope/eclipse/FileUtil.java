@@ -10,6 +10,14 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
+
+/**
+ * Got this from org.eclipse.ui.tests.harness. It's useful
+ * to have around.
+ * 
+ * @author Caius Brindescu
+ *
+ */
 public class FileUtil {
 
     /**
