@@ -12,14 +12,15 @@ public class DeleteOldFilesUtil {
 	
 	private static final String ZIP_LIBS_REGEX = ".*\\.zip(-libs)?";
 	private static final String EVENTFILE_REGEX = ".*" + File.separator + "eventFiles" + File.separator + ".*";
+	private String rootPath;
 	
-	public String getRootDirPath() {
-		return COPEPlugin.getDefault().getLocalStorage().getAbsolutePath();
+	public DeleteOldFilesUtil(String rootPath) {
+		this.rootPath = rootPath;
 	}
 	
 	public void deleteFilesOlderThanNdays(int daysBack, Date date) {
 		long purgeTime = date.getTime() - (daysBack * 24 * 60 * 60 * 1000);
-		File rootDirectory = new File(getRootDirPath());
+		File rootDirectory = new File(rootPath);
 
 		deleteFilesInDirByPattern(rootDirectory, EVENTFILE_REGEX, purgeTime);
 		

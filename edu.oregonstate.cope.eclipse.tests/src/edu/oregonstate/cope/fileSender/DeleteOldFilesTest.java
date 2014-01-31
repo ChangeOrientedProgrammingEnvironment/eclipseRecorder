@@ -74,7 +74,7 @@ public class DeleteOldFilesTest {
 	@Before
 	public void setUp() throws Exception {
 		new File(getPathForTestFiles()).mkdir();
-		deleteUtil = new DeleteOldFilesUtil();
+		deleteUtil = new DeleteOldFilesUtil(getPathForTestFiles());
 	}
 
 	@Test
@@ -87,6 +87,7 @@ public class DeleteOldFilesTest {
 			Date cutoffDate = sdf.parse("2013-12-31");
 			
 			deleteUtil.deleteFilesInDirByPattern(new File(getPathForTestFiles()), ".*\\.txt", cutoffDate.getTime());
+			
 			for(String f: getListOfFilesInDir(getPathForTestFiles())) {
 				System.out.println(f);
 			}
