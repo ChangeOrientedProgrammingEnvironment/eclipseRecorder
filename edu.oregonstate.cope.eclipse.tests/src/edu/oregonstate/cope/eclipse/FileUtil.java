@@ -68,6 +68,7 @@ public class FileUtil {
 		IProjectDescription description = javaProject.getProject().getDescription();
 		description.setNatureIds(new String[]{JavaCore.NATURE_ID});
 		javaProject.getProject().setDescription(description, new NullProgressMonitor());
+		javaProject.setRawClasspath(new IClasspathEntry[0], new NullProgressMonitor());
 		return javaProject;
 	}
 
@@ -76,8 +77,17 @@ public class FileUtil {
 		srcFolder.create(true, false, new NullProgressMonitor());
 		IPackageFragmentRoot srcFolderPkg = javaProject.getPackageFragmentRoot(srcFolder);
 		IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(srcFolder.getFullPath());
-		javaProject.setRawClasspath(new IClasspathEntry[]{newSourceEntry}, new NullProgressMonitor());
+		addEntryToClassPath(newSourceEntry, javaProject);
 		return srcFolderPkg;
+	}
+	
+	public static void addEntryToClassPath(IClasspathEntry entry, IJavaProject project) throws JavaModelException {
+		IClasspathEntry[] currentClasspath = project.getRawClasspath();
+		IClasspathEntry[] newClasspath = new IClasspathEntry[currentClasspath.length + 1];
+		for (int i = 0; i<currentClasspath.length; i++)
+			newClasspath[i] = currentClasspath[i];
+		newClasspath[currentClasspath.length] = entry;
+		project.setRawClasspath(newClasspath, new NullProgressMonitor());
 	}
 
 }
