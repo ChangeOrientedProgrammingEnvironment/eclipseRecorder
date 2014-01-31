@@ -23,12 +23,15 @@ public class FileBufferListener implements IFileBufferListener {
 
 	@Override
 	public void bufferCreated(IFileBuffer buffer) {
-		clientRecorderInstance.recordFileOpen(buffer.getLocation().toPortableString());
 		if (!(buffer instanceof ITextFileBuffer))
 			return;
 		
 		ITextFileBuffer textFileBuffer = (ITextFileBuffer) buffer;
 		IPath fileLocation = textFileBuffer.getLocation();
+		if (!fileLocation.toFile().exists())
+			return;
+		
+		clientRecorderInstance.recordFileOpen(buffer.getLocation().toPortableString());
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getFile(fileLocation).getProject();
 		if (COPEPlugin.getDefault().getIgnoreProjectsList().contains(project.getName()))
 			return;
@@ -39,7 +42,9 @@ public class FileBufferListener implements IFileBufferListener {
 
 	@Override
 	public void bufferDisposed(IFileBuffer buffer) {
-		clientRecorderInstance.recordFileClose(buffer.getLocation().toPortableString());
+		IPath fileLocation = buffer.getLocation();
+		if (fileLocation.toFile().exists())
+			clientRecorderInstance.recordFileClose(fileLocation.toPortableString());
 	}
 
 	@Override
