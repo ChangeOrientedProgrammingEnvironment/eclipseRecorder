@@ -36,7 +36,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
-import org.eclipse.ui.tests.harness.util.FileUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
