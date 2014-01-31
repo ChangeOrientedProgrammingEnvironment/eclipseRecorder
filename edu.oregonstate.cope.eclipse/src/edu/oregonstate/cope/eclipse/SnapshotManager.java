@@ -32,15 +32,19 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 
+import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+
 public class SnapshotManager {
 
 	private String knownProjectsFileName = "known-projects";
 	private List<String> knownProjects;
 	private List<String> sessionTouchedProjects;
 	private String parentDirectory;
+	private ClientRecorder clientRecorder;
 
 	protected SnapshotManager(String parentDirectory) {
 		this.parentDirectory = parentDirectory;
+		clientRecorder = COPEPlugin.getDefault().getClientRecorder();
 		File knownProjectsFile = new File(parentDirectory, knownProjectsFileName);
 		try {
 			knownProjectsFile.createNewFile();
@@ -93,9 +97,7 @@ public class SnapshotManager {
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask("Taking snapshot of " + project.getName(), 1);
 				archiveProjectToFile(project, zipFile);
-				COPEPlugin copePlugin = COPEPlugin.getDefault();
-				ClientRecorder recorder = copePlugin.getClientRecorder();
-				recorder.recordSnapshot(zipFile);
+				clientRecorder.recordSnapshot(zipFile);
 				if (JavaProject.hasJavaNature(project)) {
 					IJavaProject javaProject = addExternalLibrariesToZipFile(project, zipFile);
 					snapshotRequiredProjects(javaProject);
