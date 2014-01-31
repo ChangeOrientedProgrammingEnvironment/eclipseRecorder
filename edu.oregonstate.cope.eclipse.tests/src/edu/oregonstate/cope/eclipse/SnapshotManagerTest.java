@@ -71,6 +71,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		String projectName = javaProject.getProject().getName();
 		snapshotManager.isProjectKnown(projectName);
 		snapshotManager.takeSnapshotOfSessionTouchedProjects();
+		Thread.sleep(300);
 		File fileDir = COPEPlugin.getDefault().getLocalStorage();
 		assertTrue(fileDir.isDirectory());
 		File[] listFiles = listZipFilesInDir(fileDir);
@@ -137,6 +138,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 	@Test
 	public void testCompleteSnapshot() throws Exception {
 		String snapshotFile = snapshotManager.takeSnapshot(javaProject.getProject());
+		Thread.sleep(200);
 		ZipFileStructureProvider structureProvider = new ZipFileStructureProvider(new ZipFile(snapshotFile));
 		ZipEntry rootEntry = structureProvider.getRoot();
 		
