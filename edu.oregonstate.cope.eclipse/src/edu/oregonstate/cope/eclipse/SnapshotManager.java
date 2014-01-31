@@ -20,7 +20,11 @@ import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -78,16 +82,30 @@ public class SnapshotManager {
 	}
 
 	@SuppressWarnings("restriction")
-	public String takeSnapshot(IProject project) {
+	public String takeSnapshot(final IProject project) {
 		if (!isProjectKnown(project))
 			knowProject(project);
-		String zipFile = parentDirectory + File.separator + project.getName() + "-" + System.currentTimeMillis() + ".zip";
-		archiveProjectToFile(project, zipFile);
-		COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
-		if (JavaProject.hasJavaNature(project)) {
-			IJavaProject javaProject = addExternalLibrariesToZipFile(project, zipFile);
-			snapshotRequiredProjects(javaProject);
-		}
+		
+		final String zipFile = parentDirectory + File.separator + project.getName() + "-" + System.currentTimeMillis() + ".zip";
+		Job snapshotJob = new Job("Taking snapshot of " + project.getName()) {
+			
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Taking snapshot of " + project.getName(), 1);
+				archiveProjectToFile(project, zipFile);
+				COPEPlugin copePlugin = COPEPlugin.getDefault();
+				ClientRecorder recorder = copePlugin.getClientRecorder();
+				recorder.recordSnapshot(zipFile);
+				if (JavaProject.hasJavaNature(project)) {
+					IJavaProject javaProject = addExternalLibrariesToZipFile(project, zipFile);
+					snapshotRequiredProjects(javaProject);
+				}
+				monitor.done();
+				return Status.OK_STATUS;
+			}
+		};
+		snapshotJob.setRule(project);
+		snapshotJob.schedule();
 		return zipFile;
 	}
 
