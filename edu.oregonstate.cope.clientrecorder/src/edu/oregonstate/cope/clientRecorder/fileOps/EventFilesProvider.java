@@ -15,7 +15,7 @@ import java.util.Calendar;
  */
 public class EventFilesProvider extends FileProvider {
 
-	protected static final String EVENTFILE_ROOTDIR = "eventFiles";
+	public static final String EVENTFILE_ROOTDIR = "eventFiles";
 
 	/**
 	 * Deletes all the event files. Does not delete the parent directory.
