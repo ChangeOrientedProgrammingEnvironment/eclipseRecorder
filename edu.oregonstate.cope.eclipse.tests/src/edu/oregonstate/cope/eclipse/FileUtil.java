@@ -4,11 +4,19 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 
 public class FileUtil {
 
@@ -54,5 +62,22 @@ public class FileUtil {
         }
         return file;
     }
+
+	public static IJavaProject createTestJavaProject(String projectName) throws CoreException {
+		IJavaProject javaProject = JavaCore.create(FileUtil.createProject(projectName));
+		IProjectDescription description = javaProject.getProject().getDescription();
+		description.setNatureIds(new String[]{JavaCore.NATURE_ID});
+		javaProject.getProject().setDescription(description, new NullProgressMonitor());
+		return javaProject;
+	}
+
+	public static IPackageFragmentRoot createSourceFolder(IJavaProject javaProject) throws CoreException, JavaModelException {
+		IFolder srcFolder = javaProject.getProject().getFolder("src");
+		srcFolder.create(true, false, new NullProgressMonitor());
+		IPackageFragmentRoot srcFolderPkg = javaProject.getPackageFragmentRoot(srcFolder);
+		IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(srcFolder.getFullPath());
+		javaProject.setRawClasspath(new IClasspathEntry[]{newSourceEntry}, new NullProgressMonitor());
+		return srcFolderPkg;
+	}
 
 }
