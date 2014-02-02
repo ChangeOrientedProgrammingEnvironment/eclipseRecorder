@@ -197,6 +197,6 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		IJavaProject mainProject = FileUtil.createTestJavaProject("MainProject");
 		IPackageFragmentRoot sourceFolder = FileUtil.createSourceFolder(mainProject);
 		IClasspathEntry referencedProjectEntry = JavaCore.newProjectEntry(javaProject.getPath());
-		
+		FileUtil.addEntryToClassPath(referencedProjectEntry, javaProject);
 	}
 }
