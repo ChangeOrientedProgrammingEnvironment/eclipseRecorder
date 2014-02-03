@@ -22,6 +22,7 @@ import java.util.zip.ZipInputStream;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -199,9 +200,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		IClasspathEntry referencedProjectEntry = JavaCore.newProjectEntry(javaProject.getPath());
 		FileUtil.addEntryToClassPath(referencedProjectEntry, mainProject);
 		
-		List<String> ignoredProjects = COPEPlugin.getDefault().getIgnoreProjectsList();
-		ignoredProjects.add(javaProject.getProject().getName());
-		COPEPlugin.getDefault().setIgnoredProjectsList(ignoredProjects);
+		ignoreProject(javaProject.getProject());
 		
 		String snapshotFile = snapshotManager.takeSnapshot(mainProject.getProject());
 		
@@ -210,5 +209,11 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 			System.out.println(file.getName());
 		}
 		assertEquals(1, zipFiles.length);
+	}
+
+	private void ignoreProject(IProject project) {
+		List<String> ignoredProjects = COPEPlugin.getDefault().getIgnoreProjectsList();
+		ignoredProjects.add(project.getName());
+		COPEPlugin.getDefault().setIgnoredProjectsList(ignoredProjects);
 	}
 }
