@@ -205,9 +205,6 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		String snapshotFile = snapshotManager.takeSnapshot(mainProject.getProject());
 		
 		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
-		for (File file : zipFiles) {
-			System.out.println(file.getName());
-		}
 		assertEquals(1, zipFiles.length);
 	}
 
