@@ -196,13 +196,12 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 	@Test
 	public void testSnapshotOfIgnoredDependentProject() throws Exception {
 		IJavaProject mainProject = FileUtil.createTestJavaProject("MainProject");
-		IPackageFragmentRoot sourceFolder = FileUtil.createSourceFolder(mainProject);
 		IClasspathEntry referencedProjectEntry = JavaCore.newProjectEntry(javaProject.getPath());
 		FileUtil.addEntryToClassPath(referencedProjectEntry, mainProject);
 		
 		ignoreProject(javaProject.getProject());
 		
-		String snapshotFile = snapshotManager.takeSnapshot(mainProject.getProject());
+		snapshotManager.takeSnapshot(mainProject.getProject());
 		
 		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
 		assertEquals(1, zipFiles.length);
