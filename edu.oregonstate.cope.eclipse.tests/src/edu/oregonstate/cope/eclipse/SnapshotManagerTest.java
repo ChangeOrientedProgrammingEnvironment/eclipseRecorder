@@ -51,6 +51,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		for (File zipFile : zipFiles) {
 			zipFile.delete();
 		}
+		Files.delete(Paths.get(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath(), "known-projects"));
 	}
 
 	@Test
