@@ -69,7 +69,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 	public void testKnowProject() throws Exception {
 		snapshotManager.knowProject("known3");
 		assertTrue(snapshotManager.isProjectKnown("known3"));
-		assertEquals("known1\nknown2\nlibrariesTest\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath(), "known-projects"))));
+		assertEquals("known1\nknown2\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath(), "known-projects"))));
 	}
 	
 	@Test
