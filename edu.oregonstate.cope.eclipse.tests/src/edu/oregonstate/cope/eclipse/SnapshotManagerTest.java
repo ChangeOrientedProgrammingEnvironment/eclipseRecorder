@@ -197,6 +197,18 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		IJavaProject mainProject = FileUtil.createTestJavaProject("MainProject");
 		IPackageFragmentRoot sourceFolder = FileUtil.createSourceFolder(mainProject);
 		IClasspathEntry referencedProjectEntry = JavaCore.newProjectEntry(javaProject.getPath());
-		FileUtil.addEntryToClassPath(referencedProjectEntry, javaProject);
+		FileUtil.addEntryToClassPath(referencedProjectEntry, mainProject);
+		
+		List<String> ignoredProjects = COPEPlugin.getDefault().getIgnoreProjectsList();
+		ignoredProjects.add(javaProject.getProject().getName());
+		COPEPlugin.getDefault().setIgnoredProjectsList(ignoredProjects);
+		
+		String snapshotFile = snapshotManager.takeSnapshot(mainProject.getProject());
+		
+		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
+		for (File file : zipFiles) {
+			System.out.println(file.getName());
+		}
+		assertEquals(1, zipFiles.length);
 	}
 }
