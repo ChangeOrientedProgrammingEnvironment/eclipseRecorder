@@ -206,6 +206,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		
 		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
 		assertEquals(1, zipFiles.length);
+		assertTrue(zipFiles[0].getName().matches("MainProject-[0-9]*\\.zip"));
 	}
 
 	private void ignoreProject(IProject project) {
