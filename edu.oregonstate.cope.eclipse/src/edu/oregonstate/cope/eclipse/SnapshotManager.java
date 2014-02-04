@@ -115,11 +115,15 @@ public class SnapshotManager {
 		try {
 			String[] requiredProjectNames = javaProject.getRequiredProjectNames();
 			for (String requiredProjectName : requiredProjectNames) {
-				if(!isProjectKnown(requiredProjectName))
+				if(!isProjectKnown(requiredProjectName) && !isProjectIgnored(requiredProjectName))
 					takeSnapshot(requiredProjectName);
 			}
 		} catch (JavaModelException e) {
 		}
+	}
+
+	private boolean isProjectIgnored(String requiredProjectName) {
+		return COPEPlugin.getDefault().getIgnoreProjectsList().contains(requiredProjectName);
 	}
 
 	private String takeSnapshot(String projectName) {

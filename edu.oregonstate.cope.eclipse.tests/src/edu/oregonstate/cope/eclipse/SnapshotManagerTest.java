@@ -22,7 +22,11 @@ import java.util.zip.ZipInputStream;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
 import org.junit.After;
 import org.junit.Before;
@@ -46,6 +50,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		for (File zipFile : zipFiles) {
 			zipFile.delete();
 		}
+		Files.delete(Paths.get(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath(), "known-projects"));
 	}
 
 	@Test
@@ -63,7 +68,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 	public void testKnowProject() throws Exception {
 		snapshotManager.knowProject("known3");
 		assertTrue(snapshotManager.isProjectKnown("known3"));
-		assertEquals("known1\nknown2\nlibrariesTest\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath(), "known-projects"))));
+		assertEquals("known1\nknown2\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath(), "known-projects"))));
 	}
 	
 	@Test
@@ -185,5 +190,26 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 			entryName = entryName.substring(0, entryName.length() - 1);
 		entryName = entryName.substring(entryName.lastIndexOf("/") + 1);
 		return entryName;
+	}
+	
+	@Test
+	public void testSnapshotOfIgnoredDependentProject() throws Exception {
+		IJavaProject mainProject = FileUtil.createTestJavaProject("MainProject");
+		IClasspathEntry referencedProjectEntry = JavaCore.newProjectEntry(javaProject.getPath());
+		FileUtil.addEntryToClassPath(referencedProjectEntry, mainProject);
+		
+		ignoreProject(javaProject.getProject());
+		
+		snapshotManager.takeSnapshot(mainProject.getProject());
+		
+		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
+		assertEquals(1, zipFiles.length);
+		assertTrue(zipFiles[0].getName().matches("MainProject-[0-9]*\\.zip"));
+	}
+
+	private void ignoreProject(IProject project) {
+		List<String> ignoredProjects = COPEPlugin.getDefault().getIgnoreProjectsList();
+		ignoredProjects.add(project.getName());
+		COPEPlugin.getDefault().setIgnoredProjectsList(ignoredProjects);
 	}
 }

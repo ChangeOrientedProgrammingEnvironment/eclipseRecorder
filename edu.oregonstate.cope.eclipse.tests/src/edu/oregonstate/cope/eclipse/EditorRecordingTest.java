@@ -4,19 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
@@ -209,8 +204,8 @@ public class EditorRecordingTest {
 	
 	@Test
 	public void testRefactoring() throws Exception {
-		IJavaProject javaProject = createTestJavaProject();
-		IPackageFragmentRoot srcFolderPkg = createSourceFolder(javaProject);
+		IJavaProject javaProject = FileUtil.createTestJavaProject("JavaProject");
+		IPackageFragmentRoot srcFolderPkg = FileUtil.createSourceFolder(javaProject);
 		IPackageFragment packageFragment = srcFolderPkg.createPackageFragment("test", true, new NullProgressMonitor());
 		final ICompilationUnit compilationUnit = packageFragment.createCompilationUnit("TestFile.java", "package test;\n\npublic class TestFile{private int x;private int z=x;}\n", true, new NullProgressMonitor());
 		javaProject.getProject().build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
@@ -240,22 +235,5 @@ public class EditorRecordingTest {
 		Thread.sleep(200);
 		
 		assertEquals(ChangeOrigin.REFACTORING, recorder.recordedChangeOrigin);
-	}
-
-	private IPackageFragmentRoot createSourceFolder(IJavaProject javaProject) throws CoreException, JavaModelException {
-		IFolder srcFolder = javaProject.getProject().getFolder("src");
-		srcFolder.create(true, false, new NullProgressMonitor());
-		IPackageFragmentRoot srcFolderPkg = javaProject.getPackageFragmentRoot(srcFolder);
-		IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(srcFolder.getFullPath());
-		javaProject.setRawClasspath(new IClasspathEntry[]{newSourceEntry}, new NullProgressMonitor());
-		return srcFolderPkg;
-	}
-
-	private IJavaProject createTestJavaProject() throws CoreException {
-		IJavaProject javaProject = JavaCore.create(FileUtil.createProject("JavaProject"));
-		IProjectDescription description = javaProject.getProject().getDescription();
-		description.setNatureIds(new String[]{JavaCore.NATURE_ID});
-		javaProject.getProject().setDescription(description, new NullProgressMonitor());
-		return javaProject;
 	}
 }
