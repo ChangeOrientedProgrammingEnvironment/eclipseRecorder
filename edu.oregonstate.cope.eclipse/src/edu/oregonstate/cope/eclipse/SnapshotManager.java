@@ -20,7 +20,11 @@ import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -28,15 +32,19 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 
+import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+
 public class SnapshotManager {
 
 	private String knownProjectsFileName = "known-projects";
 	private List<String> knownProjects;
 	private List<String> sessionTouchedProjects;
 	private String parentDirectory;
+	private ClientRecorder clientRecorder;
 
 	protected SnapshotManager(String parentDirectory) {
 		this.parentDirectory = parentDirectory;
+		clientRecorder = COPEPlugin.getDefault().getClientRecorder();
 		File knownProjectsFile = new File(parentDirectory, knownProjectsFileName);
 		try {
 			knownProjectsFile.createNewFile();
@@ -78,16 +86,28 @@ public class SnapshotManager {
 	}
 
 	@SuppressWarnings("restriction")
-	public String takeSnapshot(IProject project) {
+	public String takeSnapshot(final IProject project) {
 		if (!isProjectKnown(project))
 			knowProject(project);
-		String zipFile = parentDirectory + File.separator + project.getName() + "-" + System.currentTimeMillis() + ".zip";
-		archiveProjectToFile(project, zipFile);
-		COPEPlugin.getDefault().getClientRecorder().recordSnapshot(zipFile);
-		if (JavaProject.hasJavaNature(project)) {
-			IJavaProject javaProject = addExternalLibrariesToZipFile(project, zipFile);
-			snapshotRequiredProjects(javaProject);
-		}
+		
+		final String zipFile = parentDirectory + File.separator + project.getName() + "-" + System.currentTimeMillis() + ".zip";
+		Job snapshotJob = new Job("Taking snapshot of " + project.getName()) {
+			
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Taking snapshot of " + project.getName(), 1);
+				archiveProjectToFile(project, zipFile);
+				clientRecorder.recordSnapshot(zipFile);
+				if (JavaProject.hasJavaNature(project)) {
+					IJavaProject javaProject = addExternalLibrariesToZipFile(project, zipFile);
+					snapshotRequiredProjects(javaProject);
+				}
+				monitor.done();
+				return Status.OK_STATUS;
+			}
+		};
+		snapshotJob.setRule(project);
+		snapshotJob.schedule();
 		return zipFile;
 	}
 
