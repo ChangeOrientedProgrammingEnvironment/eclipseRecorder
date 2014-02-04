@@ -36,6 +36,10 @@ public class GitRepoListener implements RefsChangedListener, IndexChangedListene
 				Git gitRepo = Git.open(new File(projectPath));
 				String gitPath = gitRepo.getRepository().getDirectory().getAbsolutePath();
 				String repoUnderGit = removeLastPathElement(gitPath);
+				if (repoUnderGit == null) {
+					COPEPlugin.getDefault().getLogger().error(this, "Could not get repo for " + project.getName());
+					continue;
+				}
 				GitRepoStatus gitRepoStatus = getGitRepoStatus(repoUnderGit);
 				clientRecorder.recordGitEvent(repoUnderGit, gitRepoStatus);
 				if (repoStatus.get(repoUnderGit) == null) {
@@ -47,7 +51,10 @@ public class GitRepoListener implements RefsChangedListener, IndexChangedListene
 	}
 
 	private String removeLastPathElement(String fullPath) {
-		return fullPath.substring(0, fullPath.lastIndexOf("/"));
+		int lastIndexOf = fullPath.lastIndexOf("/");
+		if (lastIndexOf == -1) 
+			return null;
+		return fullPath.substring(0, lastIndexOf);
 	}
 
 	private GitRepoStatus getGitRepoStatus(String repoUnderGit) {
