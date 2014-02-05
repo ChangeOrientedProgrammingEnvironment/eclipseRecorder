@@ -51,7 +51,7 @@ public class GitRepoListener implements RefsChangedListener, IndexChangedListene
 	}
 
 	private String removeLastPathElement(String fullPath) {
-		int lastIndexOf = fullPath.lastIndexOf(File.pathSeparator);
+		int lastIndexOf = fullPath.lastIndexOf(File.separator);
 		if (lastIndexOf == -1) 
 			return null;
 		return fullPath.substring(0, lastIndexOf);
