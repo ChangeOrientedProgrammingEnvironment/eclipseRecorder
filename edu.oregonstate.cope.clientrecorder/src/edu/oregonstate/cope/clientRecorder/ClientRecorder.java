@@ -43,8 +43,8 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
 	}
 	
-	public void recordRefresh(String text, String fileName) {
-		ChangePersister.instance().persist(buildRefreshJSON(text, fileName, 0));;
+	public void recordRefresh(String text, String fileName, long modificationStamp) {
+		ChangePersister.instance().persist(buildRefreshJSON(text, fileName, modificationStamp));;
 	}
 
 	public void recordDebugLaunch(String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
