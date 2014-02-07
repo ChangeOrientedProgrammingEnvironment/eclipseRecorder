@@ -47,7 +47,7 @@ public class ResourceListener implements IResourceChangeListener {
 			}
 			
 			if (isSavedAction() || isRefactoringInProgress())
-				recorder.recordFileSave(filePath, delta.getResource().getModificationStamp());
+				recordFileSave(delta, filePath);
 			else
 				recordFileRefresh(affectedFile);
 			return;
@@ -57,6 +57,10 @@ public class ResourceListener implements IResourceChangeListener {
 		for (IResourceDelta child : affectedChildren) {
 			recordChangedDelta(child);
 		}
+	}
+
+	private void recordFileSave(IResourceDelta delta, String filePath) {
+		recorder.recordFileSave(filePath, delta.getResource().getModificationStamp());
 	}
 
 	public boolean isProjectIgnored(IResource affectedResource) {
