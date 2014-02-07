@@ -75,7 +75,7 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildSnapshotJSON(snapshotPath));
 	}
 	
-	public void recordFileSave(String filePath) {
+	public void recordFileSave(String filePath, long modificationStamp) {
 		ChangePersister.instance().persist(buildIDEEventJSON(Events.fileSave, filePath));
 	}
 	

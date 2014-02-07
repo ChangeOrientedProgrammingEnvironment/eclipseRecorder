@@ -47,7 +47,7 @@ public class ResourceListener implements IResourceChangeListener {
 			}
 			
 			if (isSavedAction() || isRefactoringInProgress())
-				recorder.recordFileSave(filePath);
+				recorder.recordFileSave(filePath, delta.getResource().getModificationStamp());
 			else
 				recordFileRefresh(affectedFile);
 			return;
