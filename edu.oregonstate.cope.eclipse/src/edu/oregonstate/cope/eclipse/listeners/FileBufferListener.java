@@ -36,7 +36,7 @@ public class FileBufferListener implements IFileBufferListener {
 		if (!Files.exists(filePath))
 			return;
 		
-		clientRecorderInstance.recordFileOpen(buffer.getLocation().toPortableString());
+		clientRecorderInstance.recordFileOpen(fileLocation.toPortableString());
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getFile(fileLocation).getProject();
 		if (COPEPlugin.getDefault().getIgnoreProjectsList().contains(project.getName()))
 			return;
