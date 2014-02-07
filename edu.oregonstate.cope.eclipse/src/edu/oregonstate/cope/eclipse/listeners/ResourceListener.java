@@ -84,7 +84,8 @@ public class ResourceListener implements IResourceChangeListener {
 		String filePath = affectedFile.getFullPath().toPortableString();
 		long modificationStamp = affectedFile.getModificationStamp();
 		
-		if (lastSavedVersion.get(filePath) == modificationStamp)
+		Long lastVersion = lastSavedVersion.get(filePath);
+		if (lastVersion != null && modificationStamp == lastVersion)
 			return;
 		
 		String contents = getFileContentents(affectedFile);
