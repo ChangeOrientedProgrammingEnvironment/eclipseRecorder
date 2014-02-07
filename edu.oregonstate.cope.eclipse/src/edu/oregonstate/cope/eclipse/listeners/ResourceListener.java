@@ -1,6 +1,8 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -18,6 +20,12 @@ import edu.oregonstate.cope.eclipse.COPEPlugin;
 public class ResourceListener implements IResourceChangeListener {
 	
 	ClientRecorder recorder = COPEPlugin.getDefault().getClientRecorder();
+	
+	private Map<String, Long> lastSavedVersion;
+	
+	public void ResourceListener() {
+		lastSavedVersion = new HashMap<String, Long>();
+	}
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
