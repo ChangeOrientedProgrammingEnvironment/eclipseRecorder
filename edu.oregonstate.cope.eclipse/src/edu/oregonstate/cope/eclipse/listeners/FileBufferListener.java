@@ -1,9 +1,5 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import org.eclipse.core.filebuffers.IFileBuffer;
 import org.eclipse.core.filebuffers.IFileBufferListener;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
@@ -32,11 +28,8 @@ public class FileBufferListener implements IFileBufferListener {
 		
 		ITextFileBuffer textFileBuffer = (ITextFileBuffer) buffer;
 		IPath fileLocation = textFileBuffer.getLocation();
-		Path filePath = Paths.get(ResourcesPlugin.getWorkspace().getRoot().getLocation().makeAbsolute().toPortableString(), fileLocation.toPortableString());
-		if (!Files.exists(filePath))
-			return;
 		
-		clientRecorderInstance.recordFileOpen(buffer.getLocation().toPortableString());
+		clientRecorderInstance.recordFileOpen(fileLocation.toPortableString());
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getFile(fileLocation).getProject();
 		if (COPEPlugin.getDefault().getIgnoreProjectsList().contains(project.getName()))
 			return;
