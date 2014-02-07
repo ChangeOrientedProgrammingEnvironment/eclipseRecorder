@@ -32,9 +32,6 @@ public class FileBufferListener implements IFileBufferListener {
 		
 		ITextFileBuffer textFileBuffer = (ITextFileBuffer) buffer;
 		IPath fileLocation = textFileBuffer.getLocation();
-		Path filePath = Paths.get(ResourcesPlugin.getWorkspace().getRoot().getLocation().makeAbsolute().toPortableString(), fileLocation.toPortableString());
-		if (!Files.exists(filePath))
-			return;
 		
 		clientRecorderInstance.recordFileOpen(fileLocation.toPortableString());
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getFile(fileLocation).getProject();
