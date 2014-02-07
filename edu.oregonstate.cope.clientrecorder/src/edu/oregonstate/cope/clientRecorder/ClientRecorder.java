@@ -143,6 +143,13 @@ public class ClientRecorder {
 		return obj;
 	}
 	
+	protected JSONObject buildSaveEvent(Enum EventType, String fullyQualifiedEntityAddress, long modificationStamp) {
+		JSONObject object = buildIDEEventJSON(EventType, fullyQualifiedEntityAddress);
+		object.put(JSONConstants.JSON_MODIFICATION_STAMP, modificationStamp);
+		
+		return object;
+	}
+	
 	protected JSONObject buildLaunchEventJSON(Enum EventType, String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
 		JSONObject json = buildCommonJSONObj(EventType);
 		json.put(JSONConstants.JSON_LAUNCH_ATTRIBUTES, launchAttributes);
