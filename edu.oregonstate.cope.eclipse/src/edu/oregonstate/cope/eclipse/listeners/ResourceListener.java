@@ -68,7 +68,9 @@ public class ResourceListener implements IResourceChangeListener {
 	}
 
 	private void recordFileSave(IResourceDelta delta, String filePath) {
-		recorder.recordFileSave(filePath, delta.getResource().getModificationStamp());
+		long modificationStamp = delta.getResource().getModificationStamp();
+		recorder.recordFileSave(filePath, modificationStamp);
+		lastSavedVersion.put(filePath, modificationStamp);
 	}
 
 	public boolean isProjectIgnored(IResource affectedResource) {
@@ -80,8 +82,13 @@ public class ResourceListener implements IResourceChangeListener {
 
 	private void recordFileRefresh(IFile affectedFile) {
 		String filePath = affectedFile.getFullPath().toPortableString();
+		long modificationStamp = affectedFile.getModificationStamp();
+		
+		if (lastSavedVersion.get(filePath) == modificationStamp)
+			return;
+		
 		String contents = getFileContentents(affectedFile);
-		recorder.recordRefresh(contents, filePath, affectedFile.getModificationStamp());
+		recorder.recordRefresh(contents, filePath, modificationStamp);
 	}
 
 	private String getFileContentents(IFile affectedFile) {
