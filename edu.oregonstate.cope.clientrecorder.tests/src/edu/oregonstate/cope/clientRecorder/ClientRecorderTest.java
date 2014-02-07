@@ -65,13 +65,14 @@ public class ClientRecorderTest extends JSONTest {
 	
 	@Test
 	public void testRecordRefresh() {
-		JSONObject actual = clientRecorder.buildRefreshJSON("new file contents", "/proj/file1");
+		JSONObject actual = clientRecorder.buildRefreshJSON("new file contents", "/proj/file1", 209);
 		
 		JSONObject expected = new JSONObject();
 		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.refresh + "");
 		expected.put(JSONConstants.JSON_TEXT, "new file contents");
 		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
 		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/proj/file1");
+		expected.put(JSONConstants.JSON_MODIFICATION_STAMP, (long) 209);
 		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, actual);
@@ -210,11 +211,12 @@ public class ClientRecorderTest extends JSONTest {
 	
 	@Test
 	public void testFileSave() {
-		JSONObject output = clientRecorder.buildIDEEventJSON(Events.fileSave, "/workspace/project/file");
+		JSONObject output = clientRecorder.buildSaveEvent(Events.fileSave, "/workspace/project/file", 209);
 		JSONObject expected = new JSONObject();
 		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.fileSave + "");
 		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, "/workspace/project/file");
 		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		expected.put(JSONConstants.JSON_MODIFICATION_STAMP, (long) 209);
 		addTimeStamp(expected);
 		
 		assertJSONEquals(expected, output);

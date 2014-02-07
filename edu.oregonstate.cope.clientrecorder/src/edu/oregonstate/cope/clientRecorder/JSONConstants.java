@@ -28,5 +28,6 @@ public interface JSONConstants {
 	public static final String JSON_GIT_FILES_REMOVED = "filesRemoved";
 	public static final String JSON_GIT_REPO_PATH = "repoPath";
 	public static final String JSON_GIT_STATUS = "status";
+	public static final String JSON_MODIFICATION_STAMP = "modificationStamp";
 
 }

@@ -43,8 +43,8 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
 	}
 	
-	public void recordRefresh(String text, String fileName) {
-		ChangePersister.instance().persist(buildRefreshJSON(text, fileName));;
+	public void recordRefresh(String text, String fileName, long modificationStamp) {
+		ChangePersister.instance().persist(buildRefreshJSON(text, fileName, modificationStamp));;
 	}
 
 	public void recordDebugLaunch(String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
@@ -75,8 +75,8 @@ public class ClientRecorder {
 		ChangePersister.instance().persist(buildSnapshotJSON(snapshotPath));
 	}
 	
-	public void recordFileSave(String filePath) {
-		ChangePersister.instance().persist(buildIDEEventJSON(Events.fileSave, filePath));
+	public void recordFileSave(String filePath, long modificationStamp) {
+		ChangePersister.instance().persist(buildSaveEvent(Events.fileSave, filePath, modificationStamp));
 	}
 	
 	public void recordCopy(String entityAddress, int offset, int lenght, String copiedText) {
@@ -124,10 +124,11 @@ public class ClientRecorder {
 		return obj;
 	}
 	
-	protected JSONObject buildRefreshJSON(String text, String fileName) {
+	protected JSONObject buildRefreshJSON(String text, String fileName, long modificationStamp) {
 		JSONObject jsonObject = buildCommonJSONObj(Events.refresh);
 		jsonObject.put(JSONConstants.JSON_ENTITY_ADDRESS, fileName);
 		jsonObject.put(JSONConstants.JSON_TEXT, text);
+		jsonObject.put(JSONConstants.JSON_MODIFICATION_STAMP, modificationStamp);
 		return jsonObject;
 	}
 
@@ -141,6 +142,13 @@ public class ClientRecorder {
 		obj.put(JSONConstants.JSON_ENTITY_ADDRESS, fullyQualifiedEntityAddress);
 
 		return obj;
+	}
+	
+	protected JSONObject buildSaveEvent(Enum EventType, String fullyQualifiedEntityAddress, long modificationStamp) {
+		JSONObject object = buildIDEEventJSON(EventType, fullyQualifiedEntityAddress);
+		object.put(JSONConstants.JSON_MODIFICATION_STAMP, modificationStamp);
+		
+		return object;
 	}
 	
 	protected JSONObject buildLaunchEventJSON(Enum EventType, String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {

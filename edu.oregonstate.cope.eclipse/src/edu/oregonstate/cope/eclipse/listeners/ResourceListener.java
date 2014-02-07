@@ -1,6 +1,8 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -18,6 +20,12 @@ import edu.oregonstate.cope.eclipse.COPEPlugin;
 public class ResourceListener implements IResourceChangeListener {
 	
 	ClientRecorder recorder = COPEPlugin.getDefault().getClientRecorder();
+	
+	private Map<String, Long> lastSavedVersion;
+	
+	public ResourceListener() {
+		lastSavedVersion = new HashMap<String, Long>();
+	}
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
@@ -47,7 +55,7 @@ public class ResourceListener implements IResourceChangeListener {
 			}
 			
 			if (isSavedAction() || isRefactoringInProgress())
-				recorder.recordFileSave(filePath);
+				recordFileSave(delta, filePath);
 			else
 				recordFileRefresh(affectedFile);
 			return;
@@ -59,6 +67,12 @@ public class ResourceListener implements IResourceChangeListener {
 		}
 	}
 
+	private void recordFileSave(IResourceDelta delta, String filePath) {
+		long modificationStamp = delta.getResource().getModificationStamp();
+		recorder.recordFileSave(filePath, modificationStamp);
+		lastSavedVersion.put(filePath, modificationStamp);
+	}
+
 	public boolean isProjectIgnored(IResource affectedResource) {
 		IProject project = affectedResource.getProject();
 		if (project == null)
@@ -68,8 +82,14 @@ public class ResourceListener implements IResourceChangeListener {
 
 	private void recordFileRefresh(IFile affectedFile) {
 		String filePath = affectedFile.getFullPath().toPortableString();
+		long modificationStamp = affectedFile.getModificationStamp();
+		
+		Long lastVersion = lastSavedVersion.get(filePath);
+		if (lastVersion != null && modificationStamp == lastVersion)
+			return;
+		
 		String contents = getFileContentents(affectedFile);
-		recorder.recordRefresh(contents, filePath);
+		recorder.recordRefresh(contents, filePath, modificationStamp);
 	}
 
 	private String getFileContentents(IFile affectedFile) {
