@@ -23,7 +23,7 @@ public class ResourceListener implements IResourceChangeListener {
 	
 	private Map<String, Long> lastSavedVersion;
 	
-	public void ResourceListener() {
+	public ResourceListener() {
 		lastSavedVersion = new HashMap<String, Long>();
 	}
 
