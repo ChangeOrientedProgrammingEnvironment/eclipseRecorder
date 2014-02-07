@@ -44,7 +44,7 @@ public class ClientRecorder {
 	}
 	
 	public void recordRefresh(String text, String fileName) {
-		ChangePersister.instance().persist(buildRefreshJSON(text, fileName));;
+		ChangePersister.instance().persist(buildRefreshJSON(text, fileName, 0));;
 	}
 
 	public void recordDebugLaunch(String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
@@ -124,10 +124,11 @@ public class ClientRecorder {
 		return obj;
 	}
 	
-	protected JSONObject buildRefreshJSON(String text, String fileName) {
+	protected JSONObject buildRefreshJSON(String text, String fileName, long modificationStamp) {
 		JSONObject jsonObject = buildCommonJSONObj(Events.refresh);
 		jsonObject.put(JSONConstants.JSON_ENTITY_ADDRESS, fileName);
 		jsonObject.put(JSONConstants.JSON_TEXT, text);
+		jsonObject.put(JSONConstants.JSON_MODIFICATION_STAMP, modificationStamp);
 		return jsonObject;
 	}
 
