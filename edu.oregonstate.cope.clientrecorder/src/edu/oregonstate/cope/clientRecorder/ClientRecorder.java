@@ -76,7 +76,7 @@ public class ClientRecorder {
 	}
 	
 	public void recordFileSave(String filePath, long modificationStamp) {
-		ChangePersister.instance().persist(buildIDEEventJSON(Events.fileSave, filePath));
+		ChangePersister.instance().persist(buildSaveEvent(Events.fileSave, filePath, modificationStamp));
 	}
 	
 	public void recordCopy(String entityAddress, int offset, int lenght, String copiedText) {
