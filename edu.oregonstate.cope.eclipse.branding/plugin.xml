@@ -2,22 +2,10 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:org.eclipse.ui.trim.status">
-         <toolbar
-               id="edu.oregonstate.cope.eclipse.branding.toolbar">
-            <command
-                  commandId="edu.oregonstate.cope.eclipse.branding.command"
-                  icon="icons/black on transparent.png"
-                  id="contibutions.trimicon"
-                  label="COPE Recorder"
-                  style="push"
-                  tooltip="COPE Recorder">
-            </command>
-         </toolbar>
-      </menuContribution>
+         point="org.eclipse.ui.startup">
+      <startup
+            class="edu.oregonstate.cope.eclipse.branding.Startup">
+      </startup>
    </extension>
 
 </plugin>
