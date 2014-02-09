@@ -7,11 +7,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.NotEnabledException;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
@@ -26,11 +21,6 @@ import org.eclipse.equinox.p2.query.IQuery;
 import org.eclipse.equinox.p2.query.QueryUtil;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.IHandlerService;
 
 public class BundleUpdater {
 
@@ -52,12 +42,12 @@ public class BundleUpdater {
 		return null;
 	}
 
-	public void checkForUpdates() {
+	public boolean shouldUpdate() {
 		try {
 			IProvisioningAgentProvider agentProvider= Activator.getDefault().getProvisioningAgentProvider();
 			if (agentProvider == null) {
 				Activator.getDefault().logErrorStatus("Could not find a provisioning agent provider.", new RuntimeException());
-				return;
+				return false;
 			}
 
 			final IProvisioningAgent agent= agentProvider.createAgent(null);
@@ -66,14 +56,14 @@ public class BundleUpdater {
 
 			if (metadataRepositoryManager == null) {
 				Activator.getDefault().logErrorStatus("Could not find the meta data repository manager.", new RuntimeException());
-				return;
+				return false;
 			}
 
 			IArtifactRepositoryManager artifactRepositoryManager= (IArtifactRepositoryManager)agent.getService(IArtifactRepositoryManager.SERVICE_NAME);
 
 			if (artifactRepositoryManager == null) {
 				Activator.getDefault().logErrorStatus("Could not find the artifact repository manager.", new RuntimeException());
-				return;
+				return false;
 			}
 
 			metadataRepositoryManager.addRepository(getUpdateSiteURI(updateSite));
@@ -85,14 +75,14 @@ public class BundleUpdater {
 
 			if (registry == null) {
 				Activator.getDefault().logErrorStatus("Could not find the profile registry.", new RuntimeException());
-				return;
+				return false;
 			}
 
 			final IProfile profile= registry.getProfile(IProfileRegistry.SELF);
 
 			if (profile == null) {
 				Activator.getDefault().logErrorStatus("Could not find the profile.", new RuntimeException());
-				return;
+				return false;
 			}
 
 			IQuery<IInstallableUnit> query= QueryUtil.createIUQuery(pluginID);
@@ -104,39 +94,11 @@ public class BundleUpdater {
 
 			IStatus modalResolution= updateOperation.resolveModal(new NullProgressMonitor());
 
-			if (modalResolution.isOK()) {
-				Display.getDefault().asyncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						runCommand("org.eclipse.equinox.p2.ui.sdk.update", "Failed to open the check for updates dialog.", null);
-					}
-				});
-
-			}
+			if (modalResolution.isOK())
+				return true;
 		} catch (ProvisionException e) {
 			Activator.getDefault().logErrorStatus("A provisioning exception occured while checking for updates.", e);
 		}
+		return false;
 	}
-
-	private static void runCommand(String commandId, String errorMessage, Event event) {
-		ICommandService commandService= (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
-		Command command= commandService.getCommand(commandId);
-		if (!command.isDefined()) {
-			return;
-		}
-		IHandlerService handlerService= (IHandlerService)PlatformUI.getWorkbench().getService(IHandlerService.class);
-		try {
-			handlerService.executeCommand(commandId, event);
-		} catch (ExecutionException e) {
-			Activator.getDefault().logErrorStatus(errorMessage, e);
-		} catch (NotDefinedException e) {
-			Activator.getDefault().logErrorStatus(errorMessage, e);
-		} catch (NotEnabledException e) {
-			Activator.getDefault().logErrorStatus(errorMessage, e);
-		} catch (NotHandledException e) {
-			Activator.getDefault().logErrorStatus(errorMessage, e);
-		}
-	}
-
 }
