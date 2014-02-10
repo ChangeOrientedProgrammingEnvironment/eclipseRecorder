@@ -24,6 +24,7 @@ public class LogoManager {
 	private final static String UPDATE_LOGO = "icons/cope-logo-update.png";
 
 	private IStatusLineManager statusLineManager;
+	private String commandToExecute = "org.eclipse.ui.help.aboutAction";
 	
 	public static LogoManager getInstance() {
 		if (instance == null)
