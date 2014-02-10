@@ -72,8 +72,12 @@ public class LogoManager {
 			// add loggin stuff
 		}
 	}
-
+	
 	public void showLogo() {
+		showLogo(NORMAL_LOGO);
+	}
+
+	public synchronized void showLogo(final String imageFilePath) {
 		Display.getDefault().asyncExec(new Runnable() {
 
 			@Override
@@ -91,7 +95,7 @@ public class LogoManager {
 	
 	public void showUpdateIsAvailable() {
 		removeLogo();
-		addLogoToStatusLine(UPDATE_LOGO);
+		showLogo(UPDATE_LOGO);
 	}
 
 	public String getCommandToExecute() {
