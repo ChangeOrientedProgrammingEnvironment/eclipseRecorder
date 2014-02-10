@@ -18,7 +18,7 @@ public class LogoManager {
 	private final static String STATUS_LINE_CONTRIBUTION_ITEM_ID= "edu.illinois.codingspectator.branding.StatusLine";
 	
 	private final static String NORMAL_LOGO = "icons/cope-logo-normal.png";
-	private final static String UPDATE_LOG = "icons/copo-logo-update.png";
+	private final static String UPDATE_LOGO = "icons/cope-logo-update.png";
 
 	private IStatusLineManager statusLineManager;
 	
