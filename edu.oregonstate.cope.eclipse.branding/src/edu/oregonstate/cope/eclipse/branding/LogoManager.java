@@ -69,14 +69,6 @@ public class LogoManager {
 		return statusLineManager;
 	}
 
-	private boolean logoExists() {
-		return getStatusLineManager().find(STATUS_LINE_CONTRIBUTION_ITEM_ID) != null;
-	}
-
-	private void addLogoToStatusLine() {
-		addLogoToStatusLine(NORMAL_LOGO);
-	}
-
 	private void addLogoToStatusLine(String imageFilePath) {
 		Image codingspectatorLogo= Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID, imageFilePath).createImage(); //$NON-NLS-1$
 		StatusLineContributionItem contributionItem= new StatusLineContributionItem(STATUS_LINE_CONTRIBUTION_ITEM_ID);
