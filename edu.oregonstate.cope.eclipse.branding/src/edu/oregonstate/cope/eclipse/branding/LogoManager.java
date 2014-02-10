@@ -99,9 +99,15 @@ public class LogoManager {
 	}
 	
 	public synchronized void removeLogo() {
-		getStatusLineManager().remove(STATUS_LINE_CONTRIBUTION_ITEM_ID);
-		getStatusLineManager().markDirty();
-		getStatusLineManager().update(false);
+		Display.getDefault().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				getStatusLineManager().remove(STATUS_LINE_CONTRIBUTION_ITEM_ID);
+				getStatusLineManager().markDirty();
+				getStatusLineManager().update(false);
+			}
+		});
 	}
 	
 	public void showUpdateIsAvailable() {
