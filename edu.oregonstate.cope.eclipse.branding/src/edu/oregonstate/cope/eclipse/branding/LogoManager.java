@@ -94,4 +94,8 @@ public class LogoManager {
 		addLogoToStatusLine(UPDATE_LOGO);
 	}
 
+	public String getCommandToExecute() {
+		return commandToExecute;
+	}
+
 }
