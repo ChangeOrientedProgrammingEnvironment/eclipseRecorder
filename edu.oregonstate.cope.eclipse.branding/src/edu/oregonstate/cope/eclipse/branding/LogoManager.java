@@ -31,6 +31,9 @@ public class LogoManager {
 		return instance;
 	}
 	
+	private LogoManager() {
+	}
+	
 	private IStatusLineManager getStatusLineManager() {
 		if (statusLineManager != null)
 			return statusLineManager;
