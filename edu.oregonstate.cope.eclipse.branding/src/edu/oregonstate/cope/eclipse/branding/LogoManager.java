@@ -87,11 +87,6 @@ public class LogoManager {
 		CommandAction commandAction = new CommandAction(workbench, COMMAND_ID);
 		contributionItem.setActionHandler(commandAction);
 		
-		try {
-			Assert.isTrue(logoExists());
-		} catch (AssertionFailedException e) {
-			// add loggin stuff
-		}
 	}
 	
 	public void showLogo() {
