@@ -64,5 +64,16 @@ public class LogoManager {
 			}
 		});
 	}
+	
+	public void removeLogo() {
+		getStatusLineManager().remove(STATUS_LINE_CONTRIBUTION_ITEM_ID);
+		getStatusLineManager().markDirty();
+		getStatusLineManager().update(false);
+	}
+	
+	public void showUpdateIsAvailable() {
+		removeLogo();
+		addLogoToStatusLine(UPDATE_LOG);
+	}
 
 }
