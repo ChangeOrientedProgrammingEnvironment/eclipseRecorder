@@ -8,11 +8,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.p2.core.IProvisioningAgentProvider;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-public class Activator implements BundleActivator {
+public class Activator extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID= "edu.illinois.bundleupdater"; //$NON-NLS-1$
 
@@ -59,10 +60,6 @@ public class Activator implements BundleActivator {
 
 	public IProvisioningAgentProvider getProvisioningAgentProvider() {
 		return provisioningAgentProvider;
-	}
-
-	private ILog getLog() {
-		return Platform.getLog(Platform.getBundle(PLUGIN_ID));
 	}
 
 	public void log(IStatus status) {
