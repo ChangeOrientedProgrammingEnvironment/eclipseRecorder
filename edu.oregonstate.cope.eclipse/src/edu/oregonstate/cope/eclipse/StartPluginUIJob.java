@@ -108,7 +108,8 @@ class StartPluginUIJob extends UIJob {
 		
 		monitor.worked(1);
 
-		LogoManager.getInstance().showLogo();
+		LogoManager logoManager = LogoManager.getInstance();
+		logoManager.showLogo();
 		registerDocumentListenersForOpenEditors();
 		FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -127,6 +128,8 @@ class StartPluginUIJob extends UIJob {
 
 		if (!isDevelopementCOPE())
 			initializeFileSender();
+		
+		logoManager.checkForUpdates();
 	}
 
 	private boolean isDevelopementCOPE() {

@@ -79,9 +79,7 @@ public class LogoManager {
 		getStatusLineManager().update(false);
 		
 		CommandAction commandAction = new CommandAction(workbench, COMMAND_ID);
-		contributionItem.setActionHandler(commandAction);
-		
-		new CheckForUpdatesJob("Checking for COPE updates").schedule();
+		contributionItem.setActionHandler(commandAction);	
 	}
 	
 	public void showLogo() {
@@ -117,6 +115,10 @@ public class LogoManager {
 
 	public String getCommandToExecute() {
 		return commandToExecute;
+	}
+	
+	public void checkForUpdates() {
+		new CheckForUpdatesJob("Checking for COPE updates").schedule();
 	}
 
 }
