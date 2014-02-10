@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="edu.oregonstate.cope.eclipse.branding.Handler"
+            id="edu.oregonstate.edu.cope.eclipse.branding.logoAction"
+            name="Logo Command">
+      </command>
+   </extension>
 
 </plugin>
