@@ -82,7 +82,7 @@ public class LogoManager {
 
 			@Override
 			public void run() {
-				addLogoToStatusLine();
+				addLogoToStatusLine(imageFilePath);
 			}
 		});
 	}
