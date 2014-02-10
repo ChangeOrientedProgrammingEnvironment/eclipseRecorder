@@ -1,7 +1,9 @@
 package edu.oregonstate.cope.eclipse.branding;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.AssertionFailedException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
