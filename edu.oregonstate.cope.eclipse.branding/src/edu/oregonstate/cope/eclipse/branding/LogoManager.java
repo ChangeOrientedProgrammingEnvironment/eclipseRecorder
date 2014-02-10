@@ -81,7 +81,7 @@ public class LogoManager {
 	
 	public void showUpdateIsAvailable() {
 		removeLogo();
-		addLogoToStatusLine(UPDATE_LOG);
+		addLogoToStatusLine(UPDATE_LOGO);
 	}
 
 }
