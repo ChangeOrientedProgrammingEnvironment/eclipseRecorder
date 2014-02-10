@@ -41,8 +41,7 @@ public class FileBufferListener implements IFileBufferListener {
 	@Override
 	public void bufferDisposed(IFileBuffer buffer) {
 		IPath fileLocation = buffer.getLocation();
-		if (fileLocation.toFile().exists())
-			clientRecorderInstance.recordFileClose(fileLocation.toPortableString());
+		clientRecorderInstance.recordFileClose(fileLocation.toPortableString());
 	}
 
 	@Override
