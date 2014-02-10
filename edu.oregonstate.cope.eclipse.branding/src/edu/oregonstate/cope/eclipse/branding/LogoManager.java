@@ -12,6 +12,8 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.internal.actions.CommandAction;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
 
+import edu.illinois.bundleupdater.BundleUpdater;
+
 @SuppressWarnings("restriction")
 public class LogoManager {
 	
@@ -25,6 +27,24 @@ public class LogoManager {
 
 	private IStatusLineManager statusLineManager;
 	private String commandToExecute = "org.eclipse.ui.help.aboutAction";
+	
+	private class CheckForUpdatesJob extends Job {
+
+
+		public CheckForUpdatesJob(String name) {
+			super(name);
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			if(new BundleUpdater("http://cope.eecs.oregonstate.edu/client-recorder", "org.oregonstate.edu.eclipse").shouldUpdate()) {
+				showUpdateIsAvailable();
+				commandToExecute = "org.eclipse.equinox.p2.ui.sdk.update";
+			}
+			return Status.OK_STATUS;
+		}
+		
+	}
 	
 	public static LogoManager getInstance() {
 		if (instance == null)
