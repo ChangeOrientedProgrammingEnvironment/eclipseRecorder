@@ -81,6 +81,7 @@ public class LogoManager {
 		CommandAction commandAction = new CommandAction(workbench, COMMAND_ID);
 		contributionItem.setActionHandler(commandAction);
 		
+		new CheckForUpdatesJob("Checking for COPE updates").schedule();
 	}
 	
 	public void showLogo() {
