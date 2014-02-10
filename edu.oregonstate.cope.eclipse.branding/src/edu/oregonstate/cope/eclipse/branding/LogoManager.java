@@ -14,6 +14,9 @@ import org.eclipse.ui.texteditor.StatusLineContributionItem;
 public class LogoManager {
 	
 	private final static String STATUS_LINE_CONTRIBUTION_ITEM_ID= "edu.illinois.codingspectator.branding.StatusLine";
+	
+	private final static String NORMAL_LOGO = "icons/black on transparent.png";
+	private final static String UPDATE_LOG = "icons/copo-logo-update";
 
 	private IStatusLineManager statusLineManager;
 	
