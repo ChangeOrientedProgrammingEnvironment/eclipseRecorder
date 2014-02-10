@@ -37,7 +37,11 @@ public class LogoManager {
 	}
 
 	private void addLogoToStatusLine() {
-		Image codingspectatorLogo= Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/black on transparent.png").createImage(); //$NON-NLS-1$
+		addLogoToStatusLine(NORMAL_LOGO);
+	}
+
+	private void addLogoToStatusLine(String imageFilePath) {
+		Image codingspectatorLogo= Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID, imageFilePath).createImage(); //$NON-NLS-1$
 		StatusLineContributionItem contributionItem= new StatusLineContributionItem(STATUS_LINE_CONTRIBUTION_ITEM_ID);
 		contributionItem.setImage(codingspectatorLogo);
 		contributionItem.setToolTipText("COPE recorder");
