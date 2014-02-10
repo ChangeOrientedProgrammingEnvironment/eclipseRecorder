@@ -57,7 +57,7 @@ public class LogoManager {
 	private LogoManager() {
 	}
 	
-	private IStatusLineManager getStatusLineManager() {
+	private synchronized IStatusLineManager getStatusLineManager() {
 		if (statusLineManager != null)
 			return statusLineManager;
 		IWorkbenchWindow activeWindow= PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -69,7 +69,7 @@ public class LogoManager {
 		return statusLineManager;
 	}
 
-	private void addLogoToStatusLine(String imageFilePath) {
+	private synchronized void addLogoToStatusLine(String imageFilePath) {
 		Image codingspectatorLogo= Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID, imageFilePath).createImage(); //$NON-NLS-1$
 		StatusLineContributionItem contributionItem= new StatusLineContributionItem(STATUS_LINE_CONTRIBUTION_ITEM_ID);
 		contributionItem.setImage(codingspectatorLogo);
@@ -98,7 +98,7 @@ public class LogoManager {
 		});
 	}
 	
-	public void removeLogo() {
+	public synchronized void removeLogo() {
 		getStatusLineManager().remove(STATUS_LINE_CONTRIBUTION_ITEM_ID);
 		getStatusLineManager().markDirty();
 		getStatusLineManager().update(false);
