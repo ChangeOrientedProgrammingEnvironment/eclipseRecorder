@@ -5,9 +5,11 @@ import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchWindow;
+import org.eclipse.ui.internal.actions.CommandAction;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
 
 @SuppressWarnings("restriction")
@@ -16,6 +18,7 @@ public class LogoManager {
 	private static LogoManager instance;
 	
 	private final static String STATUS_LINE_CONTRIBUTION_ITEM_ID= "edu.illinois.codingspectator.branding.StatusLine";
+	private static final String COMMAND_ID = "edu.oregonstate.edu.cope.eclipse.branding.logoAction";
 	
 	private final static String NORMAL_LOGO = "icons/cope-logo-normal.png";
 	private final static String UPDATE_LOGO = "icons/cope-logo-update.png";
@@ -53,9 +56,13 @@ public class LogoManager {
 		StatusLineContributionItem contributionItem= new StatusLineContributionItem(STATUS_LINE_CONTRIBUTION_ITEM_ID);
 		contributionItem.setImage(codingspectatorLogo);
 		contributionItem.setToolTipText("COPE recorder");
+		IWorkbench workbench = PlatformUI.getWorkbench();
 		getStatusLineManager().add(contributionItem);
 		getStatusLineManager().update(false);
-
+		
+		CommandAction commandAction = new CommandAction(workbench, COMMAND_ID);
+		contributionItem.setActionHandler(commandAction);
+		
 		try {
 			Assert.isTrue(logoExists());
 		} catch (AssertionFailedException e) {
