@@ -69,11 +69,11 @@ public class LogoManager {
 		return statusLineManager;
 	}
 
-	private synchronized void addLogoToStatusLine(String imageFilePath) {
+	private synchronized void addLogoToStatusLine(String imageFilePath, String toolTip) {
 		Image codingspectatorLogo= Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID, imageFilePath).createImage(); //$NON-NLS-1$
 		StatusLineContributionItem contributionItem= new StatusLineContributionItem(STATUS_LINE_CONTRIBUTION_ITEM_ID);
 		contributionItem.setImage(codingspectatorLogo);
-		contributionItem.setToolTipText("COPE recorder");
+		contributionItem.setToolTipText(toolTip);
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		getStatusLineManager().add(contributionItem);
 		getStatusLineManager().update(false);
@@ -83,15 +83,15 @@ public class LogoManager {
 	}
 	
 	public void showLogo() {
-		showLogo(NORMAL_LOGO);
+		showLogo(NORMAL_LOGO, "COPE Recorder");
 	}
 
-	public synchronized void showLogo(final String imageFilePath) {
+	public synchronized void showLogo(final String imageFilePath, final String toolTip) {
 		Display.getDefault().asyncExec(new Runnable() {
 
 			@Override
 			public void run() {
-				addLogoToStatusLine(imageFilePath);
+				addLogoToStatusLine(imageFilePath, toolTip);
 			}
 		});
 	}
@@ -110,7 +110,7 @@ public class LogoManager {
 	
 	public void showUpdateIsAvailable() {
 		removeLogo();
-		showLogo(UPDATE_LOGO);
+		showLogo(UPDATE_LOGO, "COPE Recoder - Update available");
 	}
 
 	public String getCommandToExecute() {
