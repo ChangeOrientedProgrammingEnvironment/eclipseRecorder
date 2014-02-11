@@ -48,59 +48,116 @@ public class ClientRecorder {
 	 *            control
 	 */
 	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
-		ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
+		try {
+			ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
-	
+
 	public void recordRefresh(String text, String fileName, long modificationStamp) {
-		ChangePersister.instance().persist(buildRefreshJSON(text, fileName, modificationStamp));;
+		try {
+			ChangePersister.instance().persist(buildRefreshJSON(text, fileName, modificationStamp));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
+		;
 	}
 
 	public void recordDebugLaunch(String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
-		ChangePersister.instance().persist(buildLaunchEventJSON(Events.debugLaunch, launchTime, launchName, launchFile, launchConfiguration, launchAttributes));
+		try {
+			ChangePersister.instance().persist(buildLaunchEventJSON(Events.debugLaunch, launchTime, launchName, launchFile, launchConfiguration, launchAttributes));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
 
 	public void recordNormalLaunch(String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
-		ChangePersister.instance().persist(buildLaunchEventJSON(Events.normalLaunch, launchTime, launchName, launchFile, launchConfiguration, launchAttributes));
+		try {
+			ChangePersister.instance().persist(buildLaunchEventJSON(Events.normalLaunch, launchTime, launchName, launchFile, launchConfiguration, launchAttributes));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
-	
+
 	public void recordLaunchEnd(String launchTime) {
-		ChangePersister.instance().persist(buildLaunchEndEventJSON(Events.launchEnd, launchTime));
+		try {
+			ChangePersister.instance().persist(buildLaunchEndEventJSON(Events.launchEnd, launchTime));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
 
 	public void recordFileOpen(String fullyQualifiedFileAddress) {
-		ChangePersister.instance().persist(buildIDEEventJSON(Events.fileOpen, fullyQualifiedFileAddress));
+		try {
+			ChangePersister.instance().persist(buildIDEEventJSON(Events.fileOpen, fullyQualifiedFileAddress));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
 
 	public void recordFileClose(String fullyQualifiedFileAddress) {
-		ChangePersister.instance().persist(buildIDEEventJSON(Events.fileClose, fullyQualifiedFileAddress));
+		try {
+			ChangePersister.instance().persist(buildIDEEventJSON(Events.fileClose, fullyQualifiedFileAddress));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
 
 	public void recordTestRun(String fullyQualifiedTestMethod, String testResult, double elapsedTime) {
-		ChangePersister.instance().persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult, elapsedTime));
+		try {
+			ChangePersister.instance().persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult, elapsedTime));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
-	
+
 	public void recordSnapshot(String snapshotPath) {
-		ChangePersister.instance().persist(buildSnapshotJSON(snapshotPath));
+		try {
+			ChangePersister.instance().persist(buildSnapshotJSON(snapshotPath));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
-	
+
 	public void recordFileSave(String filePath, long modificationStamp) {
-		ChangePersister.instance().persist(buildSaveEvent(Events.fileSave, filePath, modificationStamp));
+		try {
+			ChangePersister.instance().persist(buildSaveEvent(Events.fileSave, filePath, modificationStamp));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
-	
+
 	public void recordCopy(String entityAddress, int offset, int lenght, String copiedText) {
-		ChangePersister.instance().persist(buildCopyJSON(Events.copy, entityAddress, offset, lenght, copiedText));
+		try {
+			ChangePersister.instance().persist(buildCopyJSON(Events.copy, entityAddress, offset, lenght, copiedText));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
-	
+
 	public void recordResourceAdd(String entityAddress, String initialText) {
-		ChangePersister.instance().persist(buildResourceAddJSON(entityAddress, initialText));
+		try {
+			ChangePersister.instance().persist(buildResourceAddJSON(entityAddress, initialText));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
-	
+
 	public void recordResourceDelete(String entityAddress) {
-		ChangePersister.instance().persist(buildResourceDeleteJSON(entityAddress));
+		try {
+			ChangePersister.instance().persist(buildResourceDeleteJSON(entityAddress));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
-	
+
 	public void recordGitEvent(String repoPath, GitRepoStatus status) {
-		ChangePersister.instance().persist(buildGitStatusJSON(repoPath, status));
+		try {
+			ChangePersister.instance().persist(buildGitStatusJSON(repoPath, status));
+		} catch (RecordException e) {
+			logger.error(this, e.getMessage(), e);
+		}
 	}
 
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
