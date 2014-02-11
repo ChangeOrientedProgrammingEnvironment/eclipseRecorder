@@ -62,7 +62,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	}
 
 	private void checkFile(File file) {
-		if (!file.getName().endsWith("zip"))
+		if (!file.getName().endsWith("zip") && !file.getName().contains(".fuse_hidden"))
 			assertTrue(allowedUnversionedFiles.contains(file.getName()));
 	}
 
