@@ -165,7 +165,7 @@ public class ClientRecorder {
 		obj = new JSONObject();
 		obj.put(JSONConstants.JSON_IDE, this.getIDE());
 		obj.put(JSONConstants.JSON_EVENT_TYPE, eventType.toString());
-		obj.put(JSONConstants.JSON_TIMESTAMP, (System.currentTimeMillis() / 1000) + "");
+		obj.put(JSONConstants.JSON_TIMESTAMP, System.currentTimeMillis() + "");
 
 		return obj;
 	}
