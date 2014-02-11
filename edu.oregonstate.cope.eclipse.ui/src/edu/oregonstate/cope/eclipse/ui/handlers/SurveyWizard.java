@@ -73,10 +73,10 @@ public class SurveyWizard extends Wizard implements SurveyProvider {
 	}
 
 	private String getRandomEmailIfAbsent(String email) {
-		if (email == null || email.isEmpty())
+		if (email == null || email.trim().isEmpty())
 			return new BigInteger(96, new Random()).toString(32);
 		else
-			return email;
+			return email.trim();
 	}
 
 	/* (non-Javadoc)
