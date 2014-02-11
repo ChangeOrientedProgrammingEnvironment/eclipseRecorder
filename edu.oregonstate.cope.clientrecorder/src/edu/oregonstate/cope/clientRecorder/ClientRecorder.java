@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
+
 /**
  * Records text changes and test runs from the IDE. Encodes changes in JSON
  * format.
@@ -15,12 +17,18 @@ public class ClientRecorder {
 
 	private String IDE;
 
+	private LoggerInterface logger;
+
 	public String getIDE() {
 		return IDE;
 	}
 
 	public void setIDE(String IDE) {
 		this.IDE = IDE;
+	}
+
+	public ClientRecorder() {
+		logger = RecorderFacade.instance().getLogger();
 	}
 
 	/**
