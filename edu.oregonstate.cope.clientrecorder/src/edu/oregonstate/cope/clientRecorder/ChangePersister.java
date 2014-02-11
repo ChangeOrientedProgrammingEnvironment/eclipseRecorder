@@ -48,9 +48,9 @@ public class ChangePersister {
 		return Instance.instance;
 	}
 
-	public synchronized void persist(JSONObject jsonObject) {
+	public synchronized void persist(JSONObject jsonObject) throws RecordException {
 		if (jsonObject == null) {
-			throw new RuntimeException("Argument cannot be null");
+			throw new RecordException("Argument cannot be null");
 		}
 
 		addInitEventIfAbsent();

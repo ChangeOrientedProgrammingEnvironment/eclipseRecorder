@@ -60,21 +60,14 @@ public class ChangePersisterTest {
 		return jsonEvents;
 	}
 
-	@Test
+	@Test(expected=RecordException.class)
 	public void testPersistNull() throws Exception {
-		RuntimeException caughtException = null;
-
-		try {
-			ChangePersister.instance().persist(null);
-		} catch (RuntimeException exception) {
-			caughtException = exception;
-		}
-		assertEquals(caughtException.getClass(), RuntimeException.class);
+		ChangePersister.instance().persist(null);
 		testInit();
 	}
 
 	@Test
-	public void testPersistOneRecord() {
+	public void testPersistOneRecord() throws RecordException {
 		JSONObject objToRecord = new JSONObject();
 		objToRecord.put("test", "fileIO");
 
@@ -88,7 +81,7 @@ public class ChangePersisterTest {
 	}
 
 	@Test
-	public void testPersistTwoRecords() {
+	public void testPersistTwoRecords() throws RecordException {
 		JSONObject objToRecord1 = new JSONObject();
 		objToRecord1.put("test", "fileIO");
 
