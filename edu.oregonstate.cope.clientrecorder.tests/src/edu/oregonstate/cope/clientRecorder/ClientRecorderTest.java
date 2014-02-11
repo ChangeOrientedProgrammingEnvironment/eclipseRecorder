@@ -20,17 +20,17 @@ public class ClientRecorderTest extends JSONTest {
 	}
 
 	/* Text Change Tests */
-	@Test(expected = RuntimeException.class)
+	@Test(expected = RecordException.class)
 	public void testRecordTextChangeNull() throws Exception {
 		clientRecorder.buildTextChangeJSON(null, 0, 0, null, null);
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = RecordException.class)
 	public void testRecordTextChangeNoSourceFile() throws Exception {
 		clientRecorder.buildTextChangeJSON("", 0, 0, "", "");
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = RecordException.class)
 	public void testRecordTextChangeNoOrigin() throws Exception {
 		clientRecorder.buildTextChangeJSON("", 0, 0, "/sampleFile", "");
 	}
@@ -92,7 +92,7 @@ public class ClientRecorderTest extends JSONTest {
 	}
 
 	/* Test DebugLaunch */
-	@Test(expected = RuntimeException.class)
+	@Test(expected = RecordException.class)
 	public void testDebugLaunchNull() throws Exception {
 		clientRecorder.buildIDEEventJSON(null, null);
 	}
@@ -157,12 +157,12 @@ public class ClientRecorderTest extends JSONTest {
 		assertJSONEquals(expected, retObj);
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = RecordException.class)
 	public void testTestRunNull() throws Exception {
 		clientRecorder.buildTestEventJSON(null, null, 0);
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = RecordException.class)
 	public void testTestRunEmpty() throws Exception {
 		clientRecorder.buildTestEventJSON("", "", 0);
 	}
@@ -182,12 +182,12 @@ public class ClientRecorderTest extends JSONTest {
 		assertJSONEquals(expected, actual);
 	}
 	
-	@Test(expected = RuntimeException.class)
+	@Test(expected = RecordException.class)
 	public void testSnapshotNull() throws Exception {
 		clientRecorder.buildSnapshotJSON(null);
 	}
 	
-	@Test(expected = RuntimeException.class)
+	@Test(expected = RecordException.class)
 	public void testSnapshotEmpty() throws Exception {
 		clientRecorder.buildSnapshotJSON("");
 	}
@@ -210,7 +210,7 @@ public class ClientRecorderTest extends JSONTest {
 	}
 	
 	@Test
-	public void testFileSave() {
+	public void testFileSave() throws RecordException {
 		JSONObject output = clientRecorder.buildSaveEvent(Events.fileSave, "/workspace/project/file", 209);
 		JSONObject expected = new JSONObject();
 		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.fileSave + "");
