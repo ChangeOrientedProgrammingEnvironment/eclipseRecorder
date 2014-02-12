@@ -40,6 +40,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.quartz.SchedulerException;
 
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
+import edu.oregonstate.cope.eclipse.branding.LogoManager;
 import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
@@ -107,6 +108,8 @@ class StartPluginUIJob extends UIJob {
 		
 		monitor.worked(1);
 
+		LogoManager logoManager = LogoManager.getInstance();
+		logoManager.showLogo();
 		registerDocumentListenersForOpenEditors();
 		FileBuffers.getTextFileBufferManager().addFileBufferListener(new FileBufferListener());
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -125,6 +128,8 @@ class StartPluginUIJob extends UIJob {
 
 		if (!isDevelopementCOPE())
 			initializeFileSender();
+		
+		logoManager.checkForUpdates();
 	}
 
 	private boolean isDevelopementCOPE() {
