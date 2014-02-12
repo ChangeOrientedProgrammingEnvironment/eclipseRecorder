@@ -206,7 +206,7 @@ public class ClientRecorderTest extends JSONTest {
 	}
 
 	private void addTimeStamp(JSONObject expected) {
-		expected.put(JSONConstants.JSON_TIMESTAMP, (System.currentTimeMillis() / 1000) + "");
+		expected.put(JSONConstants.JSON_TIMESTAMP, System.currentTimeMillis() + "");
 	}
 	
 	@Test
