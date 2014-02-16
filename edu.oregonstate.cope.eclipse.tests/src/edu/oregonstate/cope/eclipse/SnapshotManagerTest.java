@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
 import org.junit.After;
 import org.junit.Before;
@@ -197,8 +198,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 	@Test
 	public void testSnapshotOfIgnoredDependentProject() throws Exception {
 		IJavaProject mainProject = FileUtil.createTestJavaProject("MainProject");
-		IClasspathEntry referencedProjectEntry = JavaCore.newProjectEntry(javaProject.getPath());
-		FileUtil.addEntryToClassPath(referencedProjectEntry, mainProject);
+		FileUtil.addProjectDepedency(mainProject, javaProject);
 		
 		ignoreProject(javaProject.getProject());
 		

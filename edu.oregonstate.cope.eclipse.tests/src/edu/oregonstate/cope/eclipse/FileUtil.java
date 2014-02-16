@@ -97,5 +97,10 @@ public class FileUtil {
 		newClasspath[currentClasspath.length] = entry;
 		project.setRawClasspath(newClasspath, new NullProgressMonitor());
 	}
+	
+	public static void addProjectDepedency(IJavaProject mainProject, IJavaProject projectDepedency) throws JavaModelException {
+		IClasspathEntry referencedProjectEntry = JavaCore.newProjectEntry(projectDepedency.getPath());
+		FileUtil.addEntryToClassPath(referencedProjectEntry, mainProject);
+	}
 
 }
