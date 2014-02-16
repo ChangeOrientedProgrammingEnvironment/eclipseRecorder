@@ -97,6 +97,7 @@ class StartPluginUIJob extends UIJob {
 			return;
 		
 		copePlugin.initializeSnapshotManager();
+		copePlugin.readIgnoredProjects();
 		doInstall();
 
 		if (!isWorkspaceKnown()) {
@@ -104,7 +105,6 @@ class StartPluginUIJob extends UIJob {
 			initializeWorkspace();
 		}
 		
-		copePlugin.readIgnoredProjects();
 		
 		monitor.worked(1);
 
