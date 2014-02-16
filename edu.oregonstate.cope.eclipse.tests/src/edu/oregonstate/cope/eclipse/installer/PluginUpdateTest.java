@@ -83,6 +83,8 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		new Installer().doUpdate("v1", "v2");
 
 		boolean zipExists = false;
+		
+		Thread.sleep(1000);
 
 		for (File file : plugin.getLocalStorage().listFiles()) {
 			if (file.toPath().toString().endsWith(".zip"))
