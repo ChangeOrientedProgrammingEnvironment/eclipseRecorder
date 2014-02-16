@@ -207,7 +207,11 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
 		assertEquals(1, zipFiles.length);
 		assertTrue(zipFiles[0].getName().matches("MainProject-[0-9]*\\.zip"));
+		
+		FileUtil.deleteProject(mainProject.getProject());
 	}
+
+	
 
 	private void ignoreProject(IProject project) {
 		List<String> ignoredProjects = COPEPlugin.getDefault().getIgnoreProjectsList();
