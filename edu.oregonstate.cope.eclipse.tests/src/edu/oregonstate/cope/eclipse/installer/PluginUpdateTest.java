@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.jdt.core.IJavaProject;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
+import edu.oregonstate.cope.eclipse.FileUtil;
 import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
 import edu.oregonstate.cope.eclipse.SnapshotManager;
 
@@ -37,6 +39,14 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		allowedUnversionedFiles.add(COPEPlugin.getDefault()._getInstallationConfigFileName());
 		allowedUnversionedFiles.add(Installer.SURVEY_FILENAME);
 		allowedUnversionedFiles.add(Installer.EMAIL_FILENAME);
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		File[] zipFiles = FileUtil.listZipFilesInDir(plugin.getLocalStorage());
+		for (File zipFile : zipFiles) {
+			zipFile.delete();
+		}
 	}
 
 	@Test
@@ -83,6 +93,8 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		new Installer().doUpdate("v1", "v2");
 
 		boolean zipExists = false;
+		
+		Thread.sleep(1000);
 
 		for (File file : plugin.getLocalStorage().listFiles()) {
 			if (file.toPath().toString().endsWith(".zip"))
@@ -91,4 +103,20 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 		assertTrue(zipExists);
 	}
+	
+	@Test
+	public void testSnapshotAtUpdateWithDependendantProjects() throws Exception {
+		Properties properties = plugin.getWorkspaceProperties();
+		
+		IJavaProject depProject = FileUtil.createTestJavaProject("depedendentProject");
+		FileUtil.addProjectDepedency(javaProject, depProject);
+
+		new Installer().doUpdate("v1", "v2");
+		
+		Thread.sleep(2000);
+
+		File[] zipFiles = FileUtil.listZipFilesInDir(plugin.getLocalStorage());
+		assertEquals(2, zipFiles.length);
+	}
+
 }

@@ -1,6 +1,8 @@
 package edu.oregonstate.cope.eclipse;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
@@ -96,6 +98,22 @@ public class FileUtil {
 			newClasspath[i] = currentClasspath[i];
 		newClasspath[currentClasspath.length] = entry;
 		project.setRawClasspath(newClasspath, new NullProgressMonitor());
+	}
+	
+	public static void addProjectDepedency(IJavaProject mainProject, IJavaProject projectDepedency) throws JavaModelException {
+		IClasspathEntry referencedProjectEntry = JavaCore.newProjectEntry(projectDepedency.getPath());
+		FileUtil.addEntryToClassPath(referencedProjectEntry, mainProject);
+	}
+	
+	public static File[] listZipFilesInDir(File fileDir) {
+		File[] listFiles = fileDir.listFiles(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".zip");
+			}
+		});
+		return listFiles;
 	}
 
 }
