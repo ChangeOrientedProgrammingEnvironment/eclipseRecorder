@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.jdt.core.IJavaProject;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
+import edu.oregonstate.cope.eclipse.FileUtil;
 import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
 import edu.oregonstate.cope.eclipse.SnapshotManager;
 
@@ -37,6 +39,14 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		allowedUnversionedFiles.add(COPEPlugin.getDefault()._getInstallationConfigFileName());
 		allowedUnversionedFiles.add(Installer.SURVEY_FILENAME);
 		allowedUnversionedFiles.add(Installer.EMAIL_FILENAME);
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		File[] zipFiles = FileUtil.listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
+		for (File zipFile : zipFiles) {
+			zipFile.delete();
+		}
 	}
 
 	@Test
