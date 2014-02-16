@@ -103,4 +103,20 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 
 		assertTrue(zipExists);
 	}
+	
+	@Test
+	public void testSnapshotAtUpdateWithDependendantProjects() throws Exception {
+		Properties properties = plugin.getWorkspaceProperties();
+		
+		IJavaProject depProject = FileUtil.createTestJavaProject("depedendentProject");
+		FileUtil.addProjectDepedency(javaProject, depProject);
+
+		new Installer().doUpdate("v1", "v2");
+		
+		Thread.sleep(2000);
+
+		File[] zipFiles = FileUtil.listZipFilesInDir(plugin.getLocalStorage());
+		assertEquals(2, zipFiles.length);
+	}
+
 }
