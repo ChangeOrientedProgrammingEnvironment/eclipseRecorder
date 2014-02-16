@@ -111,7 +111,7 @@ public class SnapshotManager {
 		return zipFile;
 	}
 
-	private IJavaProject addExternalLibrariesToZipFile(IProject project, String zipFile) {
+	private synchronized IJavaProject addExternalLibrariesToZipFile(IProject project, String zipFile) {
 		IJavaProject javaProject = JavaCore.create(project);
 		List<String> nonWorkspaceLibraries = getNonWorkspaceLibraries(javaProject);
 		addLibsToZipFile(nonWorkspaceLibraries, zipFile);
@@ -119,7 +119,7 @@ public class SnapshotManager {
 	}
 
 	@SuppressWarnings("restriction")
-	private void archiveProjectToFile(IProject project, String zipFile) {
+	private synchronized void archiveProjectToFile(IProject project, String zipFile) {
 		ArchiveFileExportOperation archiveFileExportOperation = new ArchiveFileExportOperation(project, zipFile);
 		archiveFileExportOperation.setUseCompression(true);
 		archiveFileExportOperation.setUseTarFormat(false);
