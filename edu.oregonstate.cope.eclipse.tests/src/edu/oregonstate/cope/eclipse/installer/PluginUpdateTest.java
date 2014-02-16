@@ -43,7 +43,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		File[] zipFiles = FileUtil.listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
+		File[] zipFiles = FileUtil.listZipFilesInDir(plugin.getLocalStorage());
 		for (File zipFile : zipFiles) {
 			zipFile.delete();
 		}
