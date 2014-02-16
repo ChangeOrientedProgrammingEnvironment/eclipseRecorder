@@ -47,7 +47,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
+		File[] zipFiles = FileUtil.listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
 		for (File zipFile : zipFiles) {
 			zipFile.delete();
 		}
@@ -80,7 +80,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		Thread.sleep(300);
 		File fileDir = COPEPlugin.getDefault().getLocalStorage();
 		assertTrue(fileDir.isDirectory());
-		File[] listFiles = listZipFilesInDir(fileDir);
+		File[] listFiles = FileUtil.listZipFilesInDir(fileDir);
 		assertEquals(1,listFiles.length);
 		assertTrue(listFiles[0].getName().matches(projectName + "-[0-9]*\\.zip"));
 		assertZipFileContentsIsNotEmpty(listFiles[0]);
@@ -130,17 +130,6 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		assertEquals(actualFileContents, contents);
 	}
 
-	private File[] listZipFilesInDir(File fileDir) {
-		File[] listFiles = fileDir.listFiles(new FilenameFilter() {
-			
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".zip");
-			}
-		});
-		return listFiles;
-	}
-	
 	@Test
 	public void testCompleteSnapshot() throws Exception {
 		String snapshotFile = snapshotManager.takeSnapshot(javaProject.getProject());
@@ -204,7 +193,7 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		
 		snapshotManager.takeSnapshot(mainProject.getProject());
 		
-		File[] zipFiles = listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
+		File[] zipFiles = FileUtil.listZipFilesInDir(COPEPlugin.getDefault().getLocalStorage());
 		assertEquals(1, zipFiles.length);
 		assertTrue(zipFiles[0].getName().matches("MainProject-[0-9]*\\.zip"));
 		
