@@ -39,7 +39,7 @@ public class LogoManager {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			if(new BundleUpdater("http://cope.eecs.oregonstate.edu/client-recorder", "org.oregonstate.edu.eclipse").shouldUpdate()) {
+			if(new BundleUpdater("http://cope.eecs.oregonstate.edu/client-recorder", "org.oregonstate.edu.eclipse.feature").shouldUpdate()) {
 				showUpdateIsAvailable();
 				commandToExecute = "org.eclipse.equinox.p2.ui.sdk.update";
 			}
