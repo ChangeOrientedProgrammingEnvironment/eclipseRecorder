@@ -90,14 +90,15 @@ public class SnapshotManager {
 		if (!isProjectKnown(project))
 			knowProject(project);
 		
-		final String zipFile = parentDirectory + File.separator + project.getName() + "-" + System.currentTimeMillis() + ".zip";
+		final String zipFileName = project.getName() + "-" + System.currentTimeMillis() + ".zip";
+		final String zipFile = parentDirectory + File.separator + zipFileName;
 		Job snapshotJob = new Job("Taking snapshot of " + project.getName()) {
 			
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask("Taking snapshot of " + project.getName(), 1);
 				archiveProjectToFile(project, zipFile);
-				clientRecorder.recordSnapshot(zipFile);
+				clientRecorder.recordSnapshot(zipFileName);
 				if (JavaProject.hasJavaNature(project)) {
 					IJavaProject javaProject = addExternalLibrariesToZipFile(project, zipFile);
 					snapshotRequiredProjects(javaProject);
