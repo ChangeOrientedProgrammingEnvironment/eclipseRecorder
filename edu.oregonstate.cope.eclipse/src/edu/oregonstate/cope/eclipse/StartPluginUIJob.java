@@ -88,8 +88,10 @@ class StartPluginUIJob extends UIJob {
 	private void performUninstall(Uninstaller uninstaller) {
 		uninstaller.setUninstall();
 		
-		String title = "Recording shutting down";
-		String message = "Thank you for your participation. The recorder has shut down permanently. You may delete it if you wish to do so.";
+		String title = "COPE recorder shutting down";
+		String message = "The time allotted for the study has expired. "
+				+ "The recorder plugin has shut down permanently and you may delete it if you wish to do so. "
+				+ "\n\nThank you for your participation!";
 		MessageDialog.openInformation(Display.getDefault().getActiveShell(), title, message);
 	}
 
