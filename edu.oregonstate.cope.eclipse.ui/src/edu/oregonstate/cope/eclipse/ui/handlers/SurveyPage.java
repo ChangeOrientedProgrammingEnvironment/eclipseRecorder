@@ -58,7 +58,7 @@ public class SurveyPage extends WizardPage {
 		qAndA.put("Q3", createQuestion(questions, "What is the extent of your experience with Eclipse or IntelliJ IDEA IDE?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years" })));
 		qAndA.put("Q4", createQuestion(questions, "Select the project type you spend most of your time on", Arrays.asList(new String[] { "Proprietary Software Project", "Open Source Project", "Research Project", "Personal/Class project", "Other" })));
 		qAndA.put("Q5", createQuestion(questions, "What is the extent of your experience using TDD?", Arrays.asList(new String[] { "0-2 years", "2-5 years", "5-10 years", "10-15 years" })));
-		qAndA.put("Q6", createQuestion(questions, "How often does your code development follow TDD practices?", Arrays.asList(new String[] { "Always", "Very often", "Sometimes", "Rarely", "Nevers" })));
+		qAndA.put("Q6", createQuestion(questions, "How often does your code development follow TDD practices?", Arrays.asList(new String[] { "Always", "Very often", "Sometimes", "Rarely", "Never" })));
 		qAndA.put("Q7", createQuestion(questions, "What is your gender", Arrays.asList(new String[] { "Male", "Female", "Decline to state" })));
 		qAndA.put("Q8", createQuestion(questions, "What is your current age", Arrays.asList(new String[] { "less than 18", "18-25", "26-29", "30-39", "40-49", "50 or older" })));
 
