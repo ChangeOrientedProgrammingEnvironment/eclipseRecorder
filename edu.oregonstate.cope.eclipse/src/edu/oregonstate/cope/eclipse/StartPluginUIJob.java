@@ -87,7 +87,10 @@ class StartPluginUIJob extends UIJob {
 
 	private void performUninstall(Uninstaller uninstaller) {
 		uninstaller.setUninstall();
-		MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Recording shutting down", "Thank you for your participation. The recorder has shut down permanently. You may delete it if you wish to do so.");
+		
+		String title = "Recording shutting down";
+		String message = "Thank you for your participation. The recorder has shut down permanently. You may delete it if you wish to do so.";
+		MessageDialog.openInformation(Display.getDefault().getActiveShell(), title, message);
 	}
 
 	private void performStartup(IProgressMonitor monitor) {
