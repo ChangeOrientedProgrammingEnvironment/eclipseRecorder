@@ -33,13 +33,16 @@ public class LogoManager {
 	private class CheckForUpdatesJob extends Job {
 
 
+		private static final String UPDATE_SITE = "http://cope.eecs.oregonstate.edu/client-recorder";
+		private static final String FEATURE_NAME = "edu.oregonstate.cope.eclipse.feature.feature.group";
+
 		public CheckForUpdatesJob(String name) {
 			super(name);
 		}
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			if(new BundleUpdater("http://cope.eecs.oregonstate.edu/client-recorder", "org.oregonstate.edu.eclipse.feature").shouldUpdate()) {
+			if(new BundleUpdater(UPDATE_SITE, FEATURE_NAME).shouldUpdate()) {
 				showUpdateIsAvailable();
 				commandToExecute = "org.eclipse.equinox.p2.ui.sdk.update";
 			}

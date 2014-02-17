@@ -3,7 +3,7 @@
    <description name="COPE Client Recorder" url="http://cope.eecs.oregonstate.edu/client-recorder">
       COPE Client Recorder
    </description>
-   <feature url="features/edu.oregonstate.cope.eclipse.feature_0.8.0.qualifier.jar" id="edu.oregonstate.cope.eclipse.feature" version="0.8.0.qualifier">
+   <feature url="features/edu.oregonstate.cope.eclipse.feature_0.8.1.qualifier.jar" id="edu.oregonstate.cope.eclipse.feature" version="0.8.1.qualifier">
       <category name="edu.oregonstate.cope.category"/>
    </feature>
    <category-def name="edu.oregonstate.cope.category" label="Research"/>
