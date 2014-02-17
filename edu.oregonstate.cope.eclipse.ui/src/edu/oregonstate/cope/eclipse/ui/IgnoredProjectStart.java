@@ -20,12 +20,7 @@ public class IgnoredProjectStart implements InitializeWorkspaceOperation {
 						listOfWorkspaceProjects);
 		projectSelectionDialog.open();
 		List<String> ignoredProjects = projectSelectionDialog.getIgnoredProjects();
-		StringBuffer value = new StringBuffer();
-		for (String project : ignoredProjects) {
-			value.append(project);
-			value.append(";");
-		}
-		COPEPlugin.getDefault().getWorkspaceProperties().addProperty("ignoredProjects", value.toString());
+		COPEPlugin.getDefault().setIgnoredProjectsList(ignoredProjects);
 	}
 
 }
