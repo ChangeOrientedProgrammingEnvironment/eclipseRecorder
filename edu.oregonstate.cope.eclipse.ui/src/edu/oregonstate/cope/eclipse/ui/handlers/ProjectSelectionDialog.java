@@ -1,5 +1,6 @@
 package edu.oregonstate.cope.eclipse.ui.handlers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -31,6 +32,12 @@ public class ProjectSelectionDialog extends Dialog {
 	protected void okPressed() {
 		ignoredProjects = selectionComposite.getIgnoredProjects();
 		super.okPressed();
+	}
+
+	@Override
+	protected void cancelPressed() {
+		ignoredProjects = new ArrayList<String>();
+		super.cancelPressed();
 	}
 	
 	public List<String> getIgnoredProjects() {
