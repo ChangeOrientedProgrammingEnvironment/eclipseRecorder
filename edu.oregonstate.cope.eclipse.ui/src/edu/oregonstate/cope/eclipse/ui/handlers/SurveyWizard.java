@@ -11,7 +11,6 @@ import org.json.simple.JSONObject;
 public class SurveyWizard extends Wizard implements SurveyProvider {
 
 	protected SurveyPage surveyPage;
-	protected Page2 two;
 
 	private JSONObject surveyAnswers;
 	private String email;
@@ -48,9 +47,7 @@ public class SurveyWizard extends Wizard implements SurveyProvider {
 	@Override
 	public void addPages() {
 		surveyPage = new SurveyPage();
-		two = new Page2();
 		addPage(surveyPage);
-		addPage(two);
 	}
 
 	@Override
