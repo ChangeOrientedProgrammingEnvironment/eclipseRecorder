@@ -66,7 +66,7 @@ public class FileUtil {
             throws CoreException {
         IFile file = proj.getFile(name);
         if (!file.exists()) {
-            String str = " ";
+            String str = "";
             InputStream in = new ByteArrayInputStream(str.getBytes());
             file.create(in, true, null);
         }
