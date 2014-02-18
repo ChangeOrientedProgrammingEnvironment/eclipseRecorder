@@ -65,11 +65,15 @@ public class COPEPlugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		
+		initializeRecorder();
+		initializeSnapshotManager();
+		readIgnoredProjects();
+		
 		UIJob uiJob = new StartPluginUIJob(this, "Registering listeners");
 		uiJob.schedule();
 	}
 
-	public void initializeSnapshotManager() {
+	private void initializeSnapshotManager() {
 		snapshotManager = new SnapshotManager(getLocalStorage().getAbsolutePath());
 	}
 
@@ -85,7 +89,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
-		snapshotManager.takeSnapshotOfSessionTouchedProjects();
+		if (snapshotManager != null)
+			snapshotManager.takeSnapshotOfSessionTouchedProjects();
 		plugin = null;
 		super.stop(context);
 	}
@@ -115,7 +120,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 		return recorderFacade.getUninstaller();
 	}
 
-	public void initializeRecorder() {
+	private void initializeRecorder() {
 		String workspaceDirectory = getLocalStorage().getAbsolutePath();
 		String permanentDirectory = getBundleStorage().getAbsolutePath();
 		String eventFilesDirectory = getVersionedLocalStorage().getAbsolutePath();		
@@ -201,7 +206,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 		this.ignoredProjects = ignoredProjects;
 	}
 
-	public void readIgnoredProjects() {
+	protected void readIgnoredProjects() {
 		String ignoredProjectsString = getWorkspaceProperties().getProperty(PREFERENCES_IGNORED_PROJECTS);
 		if (ignoredProjectsString == null) {
 			ignoredProjects = new ArrayList<>();
