@@ -107,6 +107,20 @@ public class ResourceListener implements IResourceChangeListener {
 	}
 
 	/**
+	 * I return the contents of the file as a String.
+	 * @param inputStream the input stream to read from
+	 * @return the String containg the file contents, or gibberish if the file is a binary file
+	 * @throws IOException if I cannot read from the file
+	 */
+	private String getTextFileContents(InputStream inputStream) throws IOException {
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		readFromTo(inputStream, byteArrayOutputStream);
+		byte[] bytes = byteArrayOutputStream.toByteArray();
+		byteArrayOutputStream.close();
+		return new String(bytes);
+	}
+
+	/**
 	 * I return a base64 encoding of the file contents.
 	 * @param inputStream the InputStream I have to read from.
 	 * @return the base64 string containing the encoded file contents.
