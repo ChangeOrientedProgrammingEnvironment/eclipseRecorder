@@ -1,11 +1,12 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
 
+import org.apache.commons.codec.binary.Base64OutputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -92,20 +93,25 @@ public class ResourceListener implements IResourceChangeListener {
 		recorder.recordRefresh(contents, filePath, modificationStamp);
 	}
 
+	@SuppressWarnings("resource")
 	private String getFileContentents(IFile affectedFile) {
 		InputStream inputStream;
 		try {
 			inputStream = affectedFile.getContents();
-			Scanner scanner = new Scanner(inputStream, affectedFile.getCharset());
-			String contents = "";
-			try {
-				contents = scanner.useDelimiter("\\A").next(); 
-			} catch (NoSuchElementException e) {
-				contents = "";
-			}
-			scanner.close();
-			return contents;
-		} catch (CoreException e) {
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			Base64OutputStream base64OutputStream = new Base64OutputStream(byteArrayOutputStream, true, 0, null);
+			do {
+				byte[] b = new byte[1024];
+				int read = inputStream.read(b, 0, 1024);
+				if (read == -1)
+					break;
+				base64OutputStream.write(b);
+			} while (true);
+			byte[] byteArray = byteArrayOutputStream.toByteArray();
+			base64OutputStream.close();
+			byteArrayOutputStream.close();
+			return new String(byteArray);
+		} catch (CoreException | IOException e) {
 			COPEPlugin.getDefault().getLogger().error(this, "Could not get contents of file", e);
 		}
 		return "";
