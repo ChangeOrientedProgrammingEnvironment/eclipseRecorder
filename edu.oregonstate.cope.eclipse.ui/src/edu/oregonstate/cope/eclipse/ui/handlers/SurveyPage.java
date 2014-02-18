@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -109,10 +110,15 @@ public class SurveyPage extends WizardPage {
 	private List<Button> createQuestion(Composite parent, String question, List<String> answersList) {
 		Composite questionComposite = new Composite(parent, SWT.NONE);
 		questionComposite.setLayout(new GridLayout(1, false));
-		Label questionText = new Label(questionComposite, SWT.NONE);
+		
+		final Label questionText = new Label(questionComposite, SWT.NONE);
 		questionText.setText(question);
+		
+		makeLabelTextBold(questionText);
+		
 		Composite answers = new Composite(questionComposite, SWT.NONE);
 		answers.setLayout(new GridLayout(1, false));
+		
 		List<Button> answerButtons = new ArrayList<Button>();
 		for (String s : answersList) {
 			Button answer = new Button(answers, SWT.RADIO);
@@ -124,6 +130,8 @@ public class SurveyPage extends WizardPage {
 				public void widgetSelected(SelectionEvent e) {
 					if (isPageComplete())
 						setPageComplete(true);
+					
+					makeLabelTextNormal(questionText);
 				}
 
 				@Override
@@ -132,6 +140,15 @@ public class SurveyPage extends WizardPage {
 			});
 		}
 		return answerButtons;
+	}
+
+	private void makeLabelTextNormal(Label label) {
+		label.setFont(JFaceResources.getFontRegistry().defaultFont());
+		
+	}
+
+	private void makeLabelTextBold(Label label) {
+		label.setFont(JFaceResources.getFontRegistry().getBold(""));
 	}
 
 	@Override
