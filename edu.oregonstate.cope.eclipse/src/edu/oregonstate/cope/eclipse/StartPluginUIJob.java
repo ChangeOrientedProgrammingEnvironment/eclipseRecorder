@@ -20,6 +20,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.jdt.core.ElementChangedEvent;
+import org.eclipse.jdt.core.IElementChangedListener;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
@@ -46,6 +49,7 @@ import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
 import edu.oregonstate.cope.eclipse.listeners.GitRepoListener;
+import edu.oregonstate.cope.eclipse.listeners.JavaElementChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.LaunchListener;
 import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
@@ -117,6 +121,7 @@ class StartPluginUIJob extends UIJob {
 		workspace.addResourceChangeListener(new ResourceListener(), IResourceChangeEvent.PRE_REFRESH | IResourceChangeEvent.POST_CHANGE);
 		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(ICommandService.class);
 		commandService.addExecutionListener(new CommandExecutionListener());
+		JavaCore.addElementChangedListener(new JavaElementChangedListener(), ElementChangedEvent.POST_CHANGE);
 
 		RefactoringHistoryService refactoringHistoryService = RefactoringHistoryService.getInstance();
 		refactoringHistoryService.addExecutionListener(new RefactoringExecutionListener());
