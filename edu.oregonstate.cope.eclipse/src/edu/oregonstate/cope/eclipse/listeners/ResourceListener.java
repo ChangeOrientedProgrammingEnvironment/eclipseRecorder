@@ -52,7 +52,7 @@ public class ResourceListener implements IResourceChangeListener {
 				return;
 			}
 			if (delta.getKind() == IResourceDelta.ADDED) {
-				recorder.recordResourceAdd(filePath, getFileContentents(affectedFile));
+				recorder.recordResourceAdd(filePath, getFileContents(affectedFile));
 				return;
 			}
 			
@@ -90,12 +90,11 @@ public class ResourceListener implements IResourceChangeListener {
 		if (lastVersion != null && modificationStamp == lastVersion)
 			return;
 		
-		String contents = getFileContentents(affectedFile);
+		String contents = getFileContents(affectedFile);
 		recorder.recordRefresh(contents, filePath, modificationStamp);
 	}
 
-	@SuppressWarnings("resource")
-	private String getFileContentents(IFile affectedFile) {
+	protected String getFileContents(IFile affectedFile) {
 		String fileExtension = affectedFile.getFileExtension();
 		InputStream inputStream;
 		try {
