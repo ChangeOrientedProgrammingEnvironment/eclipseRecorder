@@ -3,6 +3,7 @@ package edu.oregonstate.cope.eclipse.listeners;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -114,17 +115,21 @@ public class ResourceListener implements IResourceChangeListener {
 	private String getBinaryFileContents(InputStream inputStream) throws IOException {
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		Base64OutputStream base64OutputStream = new Base64OutputStream(byteArrayOutputStream, true, 0, null);
+		readFromTo(inputStream, base64OutputStream);
+		byte[] byteArray = byteArrayOutputStream.toByteArray();
+		base64OutputStream.close();
+		byteArrayOutputStream.close();
+		return new String(byteArray);
+	}
+
+	private void readFromTo(InputStream inputStream, OutputStream outputStream) throws IOException {
 		do {
 			byte[] b = new byte[1024];
 			int read = inputStream.read(b, 0, 1024);
 			if (read == -1)
 				break;
-			base64OutputStream.write(b);
+			outputStream.write(b);
 		} while (true);
-		byte[] byteArray = byteArrayOutputStream.toByteArray();
-		base64OutputStream.close();
-		byteArrayOutputStream.close();
-		return new String(byteArray);
 	}
 
 	private boolean isClassFile(IFile affectedFile) {
