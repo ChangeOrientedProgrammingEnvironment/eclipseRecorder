@@ -2,13 +2,11 @@ package edu.oregonstate.cope.eclipse.listeners;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Random;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Base64InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
