@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64OutputStream;
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -52,7 +52,7 @@ public class ResourceListener implements IResourceChangeListener {
 				return;
 			}
 			if (delta.getKind() == IResourceDelta.ADDED) {
-				recorder.recordResourceAdd(filePath, getFileContentents(affectedFile));
+				recorder.recordResourceAdd(filePath, getFileContents(affectedFile));
 				return;
 			}
 			
@@ -90,12 +90,11 @@ public class ResourceListener implements IResourceChangeListener {
 		if (lastVersion != null && modificationStamp == lastVersion)
 			return;
 		
-		String contents = getFileContentents(affectedFile);
+		String contents = getFileContents(affectedFile);
 		recorder.recordRefresh(contents, filePath, modificationStamp);
 	}
 
-	@SuppressWarnings("resource")
-	private String getFileContentents(IFile affectedFile) {
+	protected String getFileContents(IFile affectedFile) {
 		String fileExtension = affectedFile.getFileExtension();
 		InputStream inputStream;
 		try {
@@ -132,10 +131,8 @@ public class ResourceListener implements IResourceChangeListener {
 	 */
 	private String getBinaryFileContents(InputStream inputStream) throws IOException {
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		Base64OutputStream base64OutputStream = new Base64OutputStream(byteArrayOutputStream, true, 0, null);
-		readFromTo(inputStream, base64OutputStream);
-		byte[] byteArray = byteArrayOutputStream.toByteArray();
-		base64OutputStream.close();
+		readFromTo(inputStream, byteArrayOutputStream);
+		byte[] byteArray = Base64.encodeBase64(byteArrayOutputStream.toByteArray());
 		byteArrayOutputStream.close();
 		return new String(byteArray);
 	}
