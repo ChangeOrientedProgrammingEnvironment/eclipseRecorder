@@ -44,8 +44,6 @@ public class ResourceListenerTest {
 		
 		byte[] actualBytes = Base64.decodeBase64(contents.getBytes());
 		
-		System.out.println(randomBytes.length + " " + actualBytes.length);
-		
 		assertTrue(Arrays.equals(randomBytes, actualBytes));
 	}
 
