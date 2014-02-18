@@ -4,9 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64OutputStream;
@@ -24,8 +22,6 @@ import edu.oregonstate.cope.eclipse.COPEPlugin;
 public class ResourceListener implements IResourceChangeListener {
 	
 	ClientRecorder recorder = COPEPlugin.getDefault().getClientRecorder();
-	
-	private static final List<String> knownTextFiles = Arrays.asList(new String[]{"txt", "java", "xml", "mf", "c", "cpp", "c", "h"});
 	
 	private Map<String, Long> lastSavedVersion;
 	
@@ -104,7 +100,7 @@ public class ResourceListener implements IResourceChangeListener {
 		InputStream inputStream;
 		try {
 			inputStream = affectedFile.getContents();
-			if (knownTextFiles.contains(fileExtension))
+			if (COPEPlugin.knownTextFiles.contains(fileExtension))
 				return getTextFileContents(inputStream);
 			else
 				return getBinaryFileContents(inputStream);

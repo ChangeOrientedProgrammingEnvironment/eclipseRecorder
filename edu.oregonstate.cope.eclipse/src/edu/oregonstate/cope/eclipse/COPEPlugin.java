@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -47,6 +48,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 	private List<String> ignoredProjects;
 
 	private ClientRecorder clientRecorder;
+
+	public static final List<String> knownTextFiles = Arrays.asList(new String[]{"txt", "java", "xml", "mf", "c", "cpp", "c", "h"});
 
 	/**
 	 * The constructor
