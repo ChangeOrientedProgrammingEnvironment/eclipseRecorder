@@ -150,7 +150,7 @@ public class ResourceListener implements IResourceChangeListener {
 			int read = inputStream.read(b, 0, 1024);
 			if (read == -1)
 				break;
-			outputStream.write(b);
+			outputStream.write(b, 0, read);
 		} while (true);
 	}
 
