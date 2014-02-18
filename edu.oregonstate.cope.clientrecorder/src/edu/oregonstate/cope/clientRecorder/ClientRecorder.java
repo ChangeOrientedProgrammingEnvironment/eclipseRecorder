@@ -160,6 +160,14 @@ public class ClientRecorder {
 		}
 	}
 
+	
+	public void recordExternalLibraryAdd(String libraryFullpath, String libraryFileContentsBase64) {
+		try {
+			ChangePersister.instance().persist(buildExternalLibraryJSON(libraryFullpath, libraryFileContentsBase64));
+		} catch (RecordException e) {
+		}
+	}
+
 	protected JSONObject buildCommonJSONObj(Enum eventType) {
 		JSONObject obj;
 		obj = new JSONObject();
@@ -320,4 +328,10 @@ public class ClientRecorder {
 		return json;
 	}
 
+	protected JSONObject buildExternalLibraryJSON(String libraryFullpath, String libraryFileContentsBase64) {
+		JSONObject jsonObject = buildCommonJSONObj(Events.externalLibraryAdd);
+		jsonObject.put(JSONConstants.JSON_ENTITY_ADDRESS, libraryFullpath);
+		jsonObject.put(JSONConstants.JSON_TEXT, libraryFileContentsBase64);
+		return jsonObject;
+	}
 }

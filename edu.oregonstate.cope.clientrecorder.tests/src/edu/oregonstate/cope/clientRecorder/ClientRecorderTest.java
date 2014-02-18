@@ -334,4 +334,20 @@ public class ClientRecorderTest extends JSONTest {
 
 		assertJSONEquals(expected, actual);
 	}
+	
+	@Test
+	public void testAddExternalLibrary() {
+		String libraryFullpath = "/some/path/here";
+		String libraryFileContentsBase64 = "abase64stringwiththeactualfilecontents";
+		JSONObject actual = clientRecorder.buildExternalLibraryJSON(libraryFullpath, libraryFileContentsBase64);
+		
+		JSONObject expected = new JSONObject();
+		expected.put(JSONConstants.JSON_EVENT_TYPE, Events.externalLibraryAdd + "");
+		expected.put(JSONConstants.JSON_ENTITY_ADDRESS, libraryFullpath);
+		expected.put(JSONConstants.JSON_TEXT, libraryFileContentsBase64);
+		expected.put(JSONConstants.JSON_IDE, clientRecorder.getIDE());
+		addTimeStamp(expected);
+		
+		assertJSONEquals(expected, actual);
+	}
 }
