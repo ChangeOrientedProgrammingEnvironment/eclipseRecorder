@@ -139,7 +139,8 @@ public class SnapshotManager {
 				if(!isProjectKnown(requiredProjectName) && !isProjectIgnored(requiredProjectName))
 					takeSnapshot(requiredProjectName);
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaModelException | IllegalArgumentException e) {
+			COPEPlugin.getDefault().getLogger().error(this, "The weird problem", e);
 		}
 	}
 
