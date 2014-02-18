@@ -98,23 +98,33 @@ public class ResourceListener implements IResourceChangeListener {
 		InputStream inputStream;
 		try {
 			inputStream = affectedFile.getContents();
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			Base64OutputStream base64OutputStream = new Base64OutputStream(byteArrayOutputStream, true, 0, null);
-			do {
-				byte[] b = new byte[1024];
-				int read = inputStream.read(b, 0, 1024);
-				if (read == -1)
-					break;
-				base64OutputStream.write(b);
-			} while (true);
-			byte[] byteArray = byteArrayOutputStream.toByteArray();
-			base64OutputStream.close();
-			byteArrayOutputStream.close();
-			return new String(byteArray);
+			return getBinaryFileContents(inputStream);
 		} catch (CoreException | IOException e) {
 			COPEPlugin.getDefault().getLogger().error(this, "Could not get contents of file", e);
 		}
 		return "";
+	}
+
+	/**
+	 * I return a base64 encoding of the file contents.
+	 * @param inputStream the InputStream I have to read from.
+	 * @return the base64 string containing the encoded file contents.
+	 * @throws IOException if I cannot read from the InputStream.
+	 */
+	private String getBinaryFileContents(InputStream inputStream) throws IOException {
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		Base64OutputStream base64OutputStream = new Base64OutputStream(byteArrayOutputStream, true, 0, null);
+		do {
+			byte[] b = new byte[1024];
+			int read = inputStream.read(b, 0, 1024);
+			if (read == -1)
+				break;
+			base64OutputStream.write(b);
+		} while (true);
+		byte[] byteArray = byteArrayOutputStream.toByteArray();
+		base64OutputStream.close();
+		byteArrayOutputStream.close();
+		return new String(byteArray);
 	}
 
 	private boolean isClassFile(IFile affectedFile) {
