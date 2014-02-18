@@ -89,7 +89,8 @@ public class COPEPlugin extends AbstractUIPlugin {
 	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
-		snapshotManager.takeSnapshotOfSessionTouchedProjects();
+		if (snapshotManager != null)
+			snapshotManager.takeSnapshotOfSessionTouchedProjects();
 		plugin = null;
 		super.stop(context);
 	}
