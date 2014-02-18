@@ -20,7 +20,7 @@ import edu.oregonstate.cope.eclipse.FileUtil;
 
 public class ResourceListenerTest {
 	
-	private static final int FILE_SIZE_BYTES = 10000;
+	private static final int FILE_SIZE_BYTES = 1000000;
 	private IProject project;
 	private IFile binaryFile;
 	private byte[] randomBytes;
