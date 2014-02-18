@@ -65,6 +65,10 @@ public class COPEPlugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		
+		initializeRecorder();
+		initializeSnapshotManager();
+		readIgnoredProjects();
+		
 		UIJob uiJob = new StartPluginUIJob(this, "Registering listeners");
 		uiJob.schedule();
 	}

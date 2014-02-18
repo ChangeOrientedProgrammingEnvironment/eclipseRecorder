@@ -70,8 +70,6 @@ class StartPluginUIJob extends UIJob {
 
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-		copePlugin.initializeRecorder();
-		
 		Uninstaller uninstaller = copePlugin.getUninstaller();
 
 		if (uninstaller.isUninstalled())
@@ -101,8 +99,6 @@ class StartPluginUIJob extends UIJob {
 		if (!isDevelopementCOPE() && Platform.inDevelopmentMode())
 			return;
 		
-		copePlugin.initializeSnapshotManager();
-		copePlugin.readIgnoredProjects();
 		doInstall();
 
 		if (!isWorkspaceKnown()) {
