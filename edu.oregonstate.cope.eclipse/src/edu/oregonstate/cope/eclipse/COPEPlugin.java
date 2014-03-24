@@ -22,6 +22,7 @@ import org.osgi.framework.Version;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.clientRecorder.StorageManager;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 
