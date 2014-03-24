@@ -125,14 +125,11 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	}
 
 	private void initializeRecorder() {
-		String workspaceDirectory = getLocalStorage().getAbsolutePath();
-		String permanentDirectory = getBundleStorage().getAbsolutePath();
-		String eventFilesDirectory = getVersionedLocalStorage().getAbsolutePath();		
 		String IDE = ClientRecorder.ECLIPSE_IDE;
 
 		this.workspaceID = getWorkspaceID();
 
-		recorderFacade = RecorderFacade.instance().initialize(workspaceDirectory, permanentDirectory, eventFilesDirectory, IDE);
+		recorderFacade = RecorderFacade.instance().initialize(this, IDE);
 		clientRecorder = recorderFacade.getClientRecorder();
 
 	}
