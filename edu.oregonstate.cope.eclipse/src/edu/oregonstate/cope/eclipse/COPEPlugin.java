@@ -1,9 +1,6 @@
 package edu.oregonstate.cope.eclipse;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -135,21 +132,11 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	}
 
 	protected File getWorkspaceIdFile() {
-		File pluginStoragePath = getLocalStorage();
-		return new File(pluginStoragePath.getAbsolutePath() + File.separator + "workspace_id");
+		return recorderFacade.getWorkspaceIdFile();
 	}
 
 	public String getWorkspaceID() {
-		File workspaceIdFile = getWorkspaceIdFile();
-		String workspaceID = "";
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new FileReader(workspaceIdFile));
-			workspaceID = reader.readLine();
-			reader.close();
-		} catch (IOException e) {
-		}
-		return workspaceID;
+		return recorderFacade.getWorkspaceID();
 	}
 
 	public File getLocalStorage() {
