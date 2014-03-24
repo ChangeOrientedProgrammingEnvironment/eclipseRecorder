@@ -28,7 +28,7 @@ import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class COPEPlugin extends AbstractUIPlugin {
+public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.oregonstate.edu.eclipse"; //$NON-NLS-1$
