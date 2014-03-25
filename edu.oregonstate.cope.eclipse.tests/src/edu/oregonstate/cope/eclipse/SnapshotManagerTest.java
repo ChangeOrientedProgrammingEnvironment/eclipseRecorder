@@ -200,8 +200,6 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 		FileUtil.deleteProject(mainProject.getProject());
 	}
 
-	
-
 	private void ignoreProject(IProject project) {
 		List<String> ignoredProjects = COPEPlugin.getDefault().getIgnoreProjectsList();
 		ignoredProjects.add(project.getName());
