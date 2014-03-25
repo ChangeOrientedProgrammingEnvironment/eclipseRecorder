@@ -19,7 +19,7 @@ public class WorkspaceInitTest {
 	
 	@Test
 	public void testIsWorkspaceSecondStarted() {
-		RecorderFacade recorderFacade = new RecorderFacade().initialize(COPEPlugin.getDefault(), "");
+		RecorderFacade recorderFacade = new RecorderFacade(COPEPlugin.getDefault(), "");
 		assertFalse(recorderFacade.isFirstStart());
 	}
 }

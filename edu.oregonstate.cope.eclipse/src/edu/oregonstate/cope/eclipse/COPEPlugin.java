@@ -124,7 +124,7 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	private void initializeRecorder() {
 		String IDE = ClientRecorder.ECLIPSE_IDE;
 
-		recorderFacade = RecorderFacade.instance().initialize(this, IDE);
+		recorderFacade = new RecorderFacade(this, IDE);
 		clientRecorder = recorderFacade.getClientRecorder();
 
 		this.workspaceID = getWorkspaceID();
@@ -176,7 +176,7 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	 * TODO something is fishy here, this string should not leak outside
 	 */
 	public String _getInstallationConfigFileName() {
-		return RecorderFacade.instance().getInstallationConfigFilename();
+		return getRecorder().getInstallationConfigFilename();
 	}
 	
 	public List<String> getIgnoreProjectsList() {
