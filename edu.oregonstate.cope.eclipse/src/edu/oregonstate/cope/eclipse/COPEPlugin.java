@@ -226,4 +226,8 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	public void setClientRecorder(ClientRecorder recorder) {
 		clientRecorder = recorder;
 	}
+	
+	public RecorderFacade getRecorder() {
+		return recorderFacade;
+	}
 }
