@@ -124,11 +124,10 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	private void initializeRecorder() {
 		String IDE = ClientRecorder.ECLIPSE_IDE;
 
-		this.workspaceID = getWorkspaceID();
-
 		recorderFacade = RecorderFacade.instance().initialize(this, IDE);
 		clientRecorder = recorderFacade.getClientRecorder();
 
+		this.workspaceID = getWorkspaceID();
 	}
 
 	protected File getWorkspaceIdFile() {
