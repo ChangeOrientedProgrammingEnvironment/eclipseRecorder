@@ -30,6 +30,7 @@ public class OutsideLibrariesTest extends PopulatedWorkspaceTest {
 	@Test
 	public void testAddLibraryToZip() throws Exception {
 		String zipFilePath = snapshotManager.takeSnapshot(javaProject.getProject());
+		Thread.sleep(1000);
 		assertNotNull(zipFilePath);
 		
 		ArrayList<String> initialEntries = getEntriesInZipFile(zipFilePath);

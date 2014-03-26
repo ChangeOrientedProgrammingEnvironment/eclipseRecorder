@@ -16,6 +16,7 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 public class PopulatedWorkspaceTest {
@@ -27,6 +28,10 @@ public class PopulatedWorkspaceTest {
 	@SuppressWarnings("restriction")
 	@BeforeClass
 	public static void beforeClass() throws Exception {
+		IProject[] existingProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		for (IProject project : existingProjects) {
+			FileUtil.deleteProject(project);
+		}
 		ImportOperation importOperation = new ImportOperation(new Path("librariesTest"), 
 				new File(Paths.get("projects" + File.separator + "librariesTest").toAbsolutePath().toString()), 
 				FileSystemStructureProvider.INSTANCE, 
@@ -50,6 +55,11 @@ public class PopulatedWorkspaceTest {
 		} else {
 			fail("Project does not have java nature");
 		}
+	}
+	
+	@AfterClass
+	public static void afterClass() throws Exception {
+		FileUtil.deleteProject(javaProject.getProject());
 	}
 
 	public PopulatedWorkspaceTest() {
