@@ -1,9 +1,6 @@
 package edu.oregonstate.cope.eclipse;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,13 +19,14 @@ import org.osgi.framework.Version;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Properties;
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.clientRecorder.StorageManager;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class COPEPlugin extends AbstractUIPlugin {
+public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.oregonstate.edu.eclipse"; //$NON-NLS-1$
@@ -124,34 +122,20 @@ public class COPEPlugin extends AbstractUIPlugin {
 	}
 
 	private void initializeRecorder() {
-		String workspaceDirectory = getLocalStorage().getAbsolutePath();
-		String permanentDirectory = getBundleStorage().getAbsolutePath();
-		String eventFilesDirectory = getVersionedLocalStorage().getAbsolutePath();		
 		String IDE = ClientRecorder.ECLIPSE_IDE;
 
-		this.workspaceID = getWorkspaceID();
-
-		recorderFacade = RecorderFacade.instance().initialize(workspaceDirectory, permanentDirectory, eventFilesDirectory, IDE);
+		recorderFacade = new RecorderFacade(this, IDE);
 		clientRecorder = recorderFacade.getClientRecorder();
 
+		this.workspaceID = getWorkspaceID();
 	}
 
 	protected File getWorkspaceIdFile() {
-		File pluginStoragePath = getLocalStorage();
-		return new File(pluginStoragePath.getAbsolutePath() + File.separator + "workspace_id");
+		return recorderFacade.getWorkspaceIdFile();
 	}
 
 	public String getWorkspaceID() {
-		File workspaceIdFile = getWorkspaceIdFile();
-		String workspaceID = "";
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new FileReader(workspaceIdFile));
-			workspaceID = reader.readLine();
-			reader.close();
-		} catch (IOException e) {
-		}
-		return workspaceID;
+		return recorderFacade.getWorkspaceID();
 	}
 
 	public File getLocalStorage() {
@@ -192,7 +176,7 @@ public class COPEPlugin extends AbstractUIPlugin {
 	 * TODO something is fishy here, this string should not leak outside
 	 */
 	public String _getInstallationConfigFileName() {
-		return RecorderFacade.instance().getInstallationConfigFilename();
+		return getRecorder().getInstallationConfigFilename();
 	}
 	
 	public List<String> getIgnoreProjectsList() {
@@ -241,5 +225,9 @@ public class COPEPlugin extends AbstractUIPlugin {
 	
 	public void setClientRecorder(ClientRecorder recorder) {
 		clientRecorder = recorder;
+	}
+	
+	public RecorderFacade getRecorder() {
+		return recorderFacade;
 	}
 }

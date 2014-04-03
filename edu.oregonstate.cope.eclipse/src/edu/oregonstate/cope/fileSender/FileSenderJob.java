@@ -24,7 +24,7 @@ public class FileSenderJob implements Job
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat(LAST_UPLOAD_DATE_FORMAT);
-			String lastUploadDateStr = RecorderFacade.instance().getWorkspaceProperties().getProperty(LAST_UPLOAD_DATE);
+			String lastUploadDateStr = COPEPlugin.getDefault().getRecorder().getWorkspaceProperties().getProperty(LAST_UPLOAD_DATE);
 			if(lastUploadDateStr != null) {
 				Date lastUploadDate = formatter.parse(lastUploadDateStr);
 				// delete files created at least 2 days earlier before last upload date
@@ -47,7 +47,7 @@ public class FileSenderJob implements Job
 			
 			uploader.createRemoteDir(remotePath);
 			uploader.upload(localPath, remotePath);
-			RecorderFacade.instance().getWorkspaceProperties().addProperty(LAST_UPLOAD_DATE, formatter.format(new Date()));
+			COPEPlugin.getDefault().getRecorder().getWorkspaceProperties().addProperty(LAST_UPLOAD_DATE, formatter.format(new Date()));
 			
 			COPEPlugin.getDefault().getLogger().info(this, "Upload finished");
 			
