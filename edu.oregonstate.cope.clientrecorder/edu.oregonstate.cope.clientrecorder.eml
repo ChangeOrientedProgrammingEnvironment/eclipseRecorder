@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component>
-	<contentEntry url="file://$MODULE_DIR$"/>
-	<lib name="json-simple-1.1.1.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/thirdParty/json-simple-1.1.1.jar!/"/>
-	</lib>
-</component>

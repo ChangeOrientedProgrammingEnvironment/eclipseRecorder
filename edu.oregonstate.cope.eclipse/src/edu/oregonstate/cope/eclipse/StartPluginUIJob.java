@@ -105,11 +105,8 @@ class StartPluginUIJob extends UIJob {
 		
 		doInstall();
 
-		if (!isWorkspaceKnown()) {
-			getToKnowWorkspace();
+		if (COPEPlugin.getDefault().getRecorder().isFirstStart())
 			initializeWorkspace();
-		}
-		
 		
 		monitor.worked(1);
 
@@ -160,23 +157,6 @@ class StartPluginUIJob extends UIJob {
 			new Installer().run();
 		} catch (IOException e) {
 			copePlugin.getLogger().error(this, "Installer failed", e);
-		}
-	}
-
-	protected boolean isWorkspaceKnown() {
-		workspaceIdFile = copePlugin.getWorkspaceIdFile();
-		return workspaceIdFile.exists();
-	}
-
-	protected void getToKnowWorkspace() {
-		try {
-			workspaceIdFile.createNewFile();
-			String workspaceID = UUID.randomUUID().toString();
-			BufferedWriter writer = new BufferedWriter(new FileWriter(workspaceIdFile));
-			writer.write(workspaceID);
-			writer.close();
-		} catch (IOException e) {
-			copePlugin.getLogger().error(this, e.getMessage(), e);
 		}
 	}
 
