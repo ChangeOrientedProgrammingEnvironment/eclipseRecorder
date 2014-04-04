@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.equinox.p2.engine,
  edu.oregonstate.cope.clientrecorder;bundle-version="0.3.1",
  edu.oregonstate.cope.thirdparty;bundle-version="0.4.1",
- edu.oregonstate.cope.eclipse;bundle-version="0.5.1"
+ edu.oregonstate.cope.eclipse;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: edu.oregonstate.cope.clientRecorder.fileOps,
