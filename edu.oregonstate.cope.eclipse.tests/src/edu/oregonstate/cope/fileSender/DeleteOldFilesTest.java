@@ -20,6 +20,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import edu.oregonstate.cope.clientRecorder.util.COPELogger;
+
 public class DeleteOldFilesTest {
 
 	private DeleteOldFilesUtil deleteUtil = null;
@@ -78,7 +80,7 @@ public class DeleteOldFilesTest {
 	@Before
 	public void setUp() throws Exception {
 		new File(getPathForTestFiles()).mkdir();
-		deleteUtil = new DeleteOldFilesUtil(getPathForTestFiles());
+		deleteUtil = new DeleteOldFilesUtil(getPathForTestFiles(), COPELogger.getInstance());
 	}
 
 	@Test

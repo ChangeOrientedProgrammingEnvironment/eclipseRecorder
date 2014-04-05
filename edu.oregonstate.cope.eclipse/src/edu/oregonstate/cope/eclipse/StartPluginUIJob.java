@@ -55,6 +55,7 @@ import edu.oregonstate.cope.eclipse.listeners.MultiEditorPageChangedListener;
 import edu.oregonstate.cope.eclipse.listeners.RefactoringExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.ResourceListener;
 import edu.oregonstate.cope.fileSender.FileSender;
+import edu.oregonstate.cope.fileSender.FileSenderParams;
 
 @SuppressWarnings("restriction")
 class StartPluginUIJob extends UIJob {
@@ -211,7 +212,12 @@ class StartPluginUIJob extends UIJob {
 
 	private void initializeFileSender() {
 		try {
-			new FileSender();
+			new FileSender(new FileSenderParams(
+				copePlugin.getLogger(),
+				copePlugin.getLocalStorage(),
+				copePlugin.getRecorder().getWorkspaceProperties(),
+				copePlugin.getRecorder().getWorkspaceID()
+			));
 		} catch (ParseException e) {
 			copePlugin.getLogger().error(this, e.getMessage(), e);
 		} catch (SchedulerException e) {
