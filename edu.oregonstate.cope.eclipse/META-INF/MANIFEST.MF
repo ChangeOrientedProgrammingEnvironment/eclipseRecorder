@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.7.0",
  edu.oregonstate.cope.thirdparty;bundle-version="0.4.0",
  edu.oregonstate.cope.eclipse.branding;bundle-version="0.7.4",
  org.eclipse.jgit;bundle-version="2.2.0",
- com.jcraft.jsch;bundle-version="0.1.46"
+ com.jcraft.jsch;bundle-version="0.1.46",
+ edu.oregonstate.cope.filesender
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
