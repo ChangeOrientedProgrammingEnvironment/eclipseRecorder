@@ -7,8 +7,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.NotEnabledException;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.IHandlerService;
 
 public class Handler extends AbstractHandler {

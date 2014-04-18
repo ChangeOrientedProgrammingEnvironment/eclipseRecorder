@@ -21,6 +21,7 @@ public class COPEPreferencePage extends PreferencePage implements IWorkbenchPref
 	@Override
 	protected Control createContents(Composite parent) {
 		composite = new ProjectSelectionComposite(parent, SWT.NONE, getListOfWorkspaceProjects(), COPEPlugin.getDefault().getIgnoreProjectsList());
+		
 		return composite;
 	}
 	
@@ -39,6 +40,7 @@ public class COPEPreferencePage extends PreferencePage implements IWorkbenchPref
 	private void saveSelection() {
 		List<String> ignoredProjects = composite.getIgnoredProjects();
 		COPEPlugin.getDefault().setIgnoredProjectsList(ignoredProjects);
+		// TODO: store SFTP properties into the configuration file
 	}
 	
 	private List<String> getListOfWorkspaceProjects() {

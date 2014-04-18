@@ -10,10 +10,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 
 public class ProjectSelectionComposite extends Composite {
 
@@ -26,10 +28,39 @@ public class ProjectSelectionComposite extends Composite {
 		composite.setLayout(new GridLayout(1, true));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setSize(400, 600);
-		Label label = new Label(composite, SWT.BORDER);	
+		
+		Group sftpGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
+		sftpGroup.setLayout(new GridLayout(4, false));
+		sftpGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		sftpGroup.setSize(400,100);
+		sftpGroup.setLocation(0,0);
+		sftpGroup.setText("Credentials for data upload (SFTP)");
+		//Label sftpPropertieslabel = new Label(sftpGroup, SWT.NONE);	
+		//sftpPropertieslabel.setText("SFTP upload credentials");
+		Label hostnameLabel = new Label(sftpGroup, SWT.NONE);	
+		hostnameLabel.setText("Hostname:");
+		Text hostname = new Text(sftpGroup, SWT.BORDER);
+		Label portLabel = new Label(sftpGroup, SWT.NONE);	
+		portLabel.setText("Port:");
+		Text port = new Text(sftpGroup, SWT.BORDER);
+		Label usernameLabel = new Label(sftpGroup, SWT.NONE);	
+		usernameLabel.setText("Username:");
+		Text username = new Text(sftpGroup, SWT.BORDER);
+		Label passwordLabel = new Label(sftpGroup, SWT.NONE);	
+		passwordLabel.setText("Password:");
+		Text password = new Text(sftpGroup, SWT.PASSWORD | SWT.BORDER);
+		sftpGroup.pack();
+		
+		Group projectsGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
+		projectsGroup.setLayout(new GridLayout(1, true));
+		projectsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		projectsGroup.setSize(400,500);
+		projectsGroup.setLocation(0,100);
+		projectsGroup.setText("Projects recording configuration");
+		Label label = new Label(projectsGroup, SWT.BORDER);	
 		label.setText("Please select the project you would like us to record");
 		
-		Composite buttonsParent = new Composite(composite, SWT.NONE);
+		Composite buttonsParent = new Composite(projectsGroup, SWT.NONE);
 		buttonsParent.setLayout(new GridLayout(2, false));
 		buttonsParent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		Button selectAll = new Button(buttonsParent, SWT.NONE);
@@ -69,7 +100,7 @@ public class ProjectSelectionComposite extends Composite {
 			}
 		});
 		
-		Composite projectList = new Composite(composite, SWT.BORDER);
+		Composite projectList = new Composite(projectsGroup, SWT.BORDER);
 		projectList.setLayout(new GridLayout(1, true));
 		projectList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
@@ -90,8 +121,8 @@ public class ProjectSelectionComposite extends Composite {
 				tableItem.setChecked(true);
 			tableItems.add(tableItem);
 		}
-		
 		tableColumn.pack();
+		projectsGroup.pack();
 	}
 
 	public ProjectSelectionComposite(Composite parent, int style, List<String> projects) {
