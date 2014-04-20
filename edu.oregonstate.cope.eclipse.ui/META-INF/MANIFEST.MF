@@ -12,7 +12,9 @@ Require-Bundle: org.eclipse.ui,
  edu.oregonstate.cope.eclipse;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Import-Package: edu.oregonstate.cope.clientRecorder.fileOps,
+Import-Package: com.jcraft.jsch,
+ edu.oregonstate.cope.clientRecorder.fileOps,
+ edu.oregonstate.cope.fileSender,
  org.eclipse.core.resources
 Export-Package: edu.oregonstate.cope.eclipse.ui,
  edu.oregonstate.cope.eclipse.ui.handlers

@@ -1,7 +1,9 @@
 package edu.oregonstate.cope.eclipse;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +24,7 @@ import edu.oregonstate.cope.clientRecorder.RecorderFacade;
 import edu.oregonstate.cope.clientRecorder.StorageManager;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
+import edu.oregonstate.cope.fileSender.FTPConnectionProperties;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -32,6 +35,11 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	public static final String PLUGIN_ID = "org.oregonstate.edu.eclipse"; //$NON-NLS-1$
 
 	private static final String PREFERENCES_IGNORED_PROJECTS = "ignoredProjects";
+
+	public static final String PREFERENCES_HOSTNAME = "hostname";
+	public static final String PREFERENCES_PORT = "port";
+	public static final String PREFERENCES_USERNAME = "username";
+	public static final String PREFERENCES_PASSWORD = "password";
 
 	// The shared instance
 	static COPEPlugin plugin;
@@ -46,6 +54,14 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	private List<String> ignoredProjects;
 
 	private ClientRecorder clientRecorder;
+
+	private String hostname;
+
+	private int port;
+
+	private String username;
+
+	private String password;
 
 	public static final List<String> knownTextFiles = Arrays.asList(new String[]{"txt", "java", "xml", "mf", "c", "cpp", "c", "h"});
 
@@ -206,6 +222,47 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 		}
 	}
 
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
+		COPEPlugin.getDefault().getWorkspaceProperties().addProperty(PREFERENCES_HOSTNAME, hostname);
+	}
+	
+	public void setPort(int port) {
+		this.port = port;
+		COPEPlugin.getDefault().getWorkspaceProperties().addProperty(PREFERENCES_PORT, Integer.toString(port));
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
+		COPEPlugin.getDefault().getWorkspaceProperties().addProperty(PREFERENCES_USERNAME, username);
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+		FTPConnectionProperties ftpConnectionProperties = new FTPConnectionProperties();
+		try {
+			COPEPlugin.getDefault().getWorkspaceProperties().addProperty(PREFERENCES_PASSWORD, ftpConnectionProperties.encrypt(password));
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getHostname() {
+		return this.hostname;
+	}
+	
+	public int getPort() {
+		return this.port;
+	}
+	
+	public String getUsername() {
+		return this.username;
+	}
+	
+	public String getPassword() {
+		return this.password;
+	}
+	
 	public IProject getProjectForEditor(IEditorInput editorInput) {
 		IProject project;
 		IFile file = ((FileEditorInput) editorInput).getFile();
