@@ -1,5 +1,7 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
+import java.util.List;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
@@ -62,6 +64,10 @@ public class CommandExecutionListener implements IExecutionListener {
 
 	private void recordCopy() {
 		ISelection selection = UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
+		
+		if (isInIgnoredProjectsList())
+			return;
+		
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
 			int offset = textSelection.getOffset();
@@ -72,13 +78,37 @@ public class CommandExecutionListener implements IExecutionListener {
 		}
 	}
 
+	private boolean isInIgnoredProjectsList() {
+		FileEditorInput fileEditorInput = getFileEditorInput();
+
+		if (fileEditorInput != null && fileEditorInput.getFile().getProject() != null) {
+			List<String> ignoreProjectsList = COPEPlugin.getDefault().getIgnoreProjectsList();
+			return ignoreProjectsList.contains(fileEditorInput.getFile().getProject().getName());
+		}
+
+		return false;
+	}
+
 	@SuppressWarnings("restriction")
 	private String getSourceFile() {
+		FileEditorInput fileEditorInput = getFileEditorInput();
+
+		if (fileEditorInput != null)
+			return fileEditorInput.getFile().getFullPath().toPortableString();
+
+		return "";
+	}
+
+	private FileEditorInput getFileEditorInput() {
 		IEditorPart activeEditor = UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		IEditorInput editorInput = activeEditor.getEditorInput();
+		
+		FileEditorInput fileEditorInput = null;
+
 		if (editorInput instanceof FileEditorInput)
-			return ((FileEditorInput)editorInput).getFile().getFullPath().toPortableString();
-		return "";
+			fileEditorInput = (FileEditorInput) editorInput;
+		
+		return fileEditorInput;
 	}
 
 	private boolean isFileSave(String commandId) {
