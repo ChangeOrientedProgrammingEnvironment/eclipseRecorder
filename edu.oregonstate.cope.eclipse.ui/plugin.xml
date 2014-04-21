@@ -27,5 +27,13 @@
            InitializeWorkspaceOperation="edu.oregonstate.cope.eclipse.ui.IgnoredProjectStart">
      </provider>
   </extension>
+  <extension
+        id="edu.oregonstate.cope.ui.ftpinit"
+        name="FTP Init"
+        point="edu.oregonstate.cope.eclipse.installeroperation">
+     <provider
+           InstallerOperation="edu.oregonstate.cope.eclipse.ui.FTPInit">
+     </provider>
+  </extension>
 
 </plugin>
