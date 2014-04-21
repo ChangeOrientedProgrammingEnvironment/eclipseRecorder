@@ -1,11 +1,15 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
+import java.util.List;
+
 import org.eclipse.core.filebuffers.IFileBuffer;
 import org.eclipse.core.filebuffers.IFileBufferListener;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.ui.internal.UIPlugin;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
@@ -26,6 +30,10 @@ public class FileBufferListener implements IFileBufferListener {
 		if (!(buffer instanceof ITextFileBuffer))
 			return;
 		
+		if (isInIgnoreProjects(buffer)) {
+			return;
+		}
+		
 		ITextFileBuffer textFileBuffer = (ITextFileBuffer) buffer;
 		IPath fileLocation = textFileBuffer.getLocation();
 		
@@ -38,8 +46,24 @@ public class FileBufferListener implements IFileBufferListener {
 			snapshotManager.takeSnapshot(project);
 	}
 
+	private boolean isInIgnoreProjects(IFileBuffer buffer) {
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IProject project = workspaceRoot.getFile(buffer.getLocation()).getProject();
+		
+		if (project != null) {
+			List<String> ignoreProjectsList = COPEPlugin.getDefault().getIgnoreProjectsList();
+			return ignoreProjectsList.contains(project.getName());
+		}
+		
+		return false;
+	}
+
 	@Override
 	public void bufferDisposed(IFileBuffer buffer) {
+		if (isInIgnoreProjects(buffer)) {
+			return;
+		}
+		
 		IPath fileLocation = buffer.getLocation();
 		clientRecorderInstance.recordFileClose(fileLocation.toPortableString());
 	}
