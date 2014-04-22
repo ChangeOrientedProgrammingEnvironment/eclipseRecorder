@@ -6,10 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
 
-import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.installer.InstallerOperation;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyProvider;
@@ -21,16 +18,25 @@ public class SurveyOperation extends InstallerOperation {
 
 	@Override
 	protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
-		SurveyProvider sw;
-		if (Platform.inDevelopmentMode())
-			sw = SurveyWizard.takeFakeSurvey();
-		else
-			sw = SurveyWizard.takeRealSurvey();
+		SurveyProvider sw = runSurvey();
 
 		writeContentsToFile(workspaceFile.toPath(), sw.getSurveyResults());
 		writeContentsToFile(permanentFile.toPath(), sw.getSurveyResults());
 
 		handleEmail(sw.getEmail());
+	}
+
+	/**
+	 * This method runs the survey and returns the results via a {@link SurveyProvider}
+	 * @return
+	 */
+	protected SurveyProvider runSurvey() {
+		SurveyProvider sw;
+		if (Platform.inDevelopmentMode())
+			sw = SurveyWizard.takeFakeSurvey();
+		else
+			sw = SurveyWizard.takeRealSurvey();
+		return sw;
 	}
 
 	private void handleEmail(String email) throws IOException {
