@@ -21,7 +21,7 @@ public class PluginInstallationTest {
 
 	@Before
 	public void setUp() throws IOException {
-		installer = new Installer(COPEPlugin.getDefault().getRecorder());
+		installer = new Installer(COPEPlugin.getDefault().getRecorder(), new EclipseInstallerHelper());
 		workspaceFiles = new HashSet<>();
 		permanentFiles = new HashSet<>();
 

@@ -3,15 +3,12 @@ package edu.oregonstate.cope.eclipse.installer;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 
-import edu.oregonstate.cope.clientRecorder.RecorderFacade;
 import edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface;
-import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 /**
  * Runs plugin installation mode. This is implemented by storing files both in
@@ -27,9 +24,11 @@ public class Installer {
 
 	public static final String INSTALLER_EXTENSION_ID = "edu.oregonstate.cope.eclipse.installeroperation";
 	private RecorderFacadeInterface recorder;
+	private InstallerHelper installerHelper;
 
-	public Installer(RecorderFacadeInterface recorder) {
+	public Installer(RecorderFacadeInterface recorder, InstallerHelper installerHelper) {
 		this.recorder = recorder;
+		this.installerHelper = installerHelper;
 	}
 
 	public void doInstall() throws IOException {
@@ -44,7 +43,7 @@ public class Installer {
 
 	public void run() throws IOException {
 		doInstall();
-		doUpdate(recorder.getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
+		doUpdate(recorder.getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), installerHelper.getPluginVersion());
 	}
 
 	protected ArrayList<InstallerOperation> getInstallOperations() {
@@ -80,6 +79,6 @@ public class Installer {
 	}
 
 	private void performPluginUpdate() {
-		COPEPlugin.getDefault().takeSnapshotOfKnownProjects();
+		installerHelper.takeSnapshotOfAllProjects();
 	}
 }
