@@ -11,6 +11,7 @@ import java.util.HashSet;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.oregonstate.cope.clientRecorder.installer.Installer;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class PluginInstallationTest {

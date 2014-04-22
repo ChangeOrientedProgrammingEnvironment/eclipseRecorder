@@ -7,6 +7,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 
 import edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface;
+import edu.oregonstate.cope.clientRecorder.installer.Installer;
+import edu.oregonstate.cope.clientRecorder.installer.InstallerHelper;
+import edu.oregonstate.cope.clientRecorder.installer.InstallerOperation;
 
 /**
  * Runs plugin installation mode. This is implemented by storing files both in

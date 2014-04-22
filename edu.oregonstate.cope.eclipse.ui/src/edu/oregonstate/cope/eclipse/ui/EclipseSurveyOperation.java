@@ -1,7 +1,9 @@
 package edu.oregonstate.cope.eclipse.ui;
 
 import org.eclipse.core.runtime.Platform;
-import edu.oregonstate.cope.eclipse.ui.handlers.SurveyProvider;
+
+import edu.oregonstate.cope.clientRecorder.installer.SurveyOperation;
+import edu.oregonstate.cope.clientRecorder.installer.SurveyProvider;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
 public class EclipseSurveyOperation extends SurveyOperation {

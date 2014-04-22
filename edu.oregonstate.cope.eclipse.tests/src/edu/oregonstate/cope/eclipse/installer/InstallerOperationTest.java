@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.oregonstate.cope.clientRecorder.installer.InstallerOperation;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.MockRecorder;
 import edu.oregonstate.cope.eclipse.MockRecorderFacade;

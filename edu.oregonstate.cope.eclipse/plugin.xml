@@ -19,7 +19,7 @@
          name="Email Install Operation"
          point="edu.oregonstate.cope.eclipse.installeroperation">
       <provider
-            InstallerOperation="edu.oregonstate.cope.eclipse.installer.EmailInstallOperation">
+            InstallerOperation="edu.oregonstate.cope.clientRecorder.installer.EmailInstallOperation">
       </provider>
    </extension>
    <extension
@@ -27,7 +27,7 @@
          name="Config Install Operation"
          point="edu.oregonstate.cope.eclipse.installeroperation">
       <provider
-            InstallerOperation="edu.oregonstate.cope.eclipse.installer.ConfigInstallOperation">
+            InstallerOperation="edu.oregonstate.cope.clientRecorder.installer.ConfigInstallOperation">
       </provider>
    </extension>
 

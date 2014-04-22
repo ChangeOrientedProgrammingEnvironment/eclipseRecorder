@@ -1,5 +1,6 @@
 package edu.oregonstate.cope.eclipse.installer;
 
+import edu.oregonstate.cope.clientRecorder.installer.InstallerHelper;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class EclipseInstallerHelper implements InstallerHelper{

@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.oregonstate.cope.clientRecorder.Properties;
+import edu.oregonstate.cope.clientRecorder.installer.Installer;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.FileUtil;
 import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
