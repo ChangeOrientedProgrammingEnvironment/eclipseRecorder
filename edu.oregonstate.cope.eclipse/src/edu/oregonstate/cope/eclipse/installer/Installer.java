@@ -2,6 +2,8 @@ package edu.oregonstate.cope.eclipse.installer;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -22,48 +24,59 @@ public class Installer {
 	public static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
 	public static final String SURVEY_FILENAME = "survey.txt";
 	public final static String EMAIL_FILENAME = "email.txt";
-	
+
 	public static final String INSTALLER_EXTENSION_ID = "edu.oregonstate.cope.eclipse.installeroperation";
 	private RecorderFacadeInterface recorder;
-	
+
 	public Installer(RecorderFacadeInterface recorder) {
 		this.recorder = recorder;
 	}
 
 	public void doInstall() throws IOException {
+
+		ArrayList<InstallerOperation> installerOperations = getInstallOperations();
+		
+		for (InstallerOperation installOperation : installerOperations) {
+			initInstallOperation(installOperation);
+			installOperation.perform();
+		}
+	}
+
+	public void run() throws IOException {
+		doInstall();
+		doUpdate(recorder.getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
+	}
+
+	protected ArrayList<InstallerOperation> getInstallOperations() {
+		ArrayList<InstallerOperation> installerOperations = new ArrayList<>();
+
 		IConfigurationElement[] extensions = Platform.getExtensionRegistry().getConfigurationElementsFor(INSTALLER_EXTENSION_ID);
 		for (IConfigurationElement extension : extensions) {
 			try {
 				Object executableExtension = extension.createExecutableExtension("InstallerOperation");
 				if (executableExtension instanceof InstallerOperation) {
-					InstallerOperation installerOperation = (InstallerOperation)executableExtension;
-					
-					recorder = COPEPlugin.getDefault().getRecorder();
-					Path permanentDirectory = recorder.getStorageManager().getBundleStorage().toPath();
-					Path workspaceDirectory = recorder.getStorageManager().getLocalStorage().toPath();
-					
-					installerOperation.init(recorder, permanentDirectory, workspaceDirectory);
-					
-					installerOperation.perform();
+					installerOperations.add((InstallerOperation) executableExtension);
 				}
 			} catch (CoreException e) {
 				System.out.println(e);
 			}
 		}
+		
+		return installerOperations;
 	}
-	
-	
-	public void run() throws IOException {
-		doInstall();
-		doUpdate(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), COPEPlugin.getDefault().getPluginVersion().toString());
-	}
-
 
 	protected void doUpdate(String propertiesVersion, String currentPluginVersion) {
 		if (propertiesVersion == null || !propertiesVersion.equals(currentPluginVersion)) {
-			COPEPlugin.getDefault().getWorkspaceProperties().addProperty(LAST_PLUGIN_VERSION, currentPluginVersion.toString());
+			recorder.getWorkspaceProperties().addProperty(LAST_PLUGIN_VERSION, currentPluginVersion.toString());
 			performPluginUpdate();
 		}
+	}
+
+	private void initInstallOperation(InstallerOperation installerOperation) {
+		Path permanentDirectory = recorder.getStorageManager().getBundleStorage().toPath();
+		Path workspaceDirectory = recorder.getStorageManager().getLocalStorage().toPath();
+	
+		installerOperation.init(recorder, permanentDirectory, workspaceDirectory);
 	}
 
 	private void performPluginUpdate() {
