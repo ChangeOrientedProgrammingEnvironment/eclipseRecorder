@@ -5,16 +5,22 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.eclipse.core.runtime.Platform;
-
+import edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface;
 import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.installer.InstallerOperation;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyProvider;
-import edu.oregonstate.cope.eclipse.ui.handlers.SurveyWizard;
 
-public class SurveyOperation extends InstallerOperation {
-	
+public abstract class SurveyOperation extends InstallerOperation {
+
 	private static final String SURVEY_FILENAME = "survey.txt";
+
+	public SurveyOperation() {
+		super();
+	}
+
+	public SurveyOperation(RecorderFacadeInterface recorderFacade, Path permanentDirectory, Path workspaceDirectory) {
+		super(recorderFacade, permanentDirectory, workspaceDirectory);
+	}
 
 	@Override
 	protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
@@ -30,14 +36,7 @@ public class SurveyOperation extends InstallerOperation {
 	 * This method runs the survey and returns the results via a {@link SurveyProvider}
 	 * @return
 	 */
-	protected SurveyProvider runSurvey() {
-		SurveyProvider sw;
-		if (Platform.inDevelopmentMode())
-			sw = SurveyWizard.takeFakeSurvey();
-		else
-			sw = SurveyWizard.takeRealSurvey();
-		return sw;
-	}
+	protected abstract SurveyProvider runSurvey();
 
 	private void handleEmail(String email) throws IOException {
 		doFor(permanentDirectory, email);
@@ -54,4 +53,5 @@ public class SurveyOperation extends InstallerOperation {
 	protected String getFileName() {
 		return SURVEY_FILENAME;
 	}
+
 }

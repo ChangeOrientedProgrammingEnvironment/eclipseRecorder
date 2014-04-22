@@ -17,7 +17,7 @@
         name="Survey Install Operation"
         point="edu.oregonstate.cope.eclipse.installeroperation">
      <provider
-           InstallerOperation="edu.oregonstate.cope.eclipse.ui.SurveyOperation">
+           InstallerOperation="edu.oregonstate.cope.eclipse.ui.EclipseSurveyOperation">
      </provider>
   </extension>
   <extension
