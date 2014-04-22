@@ -90,7 +90,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	public void testSnapshotAtUpdate() throws Exception {
 		Properties properties = plugin.getWorkspaceProperties();
 
-		new Installer().doUpdate("v1", "v2");
+		new Installer(COPEPlugin.getDefault().getRecorder()).doUpdate("v1", "v2");
 
 		boolean zipExists = false;
 		
@@ -111,7 +111,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		IJavaProject depProject = FileUtil.createTestJavaProject("depedendentProject");
 		FileUtil.addProjectDepedency(javaProject, depProject);
 
-		new Installer().doUpdate("v1", "v2");
+		new Installer(COPEPlugin.getDefault().getRecorder()).doUpdate("v1", "v2");
 		
 		Thread.sleep(2000);
 
