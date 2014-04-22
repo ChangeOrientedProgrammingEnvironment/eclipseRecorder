@@ -37,8 +37,8 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		allowedUnversionedFiles.add("log");
 		allowedUnversionedFiles.add("config");
 		allowedUnversionedFiles.add(COPEPlugin.getDefault()._getInstallationConfigFileName());
-		allowedUnversionedFiles.add(EclipseInstaller.SURVEY_FILENAME);
-		allowedUnversionedFiles.add(EclipseInstaller.EMAIL_FILENAME);
+		allowedUnversionedFiles.add(Installer.SURVEY_FILENAME);
+		allowedUnversionedFiles.add(Installer.EMAIL_FILENAME);
 	}
 	
 	@After

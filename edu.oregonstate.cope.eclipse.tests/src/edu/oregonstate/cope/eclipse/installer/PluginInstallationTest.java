@@ -15,7 +15,7 @@ import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class PluginInstallationTest {
 
-	private EclipseInstaller installer;
+	private Installer installer;
 	private HashSet<Path> workspaceFiles;
 	private HashSet<Path> permanentFiles;
 
@@ -42,8 +42,8 @@ public class PluginInstallationTest {
 	}
 
 	private void addToFileSet(HashSet<Path> fileSet, Path root) {
-		fileSet.add(root.resolve(EclipseInstaller.SURVEY_FILENAME));
-		fileSet.add(root.resolve(EclipseInstaller.EMAIL_FILENAME));
+		fileSet.add(root.resolve(Installer.SURVEY_FILENAME));
+		fileSet.add(root.resolve(Installer.EMAIL_FILENAME));
 		fileSet.add(root.resolve(COPEPlugin.getDefault()._getInstallationConfigFileName()));
 	}
 

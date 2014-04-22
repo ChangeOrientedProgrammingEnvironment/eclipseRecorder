@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface;
-import edu.oregonstate.cope.eclipse.installer.EclipseInstaller;
+import edu.oregonstate.cope.eclipse.installer.Installer;
 import edu.oregonstate.cope.eclipse.installer.InstallerOperation;
 import edu.oregonstate.cope.eclipse.ui.handlers.SurveyProvider;
 
@@ -44,7 +44,7 @@ public abstract class SurveyOperation extends InstallerOperation {
 	}
 
 	private void doFor(Path parentDirectory, String email) throws IOException {
-		Path emailFile = parentDirectory.resolve(EclipseInstaller.EMAIL_FILENAME);
+		Path emailFile = parentDirectory.resolve(Installer.EMAIL_FILENAME);
 		Files.deleteIfExists(emailFile);
 		writeContentsToFile(emailFile, email);
 	}
