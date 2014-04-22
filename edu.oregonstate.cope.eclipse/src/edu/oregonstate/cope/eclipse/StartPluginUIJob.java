@@ -155,7 +155,7 @@ class StartPluginUIJob extends UIJob {
 
 	private void doInstall() {
 		try {
-			new Installer().run();
+			new Installer(copePlugin.getRecorder()).run();
 		} catch (IOException e) {
 			copePlugin.getLogger().error(this, "Installer failed", e);
 		}

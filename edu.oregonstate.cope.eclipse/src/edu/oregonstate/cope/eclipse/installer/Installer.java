@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 
+import edu.oregonstate.cope.clientRecorder.RecorderFacade;
 import edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
@@ -23,6 +24,11 @@ public class Installer {
 	public final static String EMAIL_FILENAME = "email.txt";
 	
 	public static final String INSTALLER_EXTENSION_ID = "edu.oregonstate.cope.eclipse.installeroperation";
+	private RecorderFacadeInterface recorder;
+	
+	public Installer(RecorderFacadeInterface recorder) {
+		this.recorder = recorder;
+	}
 
 	public void doInstall() throws IOException {
 		IConfigurationElement[] extensions = Platform.getExtensionRegistry().getConfigurationElementsFor(INSTALLER_EXTENSION_ID);
@@ -32,7 +38,7 @@ public class Installer {
 				if (executableExtension instanceof InstallerOperation) {
 					InstallerOperation installerOperation = (InstallerOperation)executableExtension;
 					
-					RecorderFacadeInterface recorder = COPEPlugin.getDefault().getRecorder();
+					recorder = COPEPlugin.getDefault().getRecorder();
 					Path permanentDirectory = recorder.getStorageManager().getBundleStorage().toPath();
 					Path workspaceDirectory = recorder.getStorageManager().getLocalStorage().toPath();
 					
