@@ -6,23 +6,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface;
 
 public abstract class InstallerOperation {
 
 	protected Path workspaceDirectory;
 	protected Path permanentDirectory;
-	protected RecorderFacade recorderFacade;
+	protected RecorderFacadeInterface recorder;
+	
+	public InstallerOperation() {
+	}
 
-	public InstallerOperation(Path workspaceDirectory, Path permanentDirectory) {
-		this.permanentDirectory = permanentDirectory;
-		this.workspaceDirectory = workspaceDirectory;
+	public InstallerOperation(RecorderFacadeInterface recorderFacade, Path permanentDirectory, Path workspaceDirectory) {
+		init(recorderFacade, permanentDirectory, workspaceDirectory);
 	}
 	
-	public void init(RecorderFacade recorderFacade, Path permanentDiretory, Path workspaceDirectory){
-		this.recorderFacade = recorderFacade;
+	public void init(RecorderFacadeInterface recorderFacade, Path permanentDirectory, Path workspaceDirectory){
+		this.recorder = recorderFacade;
 		
-		this.permanentDirectory = permanentDiretory;
+		this.permanentDirectory = permanentDirectory;
 		this.workspaceDirectory = workspaceDirectory;
 	}
 

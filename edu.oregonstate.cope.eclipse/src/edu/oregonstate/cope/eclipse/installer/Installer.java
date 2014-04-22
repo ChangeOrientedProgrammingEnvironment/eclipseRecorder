@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 
-import edu.oregonstate.cope.clientRecorder.Uninstaller;
+import edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 /**
@@ -29,8 +29,17 @@ public class Installer {
 		for (IConfigurationElement extension : extensions) {
 			try {
 				Object executableExtension = extension.createExecutableExtension("InstallerOperation");
-				if (executableExtension instanceof InstallerOperation)
-					((InstallerOperation)executableExtension).perform();
+				if (executableExtension instanceof InstallerOperation) {
+					InstallerOperation installerOperation = (InstallerOperation)executableExtension;
+					
+					RecorderFacadeInterface recorder = COPEPlugin.getDefault().getRecorder();
+					Path permanentDirectory = recorder.getStorageManager().getBundleStorage().toPath();
+					Path workspaceDirectory = recorder.getStorageManager().getLocalStorage().toPath();
+					
+					installerOperation.init(recorder, permanentDirectory, workspaceDirectory);
+					
+					installerOperation.perform();
+				}
 			} catch (CoreException e) {
 				System.out.println(e);
 			}

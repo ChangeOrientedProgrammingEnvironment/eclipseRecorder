@@ -19,11 +19,6 @@ public class SurveyOperation extends InstallerOperation {
 	
 	private static final String SURVEY_FILENAME = "survey.txt";
 
-	public SurveyOperation() {
-		super(COPEPlugin.getDefault().getLocalStorage().toPath().toAbsolutePath(), 
-				COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath());
-	}
-
 	@Override
 	protected void doNoFileExists(File workspaceFile, File permanentFile) throws IOException {
 		SurveyProvider sw;
@@ -53,5 +48,4 @@ public class SurveyOperation extends InstallerOperation {
 	protected String getFileName() {
 		return SURVEY_FILENAME;
 	}
-
 }
