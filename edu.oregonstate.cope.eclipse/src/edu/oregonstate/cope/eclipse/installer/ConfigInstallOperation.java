@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import edu.oregonstate.cope.eclipse.COPEPlugin;
-
 public class ConfigInstallOperation extends InstallerOperation {
 
 	@Override
@@ -17,7 +15,7 @@ public class ConfigInstallOperation extends InstallerOperation {
 
 	@Override
 	protected String getFileName() {
-		return COPEPlugin.getDefault()._getInstallationConfigFileName();
+		return recorder.getInstallationConfigFilename();
 	}
 
 }
