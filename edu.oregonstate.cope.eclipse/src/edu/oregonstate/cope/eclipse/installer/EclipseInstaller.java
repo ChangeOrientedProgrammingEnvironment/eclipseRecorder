@@ -17,7 +17,7 @@ import edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface;
  * time installation code is run.
  * 
  */
-public class Installer {
+public class EclipseInstaller {
 	public static final String LAST_PLUGIN_VERSION = "LAST_PLUGIN_VERSION";
 	public static final String SURVEY_FILENAME = "survey.txt";
 	public final static String EMAIL_FILENAME = "email.txt";
@@ -26,7 +26,7 @@ public class Installer {
 	private RecorderFacadeInterface recorder;
 	private InstallerHelper installerHelper;
 
-	public Installer(RecorderFacadeInterface recorder, InstallerHelper installerHelper) {
+	public EclipseInstaller(RecorderFacadeInterface recorder, InstallerHelper installerHelper) {
 		this.recorder = recorder;
 		this.installerHelper = installerHelper;
 	}

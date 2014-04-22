@@ -45,7 +45,7 @@ import org.quartz.SchedulerException;
 import edu.oregonstate.cope.clientRecorder.Uninstaller;
 import edu.oregonstate.cope.eclipse.branding.LogoManager;
 import edu.oregonstate.cope.eclipse.installer.EclipseInstallerHelper;
-import edu.oregonstate.cope.eclipse.installer.Installer;
+import edu.oregonstate.cope.eclipse.installer.EclipseInstaller;
 import edu.oregonstate.cope.eclipse.listeners.CommandExecutionListener;
 import edu.oregonstate.cope.eclipse.listeners.DocumentListener;
 import edu.oregonstate.cope.eclipse.listeners.FileBufferListener;
@@ -156,7 +156,7 @@ class StartPluginUIJob extends UIJob {
 
 	private void doInstall() {
 		try {
-			new Installer(copePlugin.getRecorder(), new EclipseInstallerHelper()).run();
+			new EclipseInstaller(copePlugin.getRecorder(), new EclipseInstallerHelper()).run();
 		} catch (IOException e) {
 			copePlugin.getLogger().error(this, "Installer failed", e);
 		}

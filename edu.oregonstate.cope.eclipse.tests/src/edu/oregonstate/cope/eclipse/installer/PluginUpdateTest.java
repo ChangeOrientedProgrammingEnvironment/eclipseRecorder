@@ -37,8 +37,8 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		allowedUnversionedFiles.add("log");
 		allowedUnversionedFiles.add("config");
 		allowedUnversionedFiles.add(COPEPlugin.getDefault()._getInstallationConfigFileName());
-		allowedUnversionedFiles.add(Installer.SURVEY_FILENAME);
-		allowedUnversionedFiles.add(Installer.EMAIL_FILENAME);
+		allowedUnversionedFiles.add(EclipseInstaller.SURVEY_FILENAME);
+		allowedUnversionedFiles.add(EclipseInstaller.EMAIL_FILENAME);
 	}
 	
 	@After
@@ -90,7 +90,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	public void testSnapshotAtUpdate() throws Exception {
 		Properties properties = plugin.getWorkspaceProperties();
 
-		new Installer(COPEPlugin.getDefault().getRecorder(), new EclipseInstallerHelper()).doUpdate("v1", "v2");
+		new EclipseInstaller(COPEPlugin.getDefault().getRecorder(), new EclipseInstallerHelper()).doUpdate("v1", "v2");
 
 		boolean zipExists = false;
 		
@@ -111,7 +111,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		IJavaProject depProject = FileUtil.createTestJavaProject("depedendentProject");
 		FileUtil.addProjectDepedency(javaProject, depProject);
 
-		new Installer(COPEPlugin.getDefault().getRecorder(), new EclipseInstallerHelper()).doUpdate("v1", "v2");
+		new EclipseInstaller(COPEPlugin.getDefault().getRecorder(), new EclipseInstallerHelper()).doUpdate("v1", "v2");
 		
 		Thread.sleep(2000);
 
