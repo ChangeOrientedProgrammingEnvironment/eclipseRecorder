@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class WorkspaceInitTest {
@@ -19,7 +20,7 @@ public class WorkspaceInitTest {
 	
 	@Test
 	public void testIsWorkspaceSecondStarted() {
-		RecorderFacade recorderFacade = new RecorderFacade(COPEPlugin.getDefault(), "");
+		RecorderFacadeInterface recorderFacade = new RecorderFacade(COPEPlugin.getDefault(), "");
 		assertFalse(recorderFacade.isFirstStart());
 	}
 }

@@ -8,6 +8,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.json.simple.JSONObject;
 
+import edu.oregonstate.cope.clientRecorder.installer.SurveyProvider;
+
 public class SurveyWizard extends Wizard implements SurveyProvider {
 
 	protected SurveyPage surveyPage;

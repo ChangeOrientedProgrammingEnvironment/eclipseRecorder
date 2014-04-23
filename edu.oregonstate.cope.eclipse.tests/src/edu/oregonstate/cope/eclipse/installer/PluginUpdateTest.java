@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.oregonstate.cope.clientRecorder.Properties;
+import edu.oregonstate.cope.clientRecorder.installer.Installer;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.eclipse.FileUtil;
 import edu.oregonstate.cope.eclipse.PopulatedWorkspaceTest;
@@ -72,7 +73,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	}
 
 	private void checkFile(File file) {
-		if (!file.getName().endsWith("zip") && !file.getName().contains(".fuse_hidden"))
+		if (!file.getName().endsWith("zip") && !file.getName().endsWith("zip-libs") &&!file.getName().contains(".fuse_hidden"))
 			assertTrue(allowedUnversionedFiles.contains(file.getName()));
 	}
 
@@ -90,7 +91,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 	public void testSnapshotAtUpdate() throws Exception {
 		Properties properties = plugin.getWorkspaceProperties();
 
-		new Installer().doUpdate("v1", "v2");
+		new EclipseInstaller(COPEPlugin.getDefault().getRecorder(), new EclipseInstallerHelper()).doUpdate("v1", "v2");
 
 		boolean zipExists = false;
 		
@@ -111,7 +112,7 @@ public class PluginUpdateTest extends PopulatedWorkspaceTest {
 		IJavaProject depProject = FileUtil.createTestJavaProject("depedendentProject");
 		FileUtil.addProjectDepedency(javaProject, depProject);
 
-		new Installer().doUpdate("v1", "v2");
+		new EclipseInstaller(COPEPlugin.getDefault().getRecorder(), new EclipseInstallerHelper()).doUpdate("v1", "v2");
 		
 		Thread.sleep(2000);
 
