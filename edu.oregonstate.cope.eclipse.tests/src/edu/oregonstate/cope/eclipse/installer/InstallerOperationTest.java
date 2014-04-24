@@ -43,9 +43,9 @@ public class InstallerOperationTest {
 		}
 
 		@Override
-		protected void doBothFilesExists() {
+		protected void doBothFilesExists(File workspaceFile, File permanentFile) {
 			this.status = "both";
-			super.doBothFilesExists();
+			super.doBothFilesExists(workspaceFile, permanentFile);
 		}
 
 		@Override
