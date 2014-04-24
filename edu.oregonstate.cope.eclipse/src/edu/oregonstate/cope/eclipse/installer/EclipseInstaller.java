@@ -20,8 +20,7 @@ import edu.oregonstate.cope.clientRecorder.installer.InstallerOperation;
  */
 public class EclipseInstaller extends Installer {
 	public EclipseInstaller(RecorderFacadeInterface recorder, InstallerHelper installerHelper) {
-		this.recorder = recorder;
-		this.installerHelper = installerHelper;
+		super(recorder, installerHelper);
 	}
 
 	protected ArrayList<InstallerOperation> getInstallOperations() {
