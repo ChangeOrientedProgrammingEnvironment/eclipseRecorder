@@ -14,6 +14,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.oregonstate.cope.clientRecorder.installer.InstallerOperation;
+import edu.oregonstate.cope.eclipse.COPEPlugin;
+import edu.oregonstate.cope.eclipse.MockRecorder;
+import edu.oregonstate.cope.eclipse.MockRecorderFacade;
+
 public class InstallerOperationTest {
 
 	private static final String WORKSPACE = "workspace";
@@ -28,19 +33,19 @@ public class InstallerOperationTest {
 	private static final Path PERMANENT_FILE_PATH = Paths.get(TEST_DATA, PERMANENT, FILE).toAbsolutePath();
 
 	private TestOperation testOperation;
-
+	
 	private class TestOperation extends InstallerOperation {
 
 		private String status;
 
 		public TestOperation(Path workspaceDirectory, Path permanentDirectory) {
-			super(workspaceDirectory, permanentDirectory);
+			super(new MockRecorderFacade(), permanentDirectory, workspaceDirectory);
 		}
 
 		@Override
-		protected void doBothFilesExists() {
+		protected void doBothFilesExists(File workspaceFile, File permanentFile) {
 			this.status = "both";
-			super.doBothFilesExists();
+			super.doBothFilesExists(workspaceFile, permanentFile);
 		}
 
 		@Override

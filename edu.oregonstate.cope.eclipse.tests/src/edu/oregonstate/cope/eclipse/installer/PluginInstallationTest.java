@@ -11,6 +11,7 @@ import java.util.HashSet;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.oregonstate.cope.clientRecorder.installer.Installer;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class PluginInstallationTest {
@@ -21,7 +22,7 @@ public class PluginInstallationTest {
 
 	@Before
 	public void setUp() throws IOException {
-		installer = new Installer();
+		installer = new EclipseInstaller(COPEPlugin.getDefault().getRecorder(), new EclipseInstallerHelper());
 		workspaceFiles = new HashSet<>();
 		permanentFiles = new HashSet<>();
 
