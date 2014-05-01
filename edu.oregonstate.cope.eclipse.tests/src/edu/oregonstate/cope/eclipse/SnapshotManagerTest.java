@@ -52,26 +52,26 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 
 	@Test
 	public void testNotKnowProject() {
-		assertFalse(snapshotManager.getProjectManager().isProjectKnown(snapshotManager, "test"));
+		assertFalse(snapshotManager.getProjectManager().isProjectKnown("test"));
 	}
 	
 	@Test
 	public void testIsProjectKnown() {
-		assertTrue(snapshotManager.getProjectManager().isProjectKnown(snapshotManager, "known1"));
-		assertTrue(snapshotManager.getProjectManager().isProjectKnown(snapshotManager, "known2"));
+		assertTrue(snapshotManager.getProjectManager().isProjectKnown("known1"));
+		assertTrue(snapshotManager.getProjectManager().isProjectKnown("known2"));
 	}
 	
 	@Test
 	public void testKnowProject() throws Exception {
 		snapshotManager.getProjectManager().knowProject("known3");
-		assertTrue(snapshotManager.getProjectManager().isProjectKnown(snapshotManager, "known3"));
+		assertTrue(snapshotManager.getProjectManager().isProjectKnown("known3"));
 		assertEquals("known1\nknown2\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath(), "known-projects"))));
 	}
 	
 	@Test
 	public void testTouchProjectInSession() throws Exception {
 		String projectName = javaProject.getProject().getName();
-		snapshotManager.getProjectManager().isProjectKnown(snapshotManager, projectName);
+		snapshotManager.getProjectManager().isProjectKnown(projectName);
 		snapshotManager.takeSnapshotOfSessionTouchedProjects();
 		Thread.sleep(300);
 		File fileDir = COPEPlugin.getDefault().getLocalStorage();

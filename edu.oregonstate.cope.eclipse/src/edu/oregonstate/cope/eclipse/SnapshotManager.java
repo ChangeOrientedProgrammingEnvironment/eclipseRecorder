@@ -6,11 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -33,6 +31,7 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.clientRecorder.ProjectManager;
 
 public class SnapshotManager {
 
@@ -49,7 +48,7 @@ public class SnapshotManager {
 	public boolean isProjectKnown(IProject project) {
 		if (project == null)
 			return true;
-		return projectManager.isProjectKnown(this, project.getName());
+		return projectManager.isProjectKnown(project.getName());
 	}
 	
 	private void knowProject(IProject project) {
@@ -107,7 +106,7 @@ public class SnapshotManager {
 		try {
 			String[] requiredProjectNames = javaProject.getRequiredProjectNames();
 			for (String requiredProjectName : requiredProjectNames) {
-				if(!projectManager.isProjectKnown(this, requiredProjectName) && !isProjectIgnored(requiredProjectName))
+				if(!projectManager.isProjectKnown(requiredProjectName) && !isProjectIgnored(requiredProjectName))
 					takeSnapshot(requiredProjectName);
 			}
 		} catch (JavaModelException | IllegalArgumentException e) {
