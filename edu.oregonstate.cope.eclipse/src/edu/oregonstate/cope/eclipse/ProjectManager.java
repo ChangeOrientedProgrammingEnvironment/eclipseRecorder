@@ -9,8 +9,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-
 import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 
 public class ProjectManager {
