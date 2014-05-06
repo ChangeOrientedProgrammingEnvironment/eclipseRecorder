@@ -1,14 +1,9 @@
 package edu.oregonstate.cope.eclipse;
 
-import edu.oregonstate.cope.clientRecorder.ChangePersister;
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Events;
 
 public class MockRecorder extends ClientRecorder {
-	
-	public MockRecorder(ChangePersister changePersister) {
-		super(null);
-	}
 
 	public Events recordedEvent;
 	public String recordedText = "bob";
