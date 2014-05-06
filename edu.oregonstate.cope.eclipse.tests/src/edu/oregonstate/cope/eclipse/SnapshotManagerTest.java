@@ -7,7 +7,6 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
@@ -24,10 +23,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
 import org.junit.After;
 import org.junit.Before;
@@ -56,26 +52,26 @@ public class SnapshotManagerTest extends PopulatedWorkspaceTest {
 
 	@Test
 	public void testNotKnowProject() {
-		assertFalse(snapshotManager.isProjectKnown("test"));
+		assertFalse(snapshotManager.getProjectManager().isProjectKnown("test"));
 	}
 	
 	@Test
 	public void testIsProjectKnown() {
-		assertTrue(snapshotManager.isProjectKnown("known1"));
-		assertTrue(snapshotManager.isProjectKnown("known2"));
+		assertTrue(snapshotManager.getProjectManager().isProjectKnown("known1"));
+		assertTrue(snapshotManager.getProjectManager().isProjectKnown("known2"));
 	}
 	
 	@Test
 	public void testKnowProject() throws Exception {
-		snapshotManager.knowProject("known3");
-		assertTrue(snapshotManager.isProjectKnown("known3"));
+		snapshotManager.getProjectManager().knowProject("known3");
+		assertTrue(snapshotManager.getProjectManager().isProjectKnown("known3"));
 		assertEquals("known1\nknown2\nknown3\n",new String(Files.readAllBytes(Paths.get(COPEPlugin.getDefault().getLocalStorage().getAbsolutePath(), "known-projects"))));
 	}
 	
 	@Test
 	public void testTouchProjectInSession() throws Exception {
 		String projectName = javaProject.getProject().getName();
-		snapshotManager.isProjectKnown(projectName);
+		snapshotManager.getProjectManager().isProjectKnown(projectName);
 		snapshotManager.takeSnapshotOfSessionTouchedProjects();
 		Thread.sleep(300);
 		File fileDir = COPEPlugin.getDefault().getLocalStorage();

@@ -6,11 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -33,56 +31,28 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.clientRecorder.ProjectManager;
 
 public class SnapshotManager {
 
-	private String knownProjectsFileName = "known-projects";
-	private List<String> knownProjects;
-	private List<String> sessionTouchedProjects;
-	private String parentDirectory;
+	private ProjectManager projectManager;
 	private ClientRecorder clientRecorder;
+	private String parentDirectory;
 
 	protected SnapshotManager(String parentDirectory) {
 		this.parentDirectory = parentDirectory;
+		projectManager = new ProjectManager(parentDirectory, COPEPlugin.getDefault().getLogger());
 		clientRecorder = COPEPlugin.getDefault().getClientRecorder();
-		File knownProjectsFile = new File(parentDirectory, knownProjectsFileName);
-		try {
-			knownProjectsFile.createNewFile();
-			knownProjects = Files.readAllLines(knownProjectsFile.toPath(), Charset.defaultCharset());
-		} catch (IOException e) {
-			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
-		}
-		
-		sessionTouchedProjects = new ArrayList<String>();
 	}
 
-	public boolean isProjectKnown(String name) {
-		makeProjectAsTouched(name);
-		return knownProjects.contains(name);
-	}
-	
 	public boolean isProjectKnown(IProject project) {
 		if (project == null)
 			return true;
-		return isProjectKnown(project.getName());
-	}
-	
-	private void makeProjectAsTouched(String projectName) {
-		if (!sessionTouchedProjects.contains(projectName))
-			sessionTouchedProjects.add(projectName);
-	}
-
-	public void knowProject(String string) {
-		knownProjects.add(string);
-		try {
-			Files.write(Paths.get(parentDirectory, knownProjectsFileName), (string + "\n").getBytes(), StandardOpenOption.APPEND);
-		} catch (IOException e) {
-			COPEPlugin.getDefault().getLogger().error(this, e.getMessage(), e);
-		}
+		return projectManager.isProjectKnown(project.getName());
 	}
 	
 	private void knowProject(IProject project) {
-		knowProject(project.getName());
+		projectManager.knowProject(project.getName());
 	}
 
 	@SuppressWarnings("restriction")
@@ -136,7 +106,7 @@ public class SnapshotManager {
 		try {
 			String[] requiredProjectNames = javaProject.getRequiredProjectNames();
 			for (String requiredProjectName : requiredProjectNames) {
-				if(!isProjectKnown(requiredProjectName) && !isProjectIgnored(requiredProjectName))
+				if(!projectManager.isProjectKnown(requiredProjectName) && !isProjectIgnored(requiredProjectName))
 					takeSnapshot(requiredProjectName);
 			}
 		} catch (JavaModelException | IllegalArgumentException e) {
@@ -219,14 +189,18 @@ public class SnapshotManager {
 	}
 	
 	protected void takeSnapshotOfSessionTouchedProjects() {
-		for (String project : sessionTouchedProjects) {
+		for (String project : projectManager.sessionTouchedProjects) {
 			takeSnapshot(project);
 		}
 	}
 	
 	protected void takeSnapshotOfKnownProjects() {
-		for (String project : knownProjects) {
+		for (String project : projectManager.knownProjects) {
 			takeSnapshot(project);
 		}
+	}
+	
+	public ProjectManager getProjectManager() {
+		return projectManager;
 	}
 }
