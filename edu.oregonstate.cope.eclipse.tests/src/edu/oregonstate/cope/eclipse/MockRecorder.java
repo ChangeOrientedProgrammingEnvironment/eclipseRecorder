@@ -4,7 +4,7 @@ import edu.oregonstate.cope.clientRecorder.ClientRecorder;
 import edu.oregonstate.cope.clientRecorder.Events;
 
 public class MockRecorder extends ClientRecorder {
-	
+
 	public Events recordedEvent;
 	public String recordedText = "bob";
 	public int recordedOffset = 1000000;
