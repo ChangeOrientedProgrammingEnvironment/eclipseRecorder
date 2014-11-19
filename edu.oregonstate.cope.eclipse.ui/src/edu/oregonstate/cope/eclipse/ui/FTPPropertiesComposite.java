@@ -98,4 +98,12 @@ public class FTPPropertiesComposite extends Composite {
 	public String getPassword() {
 		return password.getText();
 	}
+	
+	public boolean shouldLimitBandwith() {
+		return true;
+	}
+	
+	public int getLimitInKBs() {
+		return 300;
+	}
 }
