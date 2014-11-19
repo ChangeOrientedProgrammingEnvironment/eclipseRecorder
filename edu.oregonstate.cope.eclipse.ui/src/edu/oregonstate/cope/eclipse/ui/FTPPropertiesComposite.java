@@ -79,7 +79,7 @@ public class FTPPropertiesComposite extends Composite {
 		}
 		sftpGroup.pack();
 	}
-	
+
 	public String getHostname() {
 		return hostname.getText();
 	}
@@ -95,11 +95,11 @@ public class FTPPropertiesComposite extends Composite {
 	public String getPassword() {
 		return password.getText();
 	}
-	
+
 	public boolean shouldLimitBandwith() {
 		return true;
 	}
-	
+
 	public int getLimitInKBs() {
 		return 300;
 	}
