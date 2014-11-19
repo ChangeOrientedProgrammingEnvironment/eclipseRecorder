@@ -26,13 +26,10 @@ public class ProjectSelectionComposite extends Composite {
 		Composite composite = this;
 		composite.setLayout(new GridLayout(1, true));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		composite.setSize(400, 600);
 		
 		Group projectsGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
 		projectsGroup.setLayout(new GridLayout(1, true));
 		projectsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		projectsGroup.setSize(400,500);
-		projectsGroup.setLocation(0,100);
 		projectsGroup.setText("Projects recording configuration");
 		Label label = new Label(projectsGroup, SWT.BORDER);	
 		label.setText("Please select the project you would like us to record");

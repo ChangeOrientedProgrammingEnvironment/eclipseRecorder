@@ -28,13 +28,10 @@ public class FTPPropertiesComposite extends Composite {
 		Composite composite = this;
 		composite.setLayout(new GridLayout(1, true));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		composite.setSize(400, 600);
 
 		Group sftpGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
 		sftpGroup.setLayout(new GridLayout(4, false));
 		sftpGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		sftpGroup.setSize(400, 100);
-		sftpGroup.setLocation(0, 0);
 		sftpGroup.setText("Credentials for data upload (SFTP)");
 		// Label sftpPropertieslabel = new Label(sftpGroup, SWT.NONE);
 		// sftpPropertieslabel.setText("SFTP upload credentials");
