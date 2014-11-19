@@ -8,6 +8,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MessageBox;
@@ -24,11 +26,18 @@ import edu.oregonstate.cope.fileSender.SFTPUploader;
 
 public class COPEPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-	private ProjectSelectionComposite composite;
+	private ProjectSelectionComposite projectSelectionComposite;
+	private FTPPropertiesComposite ftpPropertiesComposite;
 
 	@Override
 	protected Control createContents(Composite parent) {
-		composite = new ProjectSelectionComposite(parent, SWT.NONE, getListOfWorkspaceProjects(), COPEPlugin.getDefault().getIgnoreProjectsList());
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(1, true));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		projectSelectionComposite = new ProjectSelectionComposite(composite, SWT.NONE, getListOfWorkspaceProjects(), COPEPlugin.getDefault().getIgnoreProjectsList());
+		ftpPropertiesComposite = new FTPPropertiesComposite(composite, SWT.NONE);
+		
 		return composite;
 	}
 	
@@ -61,16 +70,16 @@ public class COPEPreferencePage extends PreferencePage implements IWorkbenchPref
 	}
 	
 	private void saveSelection() {
-		List<String> ignoredProjects = composite.getIgnoredProjects();
+		List<String> ignoredProjects = projectSelectionComposite.getIgnoredProjects();
 		COPEPlugin.getDefault().setIgnoredProjectsList(ignoredProjects);
 	}
 
 	private void saveFTPProperties() throws UnknownHostException, JSchException {
-		String hostname = composite.getHostname();
-		int port = Integer.parseInt(composite.getPort());
-		String username = composite.getUsername();
+		String hostname = ftpPropertiesComposite.getHostname();
+		int port = Integer.parseInt(ftpPropertiesComposite.getPort());
+		String username = ftpPropertiesComposite.getUsername();
 		FTPConnectionProperties ftpConnectionProperties = new FTPConnectionProperties();
-		String password = composite.getPassword();
+		String password = ftpConnectionProperties.getPassword();
 		SFTPUploader sftpUploader = new SFTPUploader(hostname, port, username, password);
 		COPEPlugin.getDefault().setHostname(hostname);
 		COPEPlugin.getDefault().setPort(port);
