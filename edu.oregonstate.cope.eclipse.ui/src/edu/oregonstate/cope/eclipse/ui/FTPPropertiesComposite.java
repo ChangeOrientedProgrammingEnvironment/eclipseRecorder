@@ -52,19 +52,16 @@ public class FTPPropertiesComposite extends Composite {
 		Properties workspaceProperties = COPEPlugin.getDefault()
 				.getWorkspaceProperties();
 		FTPConnectionProperties ftpProperties = new FTPConnectionProperties();
-		String preferencesHostname = workspaceProperties
-				.getProperty(COPEPlugin.PREFERENCES_HOSTNAME);
-		String preferencesPort = workspaceProperties
-				.getProperty(COPEPlugin.PREFERENCES_PORT);
-		String preferencesUsername = workspaceProperties
-				.getProperty(COPEPlugin.PREFERENCES_USERNAME);
-		String preferencesPassword = workspaceProperties
-				.getProperty(COPEPlugin.PREFERENCES_PASSWORD);
-		if (preferencesHostname != null && !preferencesHostname.isEmpty()
-				&& preferencesPort != null && !preferencesPort.isEmpty()
-				&& preferencesUsername != null
+		String preferencesHostname = workspaceProperties.getProperty(
+				COPEPlugin.PREFERENCES_HOSTNAME, "");
+		String preferencesPort = workspaceProperties.getProperty(
+				COPEPlugin.PREFERENCES_PORT, "");
+		String preferencesUsername = workspaceProperties.getProperty(
+				COPEPlugin.PREFERENCES_USERNAME, "");
+		String preferencesPassword = workspaceProperties.getProperty(
+				COPEPlugin.PREFERENCES_PASSWORD, "");
+		if (!preferencesHostname.isEmpty() && !preferencesPort.isEmpty()
 				&& !preferencesUsername.isEmpty()
-				&& preferencesPassword != null
 				&& !preferencesPassword.isEmpty()) {
 			hostname.setText(preferencesHostname);
 			port.setText(preferencesPort);
