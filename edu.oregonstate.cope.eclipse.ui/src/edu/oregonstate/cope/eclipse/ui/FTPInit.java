@@ -2,19 +2,16 @@ package edu.oregonstate.cope.eclipse.ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
-import edu.oregonstate.cope.eclipse.COPEPlugin;
-import edu.oregonstate.cope.eclipse.installer.InstallerOperation;
+import edu.oregonstate.cope.clientRecorder.installer.InstallerOperation;
 
 public class FTPInit extends InstallerOperation {
 
 	public FTPInit() {
-		super(COPEPlugin.getDefault().getLocalStorage().toPath().toAbsolutePath(), 
-				COPEPlugin.getDefault().getBundleStorage().toPath().toAbsolutePath());
+		super();
 	}
 	
 	@Override
