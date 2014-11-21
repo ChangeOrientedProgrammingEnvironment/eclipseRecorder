@@ -87,7 +87,6 @@ public class COPEPreferencePage extends PreferencePage implements IWorkbenchPref
 		String username = ftpPropertiesComposite.getUsername();
 		FTPConnectionProperties ftpConnectionProperties = new FTPConnectionProperties();
 		String password = ftpConnectionProperties.getPassword();
-		SFTPUploader sftpUploader = new SFTPUploader(hostname, port, username, password);
 		COPEPlugin.getDefault().setHostname(hostname);
 		COPEPlugin.getDefault().setPort(port);
 		COPEPlugin.getDefault().setUsername(username);
