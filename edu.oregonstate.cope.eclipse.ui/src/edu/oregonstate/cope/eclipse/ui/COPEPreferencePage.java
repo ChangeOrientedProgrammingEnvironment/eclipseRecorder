@@ -52,6 +52,7 @@ public class COPEPreferencePage extends PreferencePage implements IWorkbenchPref
 		try {
 			saveSelection();
 			saveFTPProperties();
+			saveUploadOptions();
 			return super.performOk();
 		} catch (UnknownHostException e) {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -64,6 +65,12 @@ public class COPEPreferencePage extends PreferencePage implements IWorkbenchPref
 			MessageBox mBox = new MessageBox(shell, SWT.ICON_WARNING);
 			mBox.setText("Warning");
 			mBox.setMessage("Unable to establish connection using specified credentials ");
+			mBox.open();
+		} catch (NumberFormatException e) {
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			MessageBox mBox = new MessageBox(shell, SWT.ICON_WARNING);
+			mBox.setText("Error");
+			mBox.setMessage("The value for the upload limit is invalid!");
 			mBox.open();
 		}
 		return false;
@@ -85,6 +92,13 @@ public class COPEPreferencePage extends PreferencePage implements IWorkbenchPref
 		COPEPlugin.getDefault().setPort(port);
 		COPEPlugin.getDefault().setUsername(username);
 		COPEPlugin.getDefault().setPassword(password);
+	}
+	
+	private void saveUploadOptions() throws NumberFormatException {
+		boolean shouldLimitBandwith = ftpPropertiesComposite.shouldLimitBandwith();
+		COPEPlugin.getDefault().setShouldLimitUploadRate(shouldLimitBandwith);
+		if (shouldLimitBandwith)
+			COPEPlugin.getDefault().setUploadLimit(ftpPropertiesComposite.getUploadLimit());
 	}
 	
 	private List<String> getListOfWorkspaceProjects() {
