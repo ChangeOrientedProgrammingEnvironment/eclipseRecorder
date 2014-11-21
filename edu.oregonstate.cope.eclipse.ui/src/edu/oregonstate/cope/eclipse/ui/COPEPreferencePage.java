@@ -22,7 +22,6 @@ import com.jcraft.jsch.JSchException;
 
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 import edu.oregonstate.cope.fileSender.FTPConnectionProperties;
-import edu.oregonstate.cope.fileSender.SFTPUploader;
 
 public class COPEPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
