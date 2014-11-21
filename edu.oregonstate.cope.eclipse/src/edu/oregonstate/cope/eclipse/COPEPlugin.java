@@ -40,6 +40,8 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	public static final String PREFERENCES_PORT = "port";
 	public static final String PREFERENCES_USERNAME = "username";
 	public static final String PREFERENCES_PASSWORD = "password";
+	public static final String PREFERENCES_SHOULD_LIMIT_UPLOAD = "should_limit";
+	public static final String PREFERENCES_UPLOAD_LIMIT = "upload_limit";
 
 	// The shared instance
 	static COPEPlugin plugin;
@@ -247,6 +249,14 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 		}
 	}
 	
+	public void setShouldLimitUploadRate(boolean value) {
+		COPEPlugin.getDefault().getWorkspaceProperties().addProperty(PREFERENCES_SHOULD_LIMIT_UPLOAD, value + "");
+	}
+	
+	public void setUploadLimit(int value) {
+		COPEPlugin.getDefault().getWorkspaceProperties().addProperty(PREFERENCES_UPLOAD_LIMIT, value + "");
+	}
+	
 	public String getHostname() {
 		return this.hostname;
 	}
@@ -261,6 +271,14 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	
 	public String getPassword() {
 		return this.password;
+	}
+	
+	public boolean getShouldUploadRate() {
+		return Boolean.parseBoolean(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(PREFERENCES_SHOULD_LIMIT_UPLOAD, "false"));
+	}
+	
+	public int getUploadRate() {
+		return Integer.parseInt(COPEPlugin.getDefault().getWorkspaceProperties().getProperty(PREFERENCES_UPLOAD_LIMIT, "200"));
 	}
 	
 	public IProject getProjectForEditor(IEditorInput editorInput) {
