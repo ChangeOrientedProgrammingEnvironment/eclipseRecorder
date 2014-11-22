@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MessageBox;
@@ -15,6 +16,7 @@ import org.eclipse.ui.PlatformUI;
 import com.jcraft.jsch.JSchException;
 
 import edu.oregonstate.cope.eclipse.COPEPlugin;
+import edu.oregonstate.cope.eclipse.ui.FTPPropertiesComposite;
 import edu.oregonstate.cope.eclipse.ui.ProjectSelectionComposite;
 import edu.oregonstate.cope.fileSender.SFTPUploader;
 
@@ -23,6 +25,7 @@ public class ProjectSelectionDialog extends Dialog {
 	private List<String> projects;
 	private List<String> ignoredProjects;
 	private ProjectSelectionComposite selectionComposite;
+	private FTPPropertiesComposite ftpPropertiesComposite;
 
 	public ProjectSelectionDialog(Shell parentShell, List<String> projects) {
 		super(parentShell);
@@ -31,17 +34,21 @@ public class ProjectSelectionDialog extends Dialog {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		selectionComposite = new ProjectSelectionComposite(parent, SWT.NONE, projects);
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout());
+		composite.setLayoutData(new GridLayout(1, true));
+		selectionComposite = new ProjectSelectionComposite(composite, SWT.NONE, projects);
+		ftpPropertiesComposite = new FTPPropertiesComposite(composite, SWT.NONE);
 		return super.createContents(parent);
 	}
 	
 	@Override
 	protected void okPressed() {
 		ignoredProjects = selectionComposite.getIgnoredProjects();
-		String hostname = selectionComposite.getHostname();
-		int port = Integer.parseInt(selectionComposite.getPort());
-		String username = selectionComposite.getUsername();
-		String password = selectionComposite.getPassword();
+		String hostname = ftpPropertiesComposite.getHostname();
+		int port = Integer.parseInt(ftpPropertiesComposite.getPort());
+		String username = ftpPropertiesComposite.getUsername();
+		String password = ftpPropertiesComposite.getPassword();
 		try {
 			new SFTPUploader(hostname, port, username, password);
 			COPEPlugin.getDefault().setHostname(hostname);
