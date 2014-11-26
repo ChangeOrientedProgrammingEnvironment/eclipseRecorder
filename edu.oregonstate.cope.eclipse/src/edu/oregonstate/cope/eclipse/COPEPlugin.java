@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -64,8 +63,6 @@ public class COPEPlugin extends AbstractUIPlugin implements StorageManager {
 	private String username;
 
 	private String password;
-
-	public static final List<String> knownTextFiles = Arrays.asList(new String[]{"txt", "java", "xml", "mf", "c", "cpp", "c", "h"});
 
 	/**
 	 * The constructor
