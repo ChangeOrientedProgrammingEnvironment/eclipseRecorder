@@ -1,13 +1,10 @@
 package edu.oregonstate.cope.eclipse.listeners;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -17,6 +14,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 
 import edu.oregonstate.cope.clientRecorder.ClientRecorder;
+import edu.oregonstate.cope.clientRecorder.util.FileUtil;
 import edu.oregonstate.cope.eclipse.COPEPlugin;
 
 public class ResourceListener implements IResourceChangeListener {
@@ -99,52 +97,11 @@ public class ResourceListener implements IResourceChangeListener {
 		InputStream inputStream;
 		try {
 			inputStream = affectedFile.getContents();
-			if (COPEPlugin.knownTextFiles.contains(fileExtension))
-				return getTextFileContents(inputStream);
-			else
-				return getBinaryFileContents(inputStream);
+			return FileUtil.encodeStream(fileExtension, inputStream);
 		} catch (CoreException | IOException e) {
 			COPEPlugin.getDefault().getLogger().error(this, "Could not get contents of file", e);
 		}
 		return "";
-	}
-
-	/**
-	 * I return the contents of the file as a String.
-	 * @param inputStream the input stream to read from
-	 * @return the String containg the file contents, or gibberish if the file is a binary file
-	 * @throws IOException if I cannot read from the file
-	 */
-	private String getTextFileContents(InputStream inputStream) throws IOException {
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		readFromTo(inputStream, byteArrayOutputStream);
-		byte[] bytes = byteArrayOutputStream.toByteArray();
-		byteArrayOutputStream.close();
-		return new String(bytes);
-	}
-
-	/**
-	 * I return a base64 encoding of the file contents.
-	 * @param inputStream the InputStream I have to read from.
-	 * @return the base64 string containing the encoded file contents.
-	 * @throws IOException if I cannot read from the InputStream.
-	 */
-	private String getBinaryFileContents(InputStream inputStream) throws IOException {
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		readFromTo(inputStream, byteArrayOutputStream);
-		byte[] byteArray = Base64.encodeBase64(byteArrayOutputStream.toByteArray());
-		byteArrayOutputStream.close();
-		return new String(byteArray);
-	}
-
-	private void readFromTo(InputStream inputStream, OutputStream outputStream) throws IOException {
-		do {
-			byte[] b = new byte[1024];
-			int read = inputStream.read(b, 0, 1024);
-			if (read == -1)
-				break;
-			outputStream.write(b, 0, read);
-		} while (true);
 	}
 
 	private boolean isClassFile(IFile affectedFile) {
