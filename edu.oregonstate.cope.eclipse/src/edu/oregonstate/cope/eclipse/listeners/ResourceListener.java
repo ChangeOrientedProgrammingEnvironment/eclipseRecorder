@@ -97,7 +97,7 @@ public class ResourceListener implements IResourceChangeListener {
 		InputStream inputStream;
 		try {
 			inputStream = affectedFile.getContents();
-			return FileUtil.decodeStream(fileExtension, inputStream);
+			return FileUtil.encodeStream(fileExtension, inputStream);
 		} catch (CoreException | IOException e) {
 			COPEPlugin.getDefault().getLogger().error(this, "Could not get contents of file", e);
 		}
