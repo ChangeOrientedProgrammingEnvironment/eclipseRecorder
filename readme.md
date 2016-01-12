@@ -12,6 +12,8 @@ the collected data to OSU. If you have any problems with the
 plugin (exceptions, errors, etc) or have any suggestions please
 send an email to cope@eecs.oregonstate.edu.
 
+Thanks for using ClientRecorder
+
 License
 -------
 
